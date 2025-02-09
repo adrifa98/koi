@@ -1,7 +1,7 @@
-import CartModal from 'components/cart/modal';
-import LogoSquare from 'components/logo-square';
-import { getMenu } from 'lib/shopify';
-import { Menu } from 'lib/shopify/types';
+import CartModal from '@/components/cart/modal';
+import LogoSquare from '@/components/logo-square';
+import { getMenu } from '@/lib/shopify';
+import { Menu } from '@/lib/shopify/types';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import MobileMenu from './mobile-menu';
@@ -9,7 +9,7 @@ import Search, { SearchSkeleton } from './search';
 
 const { SITE_NAME } = process.env;
 
-export async function Navbar() {
+export async function Navbar2() {
   const menu = await getMenu('next-js-frontend-header-menu');
 
   return (

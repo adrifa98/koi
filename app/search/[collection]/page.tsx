@@ -1,10 +1,10 @@
-import { getCollection, getCollectionProducts } from 'lib/shopify';
+import { getCollection, getCollectionProducts } from '@/lib/shopify';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import Grid from 'components/grid';
-import ProductGridItems from 'components/layout/product-grid-items';
-import { defaultSort, sorting } from 'lib/constants';
+import Grid from '@/components/grid';
+import ProductGridItems from '@/components/layout/product-grid-items';
+import { defaultSort, sorting } from '@/lib/constants';
 
 export async function generateMetadata(props: {
   params: Promise<{ collection: string }>;

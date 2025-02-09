@@ -1,13 +1,19 @@
-import { CartProvider } from 'components/cart/cart-context';
-import { Navbar } from 'components/layout/navbar';
-import { WelcomeToast } from 'components/welcome-toast';
-import { GeistSans } from 'geist/font/sans';
-import { getCart } from 'lib/shopify';
-import { ensureStartsWith } from 'lib/utils';
+import type { Metadata } from "next";
+
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { CartProvider } from '@/components/cart/cart-context';
+import { Navbar2 } from '@/components/layout/navbar';
+import { Navbar } from "./components/Navbar";
+import { ThemeProvider } from "./components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import { getCart } from '@/lib/shopify';
+import { ensureStartsWith } from '@/lib/utils';
 import { cookies } from 'next/headers';
 import { ReactNode } from 'react';
-import { Toaster } from 'sonner';
-import './globals.css';
+import { WelcomeToast } from "@/components/welcome-toast";
+
+const inter = Inter({ subsets: ["latin"] });
 
 const { TWITTER_CREATOR, TWITTER_SITE, SITE_NAME } = process.env;
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
@@ -40,17 +46,25 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const cartId = (await cookies()).get('cartId')?.value;
   // Don't await the fetch, pass the Promise to the context provider
   const cart = getCart(cartId);
-
   return (
-    <html lang="en" className={GeistSans.variable}>
-      <body className="bg-neutral-50 text-black selection:bg-teal-300 dark:bg-neutral-900 dark:text-white dark:selection:bg-pink-500 dark:selection:text-white">
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        
         <CartProvider cartPromise={cart}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar2 />
           <Navbar />
           <main>
             {children}
-            <Toaster closeButton />
             <WelcomeToast />
+            <Toaster />
           </main>
+          </ThemeProvider>
         </CartProvider>
       </body>
     </html>
