@@ -1,8 +1,8 @@
+import { SettingsForm } from "@/app/components/SettingsForm";
+import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import prisma from "../lib/db";
-import { redirect } from "next/navigation";
-import { SettingsForm } from "../components/SettingsForm";
 import { unstable_noStore as noStore } from "next/cache";
+import { redirect } from "next/navigation";
 
 async function getData(userId: string) {
   noStore();
@@ -12,10 +12,20 @@ async function getData(userId: string) {
     },
     select: {
       userName: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      imageUrl: true,
     },
   });
 
-  return data;
+  return {
+    userName: data?.userName ?? null,
+    email: data?.email ?? null,
+    firstName: data?.firstName ?? null,
+    lastName: data?.lastName ?? null,
+    imageUrl: data?.imageUrl ?? null,
+  };
 }
 
 export default async function SettingsPage() {
@@ -25,11 +35,18 @@ export default async function SettingsPage() {
   if (!user) {
     return redirect("/api/auth/login");
   }
+
   const data = await getData(user.id);
 
   return (
     <div className="max-w-[1000px] mx-auto flex flex-col mt-4">
-      <SettingsForm username={data?.userName} />
+      <SettingsForm 
+        username={data.userName} 
+        email={data.email} 
+        firstName={data.firstName} 
+        lastName={data.lastName} 
+        imageUrl={data.imageUrl} 
+      />
     </div>
   );
 }

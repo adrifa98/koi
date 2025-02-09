@@ -1,72 +1,91 @@
 "use client";
 
+import { updateUserInfo } from "@/app/actions";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
-import { updateUsername } from "../actions";
-import { SubmitButton } from "./SubmitButtons";
-import { useFormState } from "react-dom";
-import { useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { SubmitButton } from "./SubmitButtons";
 
-const initialState = {
-  message: "",
-  status: "",
-};
+const initialState = { message: "", status: "" };
 
-export function SettingsForm({
-  username,
-}: {
-  username: string | null | undefined;
+export function SettingsForm({ username, email, firstName, lastName, imageUrl }: {
+  username: string | null;
+  email: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  imageUrl: string | null;
 }) {
-  const [state, formAction] = useFormState(updateUsername, initialState);
+  const [state, formAction] = useFormState(updateUserInfo, initialState);
   const { toast } = useToast();
+  const [previewImage, setPreviewImage] = useState(imageUrl || "/default-avatar.png");
 
   useEffect(() => {
     if (state?.status === "green") {
-      toast({
-        title: "Succesfull",
-        description: state.message,
-      });
+      toast({ title: "Success", description: state.message });
     } else if (state?.status === "error") {
-      toast({
-        title: "Error",
-        description: state.message,
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: state.message, variant: "destructive" });
     }
   }, [state, toast]);
+
   return (
-    <form action={formAction}>
-      <h1 className="text-3xl font-extrabold tracking-tight">Settings</h1>
+    <Card className="max-w-[600px] mx-auto mt-6 shadow-lg rounded-lg">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold">Settings</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form action={formAction} className="space-y-4">
+          {/* Imagen de perfil */}
+          <div className="flex items-center gap-4">
+            <img src={previewImage} alt="Profile" className="w-20 h-20 rounded-full border" />
+            <Button variant="outline" type="button" onClick={() => alert("Image Selector (Pending)")}>
+              Change Profile Picture
+            </Button>
+          </div>
 
-      <Separator className="my-4" />
-      <Label className="text-lg">Username</Label>
-      <p className="text-muted-foreground">
-        In this Settings page you can change your username!
-      </p>
+          <Separator />
 
-      <Input
-        defaultValue={username ?? undefined}
-        name="username"
-        required
-        className="mt-2"
-        min={2}
-        maxLength={21}
-      />
+          {/* Username */}
+          <div>
+            <Label className="text-lg">Username</Label>
+            <Input defaultValue={username ?? ""} name="username" required minLength={2} maxLength={21} />
+          </div>
 
-      {state?.status === "error" && (
-        <p className="text-destructive mt-1">{state.message}</p>
-      )}
+          {/* Email */}
+          <div>
+            <Label className="text-lg">Email</Label>
+            <Input type="email" defaultValue={email ?? ""} name="email" required />
+          </div>
 
-      <div className="w-full flex mt-5 gap-x-5 justify-end">
-        <Button variant="secondary" asChild type="button">
-          <Link href="/">Cancel</Link>
-        </Button>
-        <SubmitButton text="Change Username" />
-      </div>
-    </form>
+          {/* First Name */}
+          <div>
+            <Label className="text-lg">First Name</Label>
+            <Input defaultValue={firstName ?? ""} name="firstName" required />
+          </div>
+
+          {/* Last Name */}
+          <div>
+            <Label className="text-lg">Last Name</Label>
+            <Input defaultValue={lastName ?? ""} name="lastName" required />
+          </div>
+
+          {/* Mensajes de error */}
+          {state?.status === "error" && <p className="text-destructive">{state.message}</p>}
+
+          {/* Botones */}
+          <div className="flex justify-end gap-3 mt-4">
+            <Button variant="secondary" asChild>
+              <Link href="/">Cancel</Link>
+            </Button>
+            <SubmitButton text="Save Changes" />
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

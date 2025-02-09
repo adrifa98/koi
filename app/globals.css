@@ -4,48 +4,48 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 20 14.3% 4.1%;
+    --background: 230 80% 3%; /* Azul aún más oscuro */
+    --foreground: 60 9.1% 97.8%; /* Blanco grisáceo */
+    --card: 230 75% 4%; /* Ajuste sutil para más contraste */
+    --card-foreground: 60 9.1% 97.8%;
+    --popover: 230 75% 4%;
+    --popover-foreground: 60 9.1% 97.8%;
+    --primary: 220 88% 58%; /* Azul un poco más vibrante */
+    --primary-foreground: 60 9.1% 97.8%;
+    --secondary: 220 55% 25%;
+    --secondary-foreground: 210 10% 85%; /* Más claro para mejor contraste */
+    --muted: 220 35% 18%; /* Un poco más brillante */
+    --muted-foreground: 220 12% 65%;
+    --accent: 220 55% 25%;
+    --accent-foreground: 60 9.1% 97.8%;
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --border: 220 35% 18%;
+    --input: 220 35% 18%;
+    --ring: 220 85% 60%; /* Más brillante para resaltar */
+    --radius: 0.5rem;
+  }
+
+  .light {
+    --background: 0 0% 100%; /* Blanco */
+    --foreground: 20 14.3% 4.1%; /* Gris oscuro */
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
-    --primary: 24.6 95% 53.1%;
+    --primary: 220 88% 58%; /* Azul en lugar de naranja */
     --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 60 4.8% 95.9%;
-    --secondary-foreground: 24 9.8% 10%;
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
-    --accent: 60 4.8% 95.9%;
-    --accent-foreground: 24 9.8% 10%;
+    --secondary: 220 50% 90%; /* Azul claro en lugar de beige */
+    --secondary-foreground: 220 20% 25%; /* Azul más oscuro */
+    --muted: 220 45% 95%; /* Azul muy claro */
+    --muted-foreground: 220 20% 35%; /* Azul grisáceo más oscuro */
+    --accent: 220 50% 90%; /* Azul claro */
+    --accent-foreground: 220 20% 25%; /* Azul más oscuro */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 60 9.1% 97.8%;
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
-    --ring: 24.6 95% 53.1%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-    --primary: 20.5 90.2% 48.2%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 12 6.5% 15.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-    --muted: 12 6.5% 15.1%;
-    --muted-foreground: 24 5.4% 63.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 60 9.1% 97.8%;
-    --destructive: 0 72.2% 50.6%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
-    --ring: 20.5 90.2% 48.2%;
+    --border: 220 15% 85%; /* Azul tenue en lugar de gris */
+    --input: 220 15% 85%; /* Azul tenue en lugar de gris */
+    --ring: 220 85% 60%; /* Azul vibrante */
   }
 }
 

@@ -1,13 +1,13 @@
 "use server";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { redirect } from "next/navigation";
-import prisma from "./lib/db";
 import { Prisma, TypeOfVote } from "@prisma/client";
 import { JSONContent } from "@tiptap/react";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import prisma from "./lib/db";
 
-export async function updateUsername(prevState: any, formData: FormData) {
+export async function updateUserInfo(prevState: any, formData: FormData) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -16,32 +16,43 @@ export async function updateUsername(prevState: any, formData: FormData) {
   }
 
   const username = formData.get("username") as string;
+  const email = formData.get("email") as string;
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+  const imageUrl = formData.get("imageUrl") as string;
 
   try {
-    await prisma.user.update({
+    // Verifica que username y email sean únicos (excepto para el usuario actual)
+    const existingUser = await prisma.user.findFirst({
       where: {
-        id: user.id,
-      },
-      data: {
-        userName: username,
+        OR: [
+          { userName: username, id: { not: user.id } },
+          { email: email, id: { not: user.id } },
+        ],
       },
     });
 
+    if (existingUser) {
+      return {
+        message: "This username or email is already in use.",
+        status: "error",
+      };
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { userName: username, email, firstName, lastName, imageUrl },
+    });
+
     return {
-      message: "Succesfully Updated name",
+      message: "Successfully updated user information!",
       status: "green",
     };
   } catch (e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === "P2002") {
-        return {
-          message: "This username is alredy used",
-          status: "error",
-        };
-      }
-    }
-
-    throw e;
+    return {
+      message: "An unexpected error occurred.",
+      status: "error",
+    };
   }
 }
 
@@ -68,7 +79,7 @@ export async function createCommunity(prevState: any, formData: FormData) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
         return {
-          message: "This Name is alredy used",
+          message: "This name is already used",
           status: "error",
         };
       }
@@ -90,22 +101,18 @@ export async function updateSubDescription(prevState: any, formData: FormData) {
     const description = formData.get("description") as string;
 
     await prisma.subreddit.update({
-      where: {
-        name: subName,
-      },
-      data: {
-        description: description,
-      },
+      where: { name: subName },
+      data: { description },
     });
 
     return {
       status: "green",
-      message: "Succesfully updated the description!",
+      message: "Successfully updated the description!",
     };
   } catch (e) {
     return {
       status: "error",
-      message: "Sorry something went wrong!",
+      message: "Sorry, something went wrong!",
     };
   }
 }
@@ -127,9 +134,9 @@ export async function createPost(
 
   const data = await prisma.post.create({
     data: {
-      title: title,
+      title,
       imageString: imageUrl ?? undefined,
-      subName: subName,
+      subName,
       userId: user.id,
       textContent: jsonContent ?? undefined,
     },
@@ -159,32 +166,23 @@ export async function handleVote(formData: FormData) {
   if (vote) {
     if (vote.voteType === voteDirection) {
       await prisma.vote.delete({
-        where: {
-          id: vote.id,
-        },
+        where: { id: vote.id },
       });
-
-      return revalidatePath("/", "page");
     } else {
       await prisma.vote.update({
-        where: {
-          id: vote.id,
-        },
-        data: {
-          voteType: voteDirection,
-        },
+        where: { id: vote.id },
+        data: { voteType: voteDirection },
       });
-      return revalidatePath("/", "page");
     }
+  } else {
+    await prisma.vote.create({
+      data: {
+        voteType: voteDirection,
+        userId: user.id,
+        postId: postId,
+      },
+    });
   }
-
-  await prisma.vote.create({
-    data: {
-      voteType: voteDirection,
-      userId: user.id,
-      postId: postId,
-    },
-  });
 
   return revalidatePath("/", "page");
 }
