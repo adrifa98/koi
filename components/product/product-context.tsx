@@ -50,7 +50,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
       updateOption,
       updateImage,
     }),
-    [state]
+    [state, updateOption, updateImage] // 🔹 Se agregaron las dependencias correctas
   );
 
   return <ProductContext.Provider value={value}>{children}</ProductContext.Provider>;
