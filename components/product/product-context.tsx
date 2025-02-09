@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import React, { createContext, useContext, useMemo, useOptimistic } from 'react';
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { createContext, useContext, useMemo, useOptimistic } from "react";
 
 type ProductState = {
   [key: string]: string;
@@ -20,19 +20,15 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export function ProductProvider({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
 
-  const getInitialState = () => {
-    const params: ProductState = {};
-    for (const [key, value] of searchParams.entries()) {
-      params[key] = value;
-    }
-    return params;
+  const getInitialState = (): ProductState => {
+    return Object.fromEntries(Array.from(searchParams.entries())) as ProductState;
   };
 
   const [state, setOptimisticState] = useOptimistic(
     getInitialState(),
     (prevState: ProductState, update: ProductState) => ({
       ...prevState,
-      ...update
+      ...update,
     })
   );
 
@@ -52,7 +48,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
     () => ({
       state,
       updateOption,
-      updateImage
+      updateImage,
     }),
     [state]
   );
@@ -63,7 +59,7 @@ export function ProductProvider({ children }: { children: React.ReactNode }) {
 export function useProduct() {
   const context = useContext(ProductContext);
   if (context === undefined) {
-    throw new Error('useProduct must be used within a ProductProvider');
+    throw new Error("useProduct must be used within a ProductProvider");
   }
   return context;
 }
