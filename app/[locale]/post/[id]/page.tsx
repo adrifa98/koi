@@ -1,15 +1,16 @@
-/* eslint-disable @next/next/no-img-element */
 import { handleVote } from "@/app/actions";
 import { CommentForm } from "@/app/components/CommentForm";
 import { CopyLink } from "@/app/components/CopyLink";
-import { RenderToJson } from "@/app/components/RendertoJson";
+import { RenderTiptap } from "@/app/components/RenderTipTap";
 import { DownVote, UpVote } from "@/app/components/SubmitButtons";
 import prisma from "@/app/lib/db";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Link } from '@/i18n/routing';
-import { Cake, MessageCircle } from "lucide-react";
+import { Link } from "@/i18n/routing";
+import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
+import { es } from "date-fns/locale";
+import { Cake, Clock, MessageCircle } from "lucide-react";
 import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -17,9 +18,7 @@ import { notFound } from "next/navigation";
 async function getData(id: string) {
   noStore();
   const data = await prisma.post.findUnique({
-    where: {
-      id: id,
-    },
+    where: { id },
     select: {
       createdAt: true,
       title: true,
@@ -27,24 +26,14 @@ async function getData(id: string) {
       textContent: true,
       subName: true,
       id: true,
-      Vote: {
-        select: {
-          voteType: true,
-        },
-      },
+      Vote: { select: { voteType: true } },
       Comment: {
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           text: true,
-          User: {
-            select: {
-              imageUrl: true,
-              userName: true,
-            },
-          },
+          createdAt: true,
+          User: { select: { imageUrl: true, userName: true } },
         },
       },
       Subreddit: {
@@ -54,20 +43,28 @@ async function getData(id: string) {
           description: true,
         },
       },
-      User: {
-        select: {
-          userName: true,
-        },
-      },
+      User: { select: { userName: true } },
     },
   });
 
-  if (!data) {
-    return notFound();
-  }
+  if (!data) return notFound();
 
   return data;
 }
+
+// 🔹 Función para formatear la fecha como en Twitter
+const formatTimeTwitterStyle = (date: Date) => {
+  const now = new Date();
+  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+
+  if (diffInHours < 24) {
+    return `hace ${formatDistanceToNow(date, { locale: es, addSuffix: false })}`;
+  } else if (isToday(date) || isYesterday(date)) {
+    return isYesterday(date) ? "Ayer" : "Hoy";
+  } else {
+    return format(date, "d MMM", { locale: es });
+  }
+};
 
 export default async function PostPage({ params }: { params: { id: string } }) {
   const data = await getData(params.id);
@@ -76,7 +73,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
     <div className="max-w-[1200px] mx-auto flex gap-x-10 mt-4 mb-10">
       <div className="w-[70%] flex flex-col gap-y-5">
         <Card className="p-2 flex">
-          <div className="flex flex-col  items-center  gap-y-2  p-2">
+          <div className="flex flex-col items-center gap-y-2 p-2">
             <form action={handleVote}>
               <input type="hidden" name="voteDirection" value="UP" />
               <input type="hidden" name="postId" value={data.id} />
@@ -85,7 +82,6 @@ export default async function PostPage({ params }: { params: { id: string } }) {
             {data.Vote.reduce((acc, vote) => {
               if (vote.voteType === "UP") return acc + 1;
               if (vote.voteType === "DOWN") return acc - 1;
-
               return acc;
             }, 0)}
             <form action={handleVote}>
@@ -96,9 +92,12 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="p-2 w-full">
-            <p className="text-xs text-muted-foreground">
-              Posted by u/{data.User?.userName}
-            </p>
+            <div className="flex items-center gap-x-2 text-xs text-muted-foreground">
+              <span>@{data.User?.userName}</span>
+              <span>·</span>
+              <Clock className="h-3 w-3" />
+              <span>{formatTimeTwitterStyle(new Date(data.createdAt))}</span>
+            </div>
 
             <h1 className="font-medium mt-1 text-lg">{data.title}</h1>
 
@@ -112,13 +111,13 @@ export default async function PostPage({ params }: { params: { id: string } }) {
               />
             )}
 
-            {data.textContent && <RenderToJson data={data.textContent} />}
+            {data.textContent && <RenderTiptap json={data.textContent} />}
 
             <div className="flex gap-x-5 items-center mt-3">
               <div className="flex items-center gap-x-1">
                 <MessageCircle className="h-4 w-4 text-muted-foreground" />
                 <p className="text-muted-foreground font-medium text-xs">
-                  {data.Comment.length} Comments
+                  {data.Comment.length}
                 </p>
               </div>
 
@@ -142,10 +141,14 @@ export default async function PostPage({ params }: { params: { id: string } }) {
                       className="w-7 h-7 rounded-full"
                       alt="Avatar of user"
                     />
-
-                    <h3 className="text-sm font-medium">
-                      {item.User?.userName}
-                    </h3>
+                    <div className="flex items-center gap-x-2 text-xs text-muted-foreground">
+                      <span className="text-sm font-medium">
+                        {item.User?.userName}
+                      </span>
+                      <span>·</span>
+                      <Clock className="h-3 w-3" />
+                      <span>{formatTimeTwitterStyle(new Date(item.createdAt))}</span>
+                    </div>
                   </div>
 
                   <p className="ml-10 text-secondary-foreground text-sm tracking-wide">
@@ -182,13 +185,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
             <div className="flex items-center gap-x-2 mt-4">
               <Cake className="h-5 w-5 text-muted-foreground" />
               <p className="text-muted-foreground font-medium text-sm">
-                Created:{" "}
-                {new Date(data?.createdAt as Date).toLocaleDateString("en-us", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
+                Creado: {format(new Date(data?.Subreddit?.createdAt as Date), "d MMM yyyy", { locale: es })}
               </p>
             </div>
 

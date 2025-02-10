@@ -1,20 +1,23 @@
 "use client";
+
 import { useToast } from "@/components/ui/use-toast";
 import { Share } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function CopyLink({ id }: { id: string }) {
   const { toast } = useToast();
-  async function copytoClipboard() {
+  const t = useTranslations("CopyLink"); // Namespace en el JSON
+
+  async function copyToClipboard() {
     await navigator.clipboard.writeText(`${location.origin}/post/${id}`);
     toast({
-      title: "Success",
-      description: "Your link is copied in your clipboard",
+      description: t("successDescription"),
     });
   }
+
   return (
-    <button className="flex items-center gap-x-1" onClick={copytoClipboard}>
+    <button className="flex items-center gap-x-1" onClick={copyToClipboard}>
       <Share className="h-4 w-4 text-muted-foreground" />
-      <p className="text-muted-foreground font-medium text-xs">Share</p>
     </button>
   );
 }

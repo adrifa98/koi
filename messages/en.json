@@ -1,6 +1,47 @@
 {
-    "HomePage": {
-      "title": "Hello world!",
-      "about": "Go to the about page"
-    }
+  "HomePage": {
+    "title": "hello",
+    "about": "egosnhgoi"
+  },
+  "CreatePost": {
+    "post": "Post",
+    "imageAndVideo": "Image & Video",
+    "title": "Title",
+    "titlePlaceholder": "Enter a title...",
+    "createPost": "Create Post",
+    "insertGif": "Insert GIF",
+    "gifDescription": "Search and select a GIF to add to your post.",
+    "gifPlaceholder": "Type to search...",
+    "search": "Search",
+    "noResults": "No results found",
+    "close": "Close",
+    "errorTitleTooLong": "The title cannot exceed 144 characters.",
+    "errorMessageTooLong": "The message cannot exceed 288 characters.",
+    "errorGifLimit": "You have reached the limit of 5 GIF searches per post.",
+    "rules": {
+      "respectful": "All posts must be constructive and respectful.",
+      "noSpam": "Promotional content and spam are strictly prohibited and will be removed.",
+      "noHate": "Be kind to others. Insults, trolling, and harassment are not allowed.",
+      "privacy": "Impersonating team members or players will result in account suspension."
+    },
+    "heading1": "Heading 1",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "bold": "Bold (Ctrl+B)",
+    "italic": "Italic (Ctrl+I)",
+    "strikethrough": "Strikethrough",
+    "bulletList": "Bullet List",
+    "orderedList": "Ordered List",
+    "blockquote": "Quote",
+    "undo": "Undo (Ctrl+Z)",
+    "redo": "Redo (Ctrl+Y)",
+    "insertLink": "Insert Link",
+    "enterUrl": "Enter URL:",
+    "placeholder": "Enter your text...",
+    "errorTitle": "Error",
+    "errorDescription": "The text field is required."
+  },
+  "CopyLink": {
+    "successDescription": "Link copied to clipboard"
   }
+}

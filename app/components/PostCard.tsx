@@ -1,11 +1,9 @@
 import { handleVote } from "@/app/actions";
 import { CopyLink } from "@/app/components/CopyLink";
-import { RenderToJson } from "@/app/components/RendertoJson";
 import { DownVote, UpVote } from "@/app/components/SubmitButtons";
 import { Card } from "@/components/ui/card";
 import { Link } from '@/i18n/routing';
 import { MessageCircle } from "lucide-react";
-import Image from "next/image";
 
 interface iAppProps {
   title: string;
@@ -60,27 +58,11 @@ export function PostCard({
           </Link>
         </div>
 
-        <div className="max-h-[300px] overflow-hidden">
-        <Link href={`/post/${id}`}>
-          {imageString ? (
-            <Image
-              src={imageString}
-              alt="Post Image"
-              width={600}
-              height={300}
-              className="w-full h-full"
-            />
-          ) : (
-            <RenderToJson data={jsonContent} />
-          )}
-          </Link>
-        </div>
-
         <div className="m-3 flex items-center gap-x-5">
           <div className="flex items-center gap-x-1">
             <MessageCircle className="h-4 w-4 text-muted-foreground" />
             <p className="text-muted-foreground font-medium text-xs">
-              {commentAmount} Comments
+              {commentAmount}
             </p>
           </div>
 
