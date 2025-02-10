@@ -6,11 +6,11 @@ import prisma from "@/app/lib/db";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Link } from '@/i18n/routing';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Cake, FileQuestion } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { unstable_noStore as noStore } from "next/cache";
+import Image from "next/image";
 
 async function getData(name: string, searchParam: string) {
   noStore();
@@ -128,8 +128,8 @@ export default async function SubRedditRoute({
                 height={60}
                 className="rounded-full h-16 w-16"
               />
-              <Link href={`/r/${data?.name}`} className="font-medium">
-                r/{data?.name}
+              <Link href={`/community/${data?.name}`} className="font-medium">
+                {data?.name}
               </Link>
             </div>
             {user?.id === data?.userId ? (
@@ -159,7 +159,7 @@ export default async function SubRedditRoute({
             <Separator className="my-5" />
             <Button asChild className="rounded-full w-full">
               <Link
-                href={user?.id ? `/r/${data?.name}/create` : "/api/auth/login"}
+                href={user?.id ? `/community/${data?.name}/create` : "/api/auth/login"}
               >
                 Create Post
               </Link>

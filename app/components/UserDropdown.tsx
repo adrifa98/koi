@@ -6,9 +6,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MenuIcon } from "lucide-react";
-import Link from "next/link";
+import { Link } from '@/i18n/routing';
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { MenuIcon } from "lucide-react";
+
 
 interface iAppProps {
   userImage: string | null;
@@ -33,16 +34,6 @@ export function UserDropdown({ userImage }: iAppProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-[200px]">
-        <DropdownMenuItem>
-          <Link className="w-full" href="/r/create">
-            Create Community
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link className="w-full" href="/create">
-            Create Post
-          </Link>
-        </DropdownMenuItem>
         <DropdownMenuItem>
           <Link className="w-full" href="/settings">
             Settings

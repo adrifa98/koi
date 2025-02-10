@@ -1,17 +1,21 @@
-import type { Metadata } from "next";
 
-import { Inter } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import { CartProvider } from '@/components/cart/cart-context';
 import { Navbar2 } from '@/components/layout/navbar';
-import { Navbar } from "./components/Navbar";
-import { ThemeProvider } from "./components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { WelcomeToast } from "@/components/welcome-toast";
+import { routing } from '@/i18n/routing';
 import { getCart } from '@/lib/shopify';
 import { ensureStartsWith } from '@/lib/utils';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { Inter } from "next/font/google";
 import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
-import { WelcomeToast } from "@/components/welcome-toast";
+import { Navbar } from "../components/Navbar";
+import { ThemeProvider } from "../components/theme-provider";
+ 
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,14 +46,22 @@ export const metadata = {
     })
 };
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children, params: {locale} }: { children: ReactNode; params: {locale: string}; }) {
   const cartId = (await cookies()).get('cartId')?.value;
   // Don't await the fetch, pass the Promise to the context provider
   const cart = getCart(cartId);
+  // Ensure that the incoming `locale` is valid
+  if (!routing.locales.includes(locale as any)) {
+    notFound();
+  }
+ 
+  // Providing all messages to the client
+  // side is the easiest way to get started
+  const messages = await getMessages();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
-        
+        <NextIntlClientProvider messages={messages}>
         <CartProvider cartPromise={cart}>
         <ThemeProvider
           attribute="class"
@@ -66,6 +78,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           </main>
           </ThemeProvider>
         </CartProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

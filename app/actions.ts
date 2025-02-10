@@ -1,5 +1,4 @@
-"use server";
-
+'use server'
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Prisma, TypeOfVote } from "@prisma/client";
 import { JSONContent } from "@tiptap/react";
@@ -15,6 +14,8 @@ export async function updateUserInfo(prevState: any, formData: FormData) {
     return redirect("/api/auth/login");
   }
 
+  const locale = formData.get("locale") || "es"; // Obtener idioma
+
   const username = formData.get("username") as string;
   const email = formData.get("email") as string;
   const firstName = formData.get("firstName") as string;
@@ -22,7 +23,6 @@ export async function updateUserInfo(prevState: any, formData: FormData) {
   const imageUrl = formData.get("imageUrl") as string;
 
   try {
-    // Verifica que username y email sean únicos (excepto para el usuario actual)
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [
@@ -64,6 +64,8 @@ export async function createCommunity(prevState: any, formData: FormData) {
     return redirect("/api/auth/login");
   }
 
+  const locale = formData.get("locale") || "es"; // Obtener idioma
+
   try {
     const name = formData.get("name") as string;
 
@@ -74,7 +76,7 @@ export async function createCommunity(prevState: any, formData: FormData) {
       },
     });
 
-    return redirect(`/r/${data.name}`);
+    return redirect(`/${locale}/community/${data.name}`);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
@@ -97,6 +99,7 @@ export async function updateSubDescription(prevState: any, formData: FormData) {
   }
 
   try {
+    const locale = formData.get("locale") || "es"; // Obtener idioma
     const subName = formData.get("subName") as string;
     const description = formData.get("description") as string;
 
@@ -128,6 +131,7 @@ export async function createPost(
     return redirect("/api/auth/login");
   }
 
+  const locale = formData.get("locale") || "es"; // Obtener idioma
   const title = formData.get("title") as string;
   const imageUrl = formData.get("imageUrl") as string | null;
   const subName = formData.get("subName") as string;
@@ -142,7 +146,7 @@ export async function createPost(
     },
   });
 
-  return redirect(`/post/${data.id}`);
+  return redirect(`/${locale}/post/${data.id}`);
 }
 
 export async function handleVote(formData: FormData) {
@@ -153,6 +157,7 @@ export async function handleVote(formData: FormData) {
     return redirect("/api/auth/login");
   }
 
+  const locale = formData.get("locale") || "es"; // Obtener idioma
   const postId = formData.get("postId") as string;
   const voteDirection = formData.get("voteDirection") as TypeOfVote;
 
@@ -184,7 +189,7 @@ export async function handleVote(formData: FormData) {
     });
   }
 
-  return revalidatePath("/", "page");
+  return revalidatePath(`/${locale}/post/${postId}`);
 }
 
 export async function createComment(formData: FormData) {
@@ -195,6 +200,7 @@ export async function createComment(formData: FormData) {
     return redirect("/api/auth/login");
   }
 
+  const locale = formData.get("locale") || "es"; // Obtener idioma
   const comment = formData.get("comment") as string;
   const postId = formData.get("postId") as string;
 
@@ -206,5 +212,5 @@ export async function createComment(formData: FormData) {
     },
   });
 
-  revalidatePath(`/post/${postId}`);
+  revalidatePath(`/${locale}/post/${postId}`);
 }

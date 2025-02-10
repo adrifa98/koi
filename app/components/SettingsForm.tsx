@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
-import Link from "next/link";
+import { Link } from '@/i18n/routing';
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { SubmitButton } from "./SubmitButtons";

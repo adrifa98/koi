@@ -1,15 +1,15 @@
-import Link from "next/link";
-import RedditText from "../../public/logo-name.svg";
-import redditMobile from "../../public/reddit-full.svg";
-import Image from "next/image";
-import { ThemeToggle } from "./ThemeToggle";
+import { ThemeToggle } from "@/app/components/ThemeToggle";
+import { UserDropdown } from "@/app/components/UserDropdown";
 import { Button } from "@/components/ui/button";
+import { Link } from '@/i18n/routing';
+import RedditText from "@/public/logo-name.svg";
+import redditMobile from "@/public/reddit-full.svg";
 import {
-  RegisterLink,
   LoginLink,
+  RegisterLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { UserDropdown } from "./UserDropdown";
+import Image from "next/image";
 
 export async function Navbar() {
   const { getUser } = getKindeServerSession();

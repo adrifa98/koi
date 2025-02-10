@@ -1,17 +1,17 @@
-import { Card } from "@/components/ui/card";
-import Image from "next/image";
-import Banner from "../public/banner.png";
-import HelloImage from "../public/hero-image.png";
-import { Separator } from "@/components/ui/separator";
+import { CreatePostCard } from "@/app/components/CreatePostCard";
+import Pagination from "@/app/components/Pagination";
+import { PostCard } from "@/app/components/PostCard";
+import { SuspenseCard } from "@/app/components/SuspenseCard";
+import prisma from "@/app/lib/db";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { CreatePostCard } from "./components/CreatePostCard";
-import prisma from "./lib/db";
-import { PostCard } from "./components/PostCard";
-import { Suspense } from "react";
-import { SuspenseCard } from "./components/SuspenseCard";
-import Pagination from "./components/Pagination";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Link } from '@/i18n/routing';
+import Banner from "@/public/banner.png";
+import HelloImage from "@/public/hero-image.png";
 import { unstable_noStore as noStore } from "next/cache";
+import Image from "next/image";
+import { Suspense } from "react";
 
 async function getData(searchParam: string) {
   noStore();
@@ -87,10 +87,10 @@ export default function Home({
 
             <div className="flex flex-col gap-y-3">
               <Button asChild variant="secondary">
-                <Link href="/r/janmarshal/create">Create Post</Link>
+                <Link href="/community/janmarshal/create">Create Post</Link>
               </Button>
               <Button asChild>
-                <Link href="/r/create">Create Community</Link>
+                <Link href="/community/create">Create Community</Link>
               </Button>
             </div>
           </div>

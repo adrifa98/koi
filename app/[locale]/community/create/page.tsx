@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/components/ui/use-toast";
-import Link from "next/link";
+import { Link } from '@/i18n/routing';
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
@@ -43,7 +43,7 @@ export default function SubredditPage() {
 
         <div className="relative mt-3">
           <p className="absolute left-0 w-8 flex items-center justify-center h-full text-muted-foreground">
-            r/
+            
           </p>
           <Input
             name="name"

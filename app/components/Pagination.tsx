@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import Link from 'next/link';
 import { usePathname, useSearchParams } from "next/navigation";
 
 export const generatePagination = (currentPage: number, totalPages: number) => {

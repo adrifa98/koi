@@ -1,12 +1,11 @@
-import { Button } from "@/components/ui/button";
+import { handleVote } from "@/app/actions";
+import { CopyLink } from "@/app/components/CopyLink";
+import { RenderToJson } from "@/app/components/RendertoJson";
+import { DownVote, UpVote } from "@/app/components/SubmitButtons";
 import { Card } from "@/components/ui/card";
-import { ArrowDown, ArrowUp, MessageCircle } from "lucide-react";
+import { Link } from '@/i18n/routing';
+import { MessageCircle } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { CopyLink } from "./CopyLink";
-import { handleVote } from "../actions";
-import { DownVote, UpVote } from "./SubmitButtons";
-import { RenderToJson } from "./RendertoJson";
 
 interface iAppProps {
   title: string;
@@ -47,11 +46,11 @@ export function PostCard({
 
       <div>
         <div className="flex items-center gap-x-2 p-2">
-          <Link className="font-semibold text-xs" href={`/r/${subName}`}>
-            r/{subName}
+          <Link className="font-semibold text-xs" href={`/community/${subName}`}>
+            {subName}
           </Link>
           <p className="text-xs text-muted-foreground">
-            Posted by: <span className="hover:text-primary">u/{userName}</span>
+            <span className="hover:text-primary">@{userName}</span>
           </p>
         </div>
 
@@ -62,6 +61,7 @@ export function PostCard({
         </div>
 
         <div className="max-h-[300px] overflow-hidden">
+        <Link href={`/post/${id}`}>
           {imageString ? (
             <Image
               src={imageString}
@@ -73,6 +73,7 @@ export function PostCard({
           ) : (
             <RenderToJson data={jsonContent} />
           )}
+          </Link>
         </div>
 
         <div className="m-3 flex items-center gap-x-5">

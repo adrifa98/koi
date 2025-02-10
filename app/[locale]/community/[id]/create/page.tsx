@@ -1,20 +1,20 @@
 "use client";
 
+import { createPost } from "@/app/actions";
+import { SubmitButton } from "@/app/components/SubmitButtons";
+import { TipTapEditor } from "@/app/components/TipTabEditor";
+import { UploadDropzone } from "@/app/components/Uploadthing";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import Image from "next/image";
-import pfp from "../../../../public/pfp.png";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Text, Video } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TipTapEditor } from "@/app/components/TipTabEditor";
-import { SubmitButton } from "@/app/components/SubmitButtons";
-import { UploadDropzone } from "@/app/components/Uploadthing";
-import { useState } from "react";
-import { createPost } from "@/app/actions";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Link } from '@/i18n/routing';
+import pfp from "@/public/pfp.png";
 import { JSONContent } from "@tiptap/react";
+import { Text, Video } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 const rules = [
   {
@@ -54,8 +54,8 @@ export default function CreatePostRoute({
       <div className="w-[65%] flex flex-col gap-y-5">
         <h1 className="font-semibold">
           Subreddit:{" "}
-          <Link href={`/r/${params.id}`} className="text-primary">
-            r/{params.id}
+          <Link href={`/community/${params.id}`} className="text-primary">
+            {params.id}
           </Link>
         </h1>
         <Tabs defaultValue="post" className="w-full">

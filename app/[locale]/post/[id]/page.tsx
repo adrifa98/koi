@@ -8,11 +8,11 @@ import prisma from "@/app/lib/db";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Link } from '@/i18n/routing';
 import { Cake, MessageCircle } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
+import Image from "next/image";
+import { notFound } from "next/navigation";
 
 async function getData(id: string) {
   noStore();
@@ -170,8 +170,8 @@ export default async function PostPage({ params }: { params: { id: string } }) {
                 height={60}
                 className="rounded-full h-16 w-16"
               />
-              <Link href={`/r/${data?.subName}`} className="font-medium">
-                r/{data?.subName}
+              <Link href={`/community/${data?.subName}`} className="font-medium">
+                {data?.subName}
               </Link>
             </div>
 
@@ -194,7 +194,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
 
             <Separator className="my-5" />
             <Button asChild className="rounded-full w-full">
-              <Link href={`/r/${data?.subName}/create`}>Create Post</Link>
+              <Link href={`/community/${data?.subName}/create`}>Create Post</Link>
             </Button>
           </div>
         </Card>
