@@ -52,7 +52,12 @@ async function getData(id: string) {
   return data;
 }
 
-// 🔹 Función para formatear la fecha como en Twitter
+// 🔹 Función para formatear la fecha del post (formato: "d MMM yyyy HH:mm'h'")
+const formatPostDate = (date: Date) => {
+  return format(date, "d MMM yyyy HH:mm'h'"); // Formato: "9 Feb 2025 18:73h"
+};
+
+// 🔹 Función para formatear la fecha de los comentarios (como en el código original)
 const formatTimeTwitterStyle = (date: Date) => {
   const now = new Date();
   const diffInMilliseconds = now.getTime() - date.getTime();
@@ -114,7 +119,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
               />
               <span>@{data.User?.userName}</span>
               <span>·</span>
-              <span>{formatTimeTwitterStyle(new Date(data.createdAt))}</span>
+              <span>{formatPostDate(new Date(data.createdAt))}</span> {/* Fecha del post */}
             </div>
 
             <h1 className="font-medium mt-1 text-lg">{data.title}</h1>
@@ -151,11 +156,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
                 <div key={item.id} className="flex flex-col">
                   <div className="flex items-center gap-x-3">
                     <img
-                      src={
-                        item.User?.imageUrl
-                          ? item.User.imageUrl
-                          : "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
-                      }
+                      src={item.User?.imageUrl || "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"}
                       className="w-7 h-7 rounded-full"
                       alt="Avatar of user"
                     />
@@ -164,7 +165,7 @@ export default async function PostPage({ params }: { params: { id: string } }) {
                         @{item.User?.userName}
                       </span>
                       <span>·</span>
-                      <span>{formatTimeTwitterStyle(new Date(item.createdAt))}</span>
+                      <span>{formatTimeTwitterStyle(new Date(item.createdAt))}</span> {/* Fecha de comentario */}
                     </div>
                   </div>
 

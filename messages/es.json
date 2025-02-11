@@ -26,7 +26,7 @@
     "noResults": "No hay resultados",
     "close": "Cerrar",
     "errorTitleTooLong": "El título no puede superar los 144 caracteres.",
-    "errorMessageTooLong": "El mensaje no puede superar los 288 caracteres.",
+    "errorMessageTooLong": "El mensaje no puede superar los 1500 caracteres.",
     "errorGifLimit": "Has alcanzado el límite de 5 búsquedas de GIFs por publicación.",
     "rules": {
       "respectful": "Todas las publicaciones deben ser constructivas y respetuosas.",
@@ -55,8 +55,10 @@
     "successDescription": "Enlace copiado al portapapeles"
   },
   "CommentForm": {
-    "label": "Escribe un comentario aquí",
-    "placeholder": "¿Qué opinas?",
-    "submit": "Comentar"
+    "label": "Escribe tu comentario",
+    "placeholder": "Comparte tu opinión...",
+    "submit": "Enviar comentario",
+    "errorTitle": "¡Error!",
+    "errorCommentTooLong": "El comentario no puede superar los 144 caracteres."
   }
 }

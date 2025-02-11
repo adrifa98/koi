@@ -78,7 +78,7 @@ export default function CreatePostRoute({ params }: { params: Params }) {
       return;
     }
 
-    if (messageLength > 288) {
+    if (messageLength > 1200) {
       toast({
         title: t("errorTitle"),
         description: t("errorMessageTooLong"),
@@ -144,8 +144,8 @@ export default function CreatePostRoute({ params }: { params: Params }) {
                     {title.length}/144
                   </p>
                   <TipTapEditor setJson={setJson} json={json} />
-                  <p className={`text-[9px] text-right mt-2 mb-0 ${messageLength > 288 ? "text-red-500" : "text-muted-foreground"}`}>
-                    {messageLength}/288
+                  <p className={`text-[9px] text-right mt-2 mb-0 ${messageLength > 1200 ? "text-red-500" : "text-muted-foreground"}`}>
+                    {messageLength}/1200
                   </p>
                 </CardHeader>
                 <CardFooter>
