@@ -161,7 +161,7 @@ export default async function SubRedditRoute({
               <Link href={`/community/${subreddit?.name}`} className="font-medium">
                 {subreddit?.name}
               </Link>
-            </div>
+            </div> 
 
             <Separator className="my-5" />
 
