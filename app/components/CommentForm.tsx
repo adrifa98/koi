@@ -2,16 +2,19 @@
 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { SubmitButton } from "./SubmitButtons";
-import { createComment } from "../actions";
+import { useTranslations } from "next-intl";
 import { useRef } from "react";
+import { createComment } from "../actions";
+import { SubmitButton } from "./SubmitButtons";
 
-interface iAppPorps {
+interface iAppProps {
   postId: string;
 }
 
-export function CommentForm({ postId }: iAppPorps) {
+export function CommentForm({ postId }: iAppProps) {
   const ref = useRef<HTMLFormElement>(null);
+  const t = useTranslations("CommentForm");
+
   return (
     <form
       className="mt-5"
@@ -22,13 +25,13 @@ export function CommentForm({ postId }: iAppPorps) {
       ref={ref}
     >
       <input type="hidden" name="postId" value={postId} />
-      <Label>Comment right here</Label>
+      <Label>{t("label")}</Label>
       <Textarea
-        placeholder="What are your thoughts?"
+        placeholder={t("placeholder")}
         className="w-full mt-1 mb-2"
         name="comment"
       />
-      <SubmitButton text="Comment" />
+      <SubmitButton text={t("submit")} />
     </form>
   );
 }

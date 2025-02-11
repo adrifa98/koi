@@ -1,8 +1,8 @@
 'use client';
 
-import clsx from 'clsx';
+import { Link } from '@/i18n/routing';
 import { Menu } from '@/lib/shopify/types';
-import Link from 'next/link';
+import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 

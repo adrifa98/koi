@@ -1,6 +1,7 @@
 import { ThemeToggle } from "@/app/components/ThemeToggle";
 import { UserDropdown } from "@/app/components/UserDropdown";
 import { Button } from "@/components/ui/button";
+import { Link } from '@/i18n/routing';
 import RedditText from "@/public/logo-name.svg";
 import redditMobile from "@/public/reddit-full.svg";
 import {
@@ -9,7 +10,6 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Image from "next/image";
-import Link from 'next/link';
 
 export async function Navbar() {
   const { getUser } = getKindeServerSession();

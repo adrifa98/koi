@@ -19,7 +19,7 @@
     "errorMessageTooLong": "El mensaje no puede superar los 288 caracteres.",
     "errorGifLimit": "Has alcanzado el límite de 5 búsquedas de GIFs por publicación.",
     "rules": {
-      "respectful": "Todas las publicaciones deben ser constructivas y respetuosas. ",
+      "respectful": "Todas las publicaciones deben ser constructivas y respetuosas.",
       "noSpam": "El contenido promocional y el spam están prohibidos y serán eliminados.",
       "noHate": "Sé amable con los demás. No se permiten insultos ni acoso.",
       "privacy": "Hacerse pasar por miembros del equipo o jugadores resultará en la suspensión de la cuenta."
@@ -43,5 +43,10 @@
   },
   "CopyLink": {
     "successDescription": "Enlace copiado al portapapeles"
+  },
+  "CommentForm": {
+    "label": "Escribe un comentario aquí",
+    "placeholder": "¿Qué opinas?",
+    "submit": "Comentar"
   }
 }

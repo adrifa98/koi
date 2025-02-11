@@ -43,5 +43,10 @@
   },
   "CopyLink": {
     "successDescription": "Link copied to clipboard"
+  },
+  "CommentForm": {
+    "label": "Comment right here",
+    "placeholder": "What are your thoughts?",
+    "submit": "Comment"
   }
 }
