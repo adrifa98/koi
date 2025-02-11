@@ -7,7 +7,7 @@ export default function Search() {
   const searchParams = useSearchParams();
 
   return (
-    <form action="/search" method="GET" className="w-max-[550px] relative w-full lg:w-80 xl:w-full">
+    <form action="search" method="GET" className="w-max-[550px] relative w-full lg:w-80 xl:w-full">
       <input
         key={searchParams?.get("q")}
         type="text"
