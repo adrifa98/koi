@@ -1,7 +1,6 @@
 import { CreatePostCard } from "@/app/components/CreatePostCard";
 import Pagination from "@/app/components/Pagination";
 import { PostCard } from "@/app/components/PostCard";
-import Text from "@/app/components/Text"; // Componente de traducción
 import prisma from "@/app/lib/db";
 import TabsClient from "@/components/community/TabsClient"; // Importamos los Tabs
 import { Button } from "@/components/ui/button";
@@ -39,7 +38,7 @@ interface Subreddit {
 }
 
 // Modificamos la función getData para que tenga las propiedades correctamente
-async function getData(name: string, searchParam: string, sortBy: "recent" | "popular", locale: string) {
+async function getData(name: string, searchParam: string, sortBy: "recent" | "popular") {
   noStore();
   const page = Number(searchParam) || 1;
   const pageSize = 10;
@@ -96,40 +95,20 @@ async function getData(name: string, searchParam: string, sortBy: "recent" | "po
   // Aplicamos la paginación después de haber ordenado los posts
   const paginatedPosts = processedPosts?.slice((page - 1) * pageSize, page * pageSize);
 
-  return { subreddit: data, posts: paginatedPosts, count: processedPosts?.length || 0 };
+  return { subreddit: data, posts: paginatedPosts, count: processedPosts?.length || 0 }; // Aseguramos que 'subreddit' esté bien definido
 }
 
 export default async function SubRedditRoute({
   params,
   searchParams,
-  locale,
 }: {
   params: { id: string };
   searchParams: { page: string; sort?: "recent" | "popular" };
-  locale: string;  // El locale es pasado para cargar las traducciones adecuadas
 }) {
   const sortBy = searchParams.sort || "recent"; // Orden por defecto es "recent"
-  const { subreddit, posts, count } = await getData(params.id, searchParams.page, sortBy, locale);
+  const { subreddit, posts, count } = await getData(params.id, searchParams.page, sortBy);
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-
-  // Verificamos que el subreddit y los posts existen antes de continuar
-  if (!subreddit) {
-    return <div>Subreddit not found</div>;
-  }
-
-  if (!posts || posts.length === 0) {
-    return (
-      <div className="flex min-h-[300px] flex-col justify-center items-center rounded-md border border-dashed p-8 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-          <FileQuestion className="h-10 w-10 text-primary" />
-        </div>
-        <h2 className="mt-6 text-xl font-semibold">
-          <Text id="CreatePost.noResults" /> {/* Usamos el componente Text para la traducción */}
-        </h2>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10">
@@ -139,22 +118,33 @@ export default async function SubRedditRoute({
         {/* Agregamos el componente Tabs para cambiar entre "Reciente" y "Popular" */}
         <TabsClient currentSort={sortBy} />
 
-        {posts?.map((post) => (
-          <PostCard
-            key={post.id}
-            id={post.id}
-            imageString={post.imageString}
-            subName={params.id}
-            commentAmount={post.Comment.length}
-            title={post.title}
-            userName={post.User?.userName as string}
-            jsonContent={post.textContent}
-            voteCount={post.voteScore}
-            createdAt={post.createdAt.toISOString()}
-          />
-        ))}
+        {posts?.length === 0 ? (
+          <div className="flex min-h-[300px] flex-col justify-center items-center rounded-md border border-dashed p-8 text-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+              <FileQuestion className="h-10 w-10 text-primary" />
+            </div>
+            <h2 className="mt-6 text-xl font-semibold">No posts have been created</h2>
+          </div>
+        ) : (
+          <>
+            {posts?.map((post) => (
+              <PostCard
+                key={post.id}
+                id={post.id}
+                imageString={post.imageString}
+                subName={params.id}
+                commentAmount={post.Comment.length}
+                title={post.title}
+                userName={post.User?.userName as string}
+                jsonContent={post.textContent}
+                voteCount={post.voteScore} // Ahora tenemos 'voteScore' disponible
+                createdAt={post.createdAt.toISOString()} // Convertimos 'createdAt' a string ISO para pasar a PostCard
+              />
+            ))}
 
-        <Pagination totalPages={Math.ceil(count / 10)} />
+            <Pagination totalPages={Math.ceil(count / 10)} />
+          </>
+        )}
       </div>
 
       <div className="w-[35%]">
@@ -177,7 +167,7 @@ export default async function SubRedditRoute({
 
             <Button asChild className="rounded-full w-full">
               <Link href={user?.id ? `/community/${subreddit?.name}/create` : "/api/auth/login"}>
-                <Text id="CreatePost.createPost" />
+                Create Post
               </Link>
             </Button>
           </div>
