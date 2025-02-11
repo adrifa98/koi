@@ -1,6 +1,7 @@
 import { CreatePostCard } from "@/app/components/CreatePostCard";
 import Pagination from "@/app/components/Pagination";
 import { PostCard } from "@/app/components/PostCard";
+import Text from "@/app/components/Text"; // Importamos el componente de traducción
 import prisma from "@/app/lib/db";
 import TabsClient from "@/components/community/TabsClient"; // Importamos los Tabs
 import { Button } from "@/components/ui/button";
@@ -167,7 +168,7 @@ export default async function SubRedditRoute({
 
             <Button asChild className="rounded-full w-full">
               <Link href={user?.id ? `/community/${subreddit?.name}/create` : "/api/auth/login"}>
-                Create Post
+                <Text id="CreatePost.createPost" /> {/* Usamos el componente Text para traducir el texto del botón */}
               </Link>
             </Button>
           </div>
