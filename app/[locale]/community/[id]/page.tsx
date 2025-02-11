@@ -172,7 +172,7 @@ export default async function SubRedditRoute({
 
             <Button asChild className="rounded-full w-full">
               <Link href={user?.id ? `/community/${subreddit?.name}/create` : "/api/auth/login"}>
-                <Text id="CreatePost.createPost" />
+                <Text id="CreatePost.createPost" /> 
               </Link>
             </Button>
           </div>
