@@ -3,8 +3,9 @@ import Pagination from "@/app/components/Pagination";
 import { PostCard } from "@/app/components/PostCard";
 import { SuspenseCard } from "@/app/components/SuspenseCard";
 import prisma from "@/app/lib/db";
+import TabsClient from "@/components/community/TabsClient";
 import { Link } from "@/i18n/routing";
-import lolImage from "@/public/community/league-of-legends-sidebar.jpg"; // Importación correcta
+import lolImage from "@/public/community/league-of-legends-sidebar.jpg";
 import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import { Suspense } from "react";
@@ -18,59 +19,67 @@ const games = [
   { name: "Fortnite", slug: "fortnite" },
 ];
 
-async function getData(searchParam: string) {
+async function getData(
+  searchParam: string,
+  sortBy: "recent" | "popular"
+) {
   noStore();
-  const [count, data] = await prisma.$transaction([
-    prisma.post.count(),
-    prisma.post.findMany({
-      take: 10,
-      skip: searchParam ? (Number(searchParam) - 1) * 10 : 0,
-      select: {
-        title: true,
-        createdAt: true,
-        textContent: true,
-        id: true,
-        imageString: true,
-        Comment: {
-          select: {
-            id: true,
-          },
-        },
-        User: {
-          select: {
-            userName: true,
-          },
-        },
-        subName: true,
-        Vote: {
-          select: {
-            userId: true,
-            voteType: true,
-            postId: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
-  ]);
+  const page = Number(searchParam) || 1;
+  const pageSize = 10;
 
-  return { data, count };
+  const allPosts = await prisma.post.findMany({
+    select: {
+      title: true,
+      createdAt: true,
+      textContent: true,
+      id: true,
+      imageString: true,
+      Comment: { select: { id: true } },
+      User: { select: { userName: true } },
+      subName: true,
+      Vote: { select: { voteType: true } },
+    },
+    orderBy: sortBy === "recent" ? { createdAt: "desc" } : undefined,
+  });
+
+  const processedData = allPosts.map((post) => ({
+    ...post,
+    voteScore: post.Vote.reduce((acc, vote) => {
+      if (vote.voteType === "UP") return acc + 1;
+      if (vote.voteType === "DOWN") return acc - 1;
+      return acc;
+    }, 0),
+  }));
+
+  if (sortBy === "popular") {
+    processedData.sort((a, b) => b.voteScore - a.voteScore || b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  const count = processedData.length;
+  const paginatedData = processedData.slice((page - 1) * pageSize, page * pageSize);
+
+  return { data: paginatedData, count };
 }
 
-export default function Home({
+export default async function Home({
   searchParams,
 }: {
-  searchParams: { page: string };
+  searchParams: { page?: string; sort?: "recent" | "popular" };
 }) {
+  const sortBy = searchParams.sort || "recent";
+  const { count, data } = await getData(searchParams.page || "1", sortBy);
+
   return (
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10">
       {/* Contenido Principal */}
       <div className="w-[65%] flex flex-col gap-y-5">
         <CreatePostCard />
-        <Suspense fallback={<SuspenseCard />} key={searchParams.page}>
-          <ShowItems searchParams={searchParams} />
+
+        {/* Tabs con Shadcn */}
+        <TabsClient currentSort={sortBy} />
+
+        <Suspense fallback={<SuspenseCard />} key={`suspense-${sortBy}-${searchParams.page}`}>
+          <ShowItems data={data} count={count} />
         </Suspense>
       </div>
 
@@ -97,8 +106,7 @@ export default function Home({
   );
 }
 
-async function ShowItems({ searchParams }: { searchParams: { page: string } }) {
-  const { count, data } = await getData(searchParams.page);
+function ShowItems({ data, count }: { data: any[]; count: number }) {
   return (
     <>
       {data.map((post) => (
@@ -111,12 +119,8 @@ async function ShowItems({ searchParams }: { searchParams: { page: string } }) {
           key={post.id}
           commentAmount={post.Comment.length}
           userName={post.User?.userName as string}
-          voteCount={post.Vote.reduce((acc, vote) => {
-            if (vote.voteType === "UP") return acc + 1;
-            if (vote.voteType === "DOWN") return acc - 1;
-
-            return acc;
-          }, 0)}
+          voteCount={post.voteScore}
+          createdAt={post.createdAt}  // Asegúrate de pasar createdAt aquí
         />
       ))}
 

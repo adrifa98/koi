@@ -3,7 +3,9 @@ import { CopyLink } from "@/app/components/CopyLink";
 import { DownVote, UpVote } from "@/app/components/SubmitButtons";
 import { Card } from "@/components/ui/card";
 import { Link } from '@/i18n/routing';
+import { format, isThisYear, isToday, isYesterday } from "date-fns";
 import { MessageCircle } from "lucide-react";
+import { useTranslations } from 'next-intl';
 
 interface iAppProps {
   title: string;
@@ -14,6 +16,7 @@ interface iAppProps {
   imageString: string | null;
   voteCount: number;
   commentAmount: number;
+  createdAt: string; // Recibe createdAt como prop
 }
 
 export function PostCard({
@@ -25,7 +28,34 @@ export function PostCard({
   userName,
   voteCount,
   commentAmount,
+  createdAt, // Recibir createdAt como prop
 }: iAppProps) {
+
+  // Obtener las traducciones
+  const t = useTranslations('time'); // Suponiendo que las traducciones se guardan en el namespace 'time'
+
+  // 🔹 Función para formatear la fecha como en Twitter
+  const formatTimeTwitterStyle = (date: Date) => {
+    const now = new Date();
+    const diffInMilliseconds = now.getTime() - date.getTime();
+    const diffInMinutes = diffInMilliseconds / (1000 * 60);
+    const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+
+    if (diffInHours < 1) {
+      return t('minutes_ago', { count: Math.floor(diffInMinutes) });
+    } else if (diffInHours < 24) {
+      return t('hours_ago', { count: Math.floor(diffInHours) });
+    } else if (isToday(date)) {
+      return t('today');
+    } else if (isYesterday(date)) {
+      return t('yesterday');
+    } else if (isThisYear(date)) {
+      return format(date, "d MMM"); // Formato: 9 feb.
+    } else {
+      return format(date, "d MMM yyyy"); // Formato: 9 feb. 2024
+    }
+  };
+
   return (
     <Card className="flex relative overflow-hidden">
       <div className="flex flex-col items-center gap-y-2 bg-muted p-2">
@@ -43,12 +73,17 @@ export function PostCard({
       </div>
 
       <div>
+        {/* Ajusta este contenedor para que todo quede en una línea */}
         <div className="flex items-center gap-x-2 p-2">
           <Link className="font-semibold text-xs" href={`/community/${subName}`}>
             {subName}
           </Link>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground flex items-center gap-x-1">
             <span className="hover:text-primary">@{userName}</span>
+            <span> · </span>
+            <span className="text-xs text-muted-foreground">
+              {formatTimeTwitterStyle(new Date(createdAt))}
+            </span>
           </p>
         </div>
 

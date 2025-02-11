@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "@/i18n/routing";
-import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
+import { format, isThisYear, isToday, isYesterday } from "date-fns";
 import { es } from "date-fns/locale";
-import { Cake, Clock, MessageCircle } from "lucide-react";
+import { Cake, MessageCircle } from "lucide-react";
 import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -43,7 +43,7 @@ async function getData(id: string) {
           description: true,
         },
       },
-      User: { select: { userName: true } },
+      User: { select: { userName: true, imageUrl: true } },
     },
   });
 
@@ -55,14 +55,25 @@ async function getData(id: string) {
 // 🔹 Función para formatear la fecha como en Twitter
 const formatTimeTwitterStyle = (date: Date) => {
   const now = new Date();
-  const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+  const diffInMilliseconds = now.getTime() - date.getTime();
+  const diffInMinutes = diffInMilliseconds / (1000 * 60);
+  const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+  const diffInDays = diffInMilliseconds / (1000 * 60 * 60 * 24);
 
-  if (diffInHours < 24) {
-    return `hace ${formatDistanceToNow(date, { locale: es, addSuffix: false })}`;
-  } else if (isToday(date) || isYesterday(date)) {
-    return isYesterday(date) ? "Ayer" : "Hoy";
+  if (diffInMinutes < 2) {
+    return `2min`;
+  } else if (diffInHours < 1) {
+    return `${Math.floor(diffInMinutes)}min`;
+  } else if (diffInHours < 24) {
+    return `${Math.floor(diffInHours)}h`;
+  } else if (isToday(date)) {
+    return "Hoy";
+  } else if (isYesterday(date)) {
+    return "Ayer";
+  } else if (isThisYear(date)) {
+    return format(date, "d MMM"); // Formato: 8 Feb
   } else {
-    return format(date, "d MMM", { locale: es });
+    return format(date, "d MMM yyyy"); // Formato: 5 May 2024
   }
 };
 
@@ -92,10 +103,17 @@ export default async function PostPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="p-2 w-full">
-            <div className="flex items-center gap-x-2 text-xs text-muted-foreground">
+            <div className="flex items-center gap-x-3 text-xs text-muted-foreground">
+              {/* Imagen de avatar junto al nombre */}
+              <Image
+                src={data.User?.imageUrl || "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"}
+                alt="Avatar"
+                width={20}
+                height={20}
+                className="rounded-full"
+              />
               <span>@{data.User?.userName}</span>
               <span>·</span>
-              <Clock className="h-3 w-3" />
               <span>{formatTimeTwitterStyle(new Date(data.createdAt))}</span>
             </div>
 
@@ -143,10 +161,9 @@ export default async function PostPage({ params }: { params: { id: string } }) {
                     />
                     <div className="flex items-center gap-x-2 text-xs text-muted-foreground">
                       <span className="text-sm font-medium">
-                        {item.User?.userName}
+                        @{item.User?.userName}
                       </span>
                       <span>·</span>
-                      <Clock className="h-3 w-3" />
                       <span>{formatTimeTwitterStyle(new Date(item.createdAt))}</span>
                     </div>
                   </div>

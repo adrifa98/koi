@@ -1,4 +1,14 @@
 {
+  "TabsClient": {
+    "recent": "Reciente",
+    "popular": "Popular"
+  },
+    "time": {
+    "minutes_ago": "hace {count} minutos",
+    "hours_ago": "hace {count} horas",
+    "today": "Hoy",
+    "yesterday": "Ayer"
+  },
   "HomePage": {
     "title": "hola",
     "about": "egosnhgoi"
