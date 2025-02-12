@@ -1,11 +1,11 @@
 'use client';
 
-import { Dialog, Transition } from '@headlessui/react';
-import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import LoadingDots from '@/components/loading-dots';
 import Price from '@/components/price';
 import { DEFAULT_OPTION } from '@/lib/constants';
 import { createUrl } from '@/lib/utils';
+import { Dialog, Transition } from '@headlessui/react';
+import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment, useEffect, useRef, useState } from 'react';

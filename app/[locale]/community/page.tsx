@@ -4,6 +4,7 @@ import { PostCard } from "@/app/components/PostCard";
 import { SuspenseCard } from "@/app/components/SuspenseCard";
 import prisma from "@/app/lib/db";
 import TabsClient from "@/components/community/TabsClient";
+import TwitterTimeline from "@/components/community/TwitterTimeline";
 import { Link } from "@/i18n/routing";
 import lolImage from "@/public/community/league-of-legends-sidebar.jpg";
 import { unstable_noStore as noStore } from "next/cache";
@@ -101,6 +102,9 @@ export default async function Home({
             {game.name}
           </Link>
         ))}
+        <Suspense>
+        <TwitterTimeline/>    
+        </Suspense>
       </div>
     </div>
   );

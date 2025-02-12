@@ -1,10 +1,12 @@
 
+import { Navbar } from "@/app/components/Navbar";
 import "@/app/globals.css";
 import { CartProvider } from '@/components/cart/cart-context';
 import { Navbar2 } from '@/components/layout/navbar';
 import { Toaster } from "@/components/ui/toaster";
 import { WelcomeToast } from "@/components/welcome-toast";
 import { routing } from '@/i18n/routing';
+import { getAuthStatus } from "@/lib/auth";
 import { getCart } from '@/lib/shopify';
 import { ensureStartsWith } from '@/lib/utils';
 import { NextIntlClientProvider } from 'next-intl';
@@ -13,7 +15,6 @@ import { Inter } from "next/font/google";
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
-import { Navbar } from "../components/Navbar";
 import { ThemeProvider } from "../components/theme-provider";
  
 
@@ -47,6 +48,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children, params: {locale} }: { children: ReactNode; params: {locale: string}; }) {
+  const authStatus = await getAuthStatus();
   const cartId = (await cookies()).get('cartId')?.value;
   // Don't await the fetch, pass the Promise to the context provider
   const cart = getCart(cartId);
@@ -70,7 +72,7 @@ export default async function RootLayout({ children, params: {locale} }: { child
           disableTransitionOnChange
         >
           <Navbar2 />
-          <Navbar />
+          <Navbar authStatus={authStatus} />
           <main>
             {children}
             <WelcomeToast />
