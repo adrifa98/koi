@@ -59,6 +59,43 @@
   }
 }
 
+@layer utilities {
+  /* Scrollbar General */
+  ::-webkit-scrollbar {
+    width: 12px; /* Ancho del scrollbar */
+  }
+
+  /* Light Mode */
+  .light ::-webkit-scrollbar-track {
+    background: hsl(0, 0%, 100%); /* Blanco */
+  }
+
+  .light ::-webkit-scrollbar-thumb {
+    background: hsl(220, 15%, 85%); /* Azul tenue en lugar de gris */
+    border-radius: 6px; /* Bordes redondeados */
+  }
+
+  .light ::-webkit-scrollbar-thumb:hover {
+    background: hsl(220, 20%, 35%); /* Azul grisáceo más oscuro */
+  }
+
+  /* Dark Mode */
+  .dark ::-webkit-scrollbar-track {
+    background: hsl(230, 80%, 3%); /* Fondo oscuro */
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: hsl(220, 35%, 18%); /* Azul oscuro suave */
+    border-radius: 6px; /* Bordes redondeados */
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: hsl(220, 55%, 25%); /* Azul más vibrante en hover */
+  }
+}
+
+
+
 .ProseMirror:focus {
   outline: none;
 }

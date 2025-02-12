@@ -29,3 +29,31 @@ export const TAGS = {
 export const HIDDEN_PRODUCT_TAG = 'nextjs-frontend-hidden';
 export const DEFAULT_OPTION = 'Default Title';
 export const SHOPIFY_GRAPHQL_API_ENDPOINT = '/api/2023-01/graphql.json';
+
+
+export const HOVER_DELAY = 300
+export const PREVIEW_DURATION = 8000
+export const SCROLL_AMOUNT = 400
+export const CARD_WIDTH = 320
+export const CARD_HEIGHT = 180
+export const VIDEO_PROVIDERS = {
+  youtube: {
+    thumbnail: (videoId: string) => `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+    embed: (videoId: string) =>
+      `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&mute=1&modestbranding=1&loop=1&playlist=${videoId}`,
+    share: (videoId: string) => `https://youtube.com/watch?v=${videoId}`,
+  },
+  twitch: {
+    thumbnail: (channelName: string) =>
+      `https://static-cdn.jtvnw.net/previews-ttv/live_user_${channelName}-640x360.jpg`,
+    embed: (channelName: string) =>
+      typeof window !== "undefined"
+        ? `https://player.twitch.tv/?channel=${channelName}&parent=${window.location.hostname}&muted=true`
+        : "", // Devuelve una cadena vacía en SSR para evitar errores
+    embedFull: (channelName: string) =>
+      typeof window !== "undefined"
+        ? `https://player.twitch.tv/?channel=${channelName}&parent=${window.location.hostname}`
+        : "",
+    share: (channelName: string) => `https://twitch.tv/${channelName}`,
+  },
+} as const;

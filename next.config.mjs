@@ -24,10 +24,19 @@ const nextConfig = {
         hostname: "lh3.googleusercontent.com", 
       },
       {
+        protocol: "https",
+        hostname: "img.youtube.com", 
+      },
+      {
+        protocol: "https",
+        hostname: "static-cdn.jtvnw.net", 
+      },
+      {
         protocol: 'https',
         hostname: 'static.vecteezy.com', // Dominio del que se cargan las imágenes
         pathname: '/system/resources/thumbnails/**',
       },
+      
     ],
   },
 };

@@ -51,7 +51,9 @@ export default function TwitterTimeline() {
   return (
     <div className="flex justify-center mt-4 w-full">
       <div
-        className="relative w-full max-w-[600px] rounded-lg overflow-hidden"
+        className={`relative w-full max-w-[600px] rounded-lg overflow-auto scrollbar ${
+          theme === "dark" ? "dark-scroll" : "light-scroll"
+        }`}
         style={{
           height: "1100px",
         }}

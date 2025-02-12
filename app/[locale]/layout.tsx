@@ -2,7 +2,6 @@
 import { Navbar } from "@/app/components/Navbar";
 import "@/app/globals.css";
 import { CartProvider } from '@/components/cart/cart-context';
-import { Navbar2 } from '@/components/layout/navbar';
 import { Toaster } from "@/components/ui/toaster";
 import { WelcomeToast } from "@/components/welcome-toast";
 import { routing } from '@/i18n/routing';
@@ -71,7 +70,6 @@ export default async function RootLayout({ children, params: {locale} }: { child
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar2 />
           <Navbar authStatus={authStatus} />
           <main>
             {children}
