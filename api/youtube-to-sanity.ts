@@ -1,24 +1,27 @@
-import { createClient } from '@sanity/client';
-import 'dotenv/config';
-import { google, youtube_v3 } from 'googleapis';
-import { NextApiRequest, NextApiResponse } from 'next';
+const { createClient } = require('@sanity/client');
+require('dotenv/config');
+const { google } = require('googleapis');
+const { NextApiRequest, NextApiResponse } = require('next');
 
 // Tipado para el video obtenido de la API de YouTube
-type Video = Required<Pick<youtube_v3.Schema$SearchResult, 'id' | 'snippet'>> & {
-  id: { videoId: string };
-  snippet: {
-    title: string;
-    channelTitle: string;
-    publishedAt: string;
-    thumbnails: { high: { url: string } };
-  };
-};
+/**
+ * @typedef {Object} Video
+ * @property {Object} id
+ * @property {string} id.videoId
+ * @property {Object} snippet
+ * @property {string} snippet.title
+ * @property {string} snippet.channelTitle
+ * @property {string} snippet.publishedAt
+ * @property {Object} snippet.thumbnails
+ * @property {Object} snippet.thumbnails.high
+ * @property {string} snippet.thumbnails.high.url
+ */
 
 // Configuración del cliente de Sanity
 const client = createClient({
-  projectId: process.env.SANITY_PROJECT_ID!,
-  dataset: process.env.SANITY_DATASET!,
-  token: process.env.SANITY_TOKEN!,
+  projectId: process.env.SANITY_PROJECT_ID,
+  dataset: process.env.SANITY_DATASET,
+  token: process.env.SANITY_TOKEN,
   apiVersion: '2023-01-01',
   useCdn: false,
 });
@@ -36,8 +39,8 @@ const CHANNELS = [
 ];
 
 // Función para obtener videos recientes de un canal
-async function fetchLatestVideos(channelId: string, maxResults: number): Promise<Video[]> {
-  let videos: Video[] = [];
+async function fetchLatestVideos(channelId, maxResults) {
+  let videos = [];
   try {
     const response = await youtube.search.list({
       part: ['snippet'],
@@ -47,18 +50,18 @@ async function fetchLatestVideos(channelId: string, maxResults: number): Promise
       order: 'date',
     });
 
-    const data = response.data as youtube_v3.Schema$SearchListResponse;
+    const data = response.data;
     if (!data.items) return [];
 
     // Obtener detalles del video en batch
-    const videoIds = data.items.map(item => item.id?.videoId).filter(Boolean) as string[];
+    const videoIds = data.items.map(item => item.id?.videoId).filter(Boolean);
     const videoDetails = await fetchVideoDetails(videoIds);
 
     for (const item of data.items) {
       if (!item.id?.videoId || !item.snippet) continue;
 
       if (videoDetails[item.id.videoId] >= 60) {
-        videos.push(item as Video);
+        videos.push(item);
       }
     }
   } catch (error) {
@@ -68,7 +71,7 @@ async function fetchLatestVideos(channelId: string, maxResults: number): Promise
 }
 
 // Función para obtener duración de videos en batch
-async function fetchVideoDetails(videoIds: string[]): Promise<{ [key: string]: number }> {
+async function fetchVideoDetails(videoIds) {
   if (videoIds.length === 0) return {};
 
   const response = await youtube.videos.list({
@@ -81,11 +84,11 @@ async function fetchVideoDetails(videoIds: string[]): Promise<{ [key: string]: n
       acc[item.id] = parseISO8601Duration(item.contentDetails.duration);
     }
     return acc;
-  }, {} as { [key: string]: number }) || {};
+  }, {}) || {};
 }
 
 // Función para convertir duración ISO 8601 a segundos
-function parseISO8601Duration(duration: string): number {
+function parseISO8601Duration(duration) {
   const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
   const matches = duration.match(regex);
   if (!matches) return 0;
@@ -97,14 +100,14 @@ function parseISO8601Duration(duration: string): number {
 }
 
 // Función para obtener todos los IDs de videos ya guardados en Sanity
-async function getExistingVideoIds(): Promise<Set<string>> {
+async function getExistingVideoIds() {
   const query = `*[_type == "video"]{videoId}`;
-  const results = await client.fetch<{ videoId: string }[]>(query);
+  const results = await client.fetch(query);
   return new Set(results.map(video => video.videoId));
 }
 
 // Función para importar nuevos videos a Sanity
-async function importNewVideos(videos: Video[]) {
+async function importNewVideos(videos) {
   const existingVideoIds = await getExistingVideoIds();
 
   for (const video of videos) {
@@ -141,7 +144,7 @@ async function checkForNewVideos() {
         maxResults: 1,
       });
 
-      const channelData = channelIdRes.data as youtube_v3.Schema$SearchListResponse;
+      const channelData = channelIdRes.data;
       if (!channelData.items || channelData.items.length === 0) {
         console.log(`⚠️ No channel data found for ${url}`);
         continue;
@@ -167,7 +170,7 @@ async function checkForNewVideos() {
 }
 
 // Endpoint API para ejecutar manualmente en Next.js
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req, res) {
   try {
     console.log('⏳ Starting manual video check...');
     await checkForNewVideos();
@@ -187,3 +190,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 })();
 
 console.log('🎬 YouTube to Sanity cron job ready with Vercel.');
+
+module.exports = handler;
