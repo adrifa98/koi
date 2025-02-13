@@ -3,7 +3,6 @@ import 'dotenv/config';
 import { google, youtube_v3 } from 'googleapis';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-
 // Tipado para el video obtenido de la API de YouTube
 type Video = Required<Pick<youtube_v3.Schema$SearchResult, 'id' | 'snippet'>> & {
   id: { videoId: string };
@@ -46,27 +45,19 @@ async function fetchLatestVideos(channelId: string, maxResults: number): Promise
       maxResults,
       type: ['video'],
       order: 'date',
-      key: process.env.YOUTUBE_API_KEY,
-    } as youtube_v3.Params$Resource$Search$List);
+    });
 
     const data = response.data as youtube_v3.Schema$SearchListResponse;
     if (!data.items) return [];
 
+    // Obtener detalles del video en batch
+    const videoIds = data.items.map(item => item.id?.videoId).filter(Boolean) as string[];
+    const videoDetails = await fetchVideoDetails(videoIds);
+
     for (const item of data.items) {
       if (!item.id?.videoId || !item.snippet) continue;
 
-      // Obtener detalles del video (duración)
-      const videoDetails = await youtube.videos.list({
-        part: ['contentDetails'],
-        id: [item.id.videoId],
-        key: process.env.YOUTUBE_API_KEY,
-      });
-
-      const duration = videoDetails.data.items?.[0]?.contentDetails?.duration;
-      const durationInSeconds = parseISO8601Duration(duration || 'PT0S');
-
-      // Filtrar videos de menos de 1 minuto (evitar Shorts)
-      if (durationInSeconds >= 60) {
+      if (videoDetails[item.id.videoId] >= 60) {
         videos.push(item as Video);
       }
     }
@@ -74,6 +65,23 @@ async function fetchLatestVideos(channelId: string, maxResults: number): Promise
     console.error(`Error fetching videos for channel ${channelId}:`, error);
   }
   return videos;
+}
+
+// Función para obtener duración de videos en batch
+async function fetchVideoDetails(videoIds: string[]): Promise<{ [key: string]: number }> {
+  if (videoIds.length === 0) return {};
+
+  const response = await youtube.videos.list({
+    part: ['contentDetails'],
+    id: videoIds,
+  });
+
+  return response.data.items?.reduce((acc, item) => {
+    if (item.id && item.contentDetails?.duration) {
+      acc[item.id] = parseISO8601Duration(item.contentDetails.duration);
+    }
+    return acc;
+  }, {} as { [key: string]: number }) || {};
 }
 
 // Función para convertir duración ISO 8601 a segundos
@@ -88,17 +96,19 @@ function parseISO8601Duration(duration: string): number {
   return hours * 3600 + minutes * 60 + seconds;
 }
 
-// Función para verificar si un video ya está en Sanity
-async function isVideoInSanity(videoId: string): Promise<boolean> {
-  const query = `*[_type == "video" && videoId == "${videoId}"]{_id}`;
-  const result = await client.fetch(query);
-  return result.length > 0;
+// Función para obtener todos los IDs de videos ya guardados en Sanity
+async function getExistingVideoIds(): Promise<Set<string>> {
+  const query = `*[_type == "video"]{videoId}`;
+  const results = await client.fetch<{ videoId: string }[]>(query);
+  return new Set(results.map(video => video.videoId));
 }
 
 // Función para importar nuevos videos a Sanity
 async function importNewVideos(videos: Video[]) {
+  const existingVideoIds = await getExistingVideoIds();
+
   for (const video of videos) {
-    if (!video.id.videoId || await isVideoInSanity(video.id.videoId)) continue;
+    if (existingVideoIds.has(video.id.videoId)) continue;
 
     const doc = {
       _type: 'video',
@@ -124,23 +134,24 @@ async function checkForNewVideos() {
   for (const { url, maxResults } of CHANNELS) {
     try {
       console.log(`📡 Fetching channel ID for ${url}...`);
-      const channelIdRes = await youtube.channels.list({
-        part: ['id'],
-        forHandle: url.replace('https://www.youtube.com/@', ''),
-        key: process.env.YOUTUBE_API_KEY,
+      const channelIdRes = await youtube.search.list({
+        part: ['snippet'],
+        type: ['channel'],
+        q: url.replace('https://www.youtube.com/@', ''),
+        maxResults: 1,
       });
 
-      const channelData = channelIdRes.data as youtube_v3.Schema$ChannelListResponse;
+      const channelData = channelIdRes.data as youtube_v3.Schema$SearchListResponse;
       if (!channelData.items || channelData.items.length === 0) {
         console.log(`⚠️ No channel data found for ${url}`);
         continue;
       }
 
-      const channelId = channelData.items[0].id ?? ''; // Usa '' si es undefined
-        if (!channelId) {
-          console.log(`⚠️ Channel ID not found for ${url}, skipping.`);
-          continue;
-        }
+      const channelId = channelData.items[0].id?.channelId ?? '';
+      if (!channelId) {
+        console.log(`⚠️ Channel ID not found for ${url}, skipping.`);
+        continue;
+      }
 
       console.log(`📺 Found channel ID: ${channelId}`);
 
