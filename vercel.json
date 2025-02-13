@@ -2,7 +2,7 @@
 {
    "crons": [
      {
-       "path": "/app/api/youtube-to-sanity.ts",
+       "path": "/api/youtube-to-sanity.ts",
        "schedule": "0 * * * *"
      }
    ]
