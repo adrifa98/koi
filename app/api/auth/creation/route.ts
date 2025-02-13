@@ -1,8 +1,8 @@
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { unstable_noStore as noStore } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { generateUsername } from "unique-username-generator";
-import { unstable_noStore as noStore } from "next/cache";
 
 export async function GET(req: NextRequest) {
   noStore();
@@ -31,9 +31,13 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  return NextResponse.redirect(
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000/"
-      : "https://reddit-yt-ten.vercel.app/"
-  );
+  const redirectUrl = process.env.NODE_ENV === "development"
+    ? process.env.KINDE_SITE_URL
+    : process.env.NEXT_PUBLIC_VERCEL_URL;
+
+  if (!redirectUrl) {
+    throw new Error("Redirect URL is not defined");
+  }
+
+  return NextResponse.redirect(redirectUrl);
 }
