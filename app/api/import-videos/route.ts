@@ -33,9 +33,14 @@ const CHANNELS: { url: string; maxResults: number }[] = [
   { url: "https://www.youtube.com/@MovistarKOIVODS", maxResults: 1000 },
 ]
 
-// Función para obtener videos recientes de un canal
-async function fetchLatestVideos(channelId: string, maxResults: number): Promise<Video[]> {
-  const videos: Video[] = []
+// Función para esperar con backoff exponencial
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+// Función modificada para obtener videos recientes de un canal con retry
+async function fetchLatestVideos(channelId: string, maxResults: number, retryCount = 0): Promise<Video[]> {
+  const MAX_RETRIES = 3
+  const INITIAL_RETRY_DELAY = 1000 // 1 segundo
+
   try {
     const response = await youtube.search.list({
       part: ["snippet"],
@@ -51,16 +56,25 @@ async function fetchLatestVideos(channelId: string, maxResults: number): Promise
     const videoIds = data.items.map((item) => item.id?.videoId).filter(Boolean) as string[]
     const videoDetails = await fetchVideoDetails(videoIds)
 
-    for (const item of data.items) {
-      if (!item.id?.videoId || !item.snippet) continue
-      if (videoDetails[item.id.videoId] >= 60) {
-        videos.push(item as Video)
-      }
+    return data.items
+      .filter((item) => item.id?.videoId && item.snippet && videoDetails[item.id.videoId] >= 60)
+      .map((item) => item as Video)
+  } catch (error: any) {
+    if (error.code === 403 && error.errors?.[0]?.reason === "quotaExceeded") {
+      console.log("⚠️ YouTube API quota exceeded. Skipping remaining operations.")
+      return []
     }
-  } catch (error) {
+
+    if (retryCount < MAX_RETRIES) {
+      const delay = INITIAL_RETRY_DELAY * Math.pow(2, retryCount)
+      console.log(`Retry ${retryCount + 1}/${MAX_RETRIES} after ${delay}ms...`)
+      await wait(delay)
+      return fetchLatestVideos(channelId, maxResults, retryCount + 1)
+    }
+
     console.error(`Error fetching videos for channel ${channelId}:`, error)
+    return []
   }
-  return videos
 }
 
 async function fetchVideoDetails(videoIds: string[]): Promise<{ [key: string]: number }> {
@@ -121,37 +135,62 @@ async function importNewVideos(videos: Video[]) {
   }
 }
 
+// Función modificada para obtener el ID del canal con retry
+async function getChannelId(channelHandle: string, retryCount = 0): Promise<string | null> {
+  const MAX_RETRIES = 3
+  const INITIAL_RETRY_DELAY = 1000
+
+  try {
+    const channelIdRes = await youtube.search.list({
+      part: ["snippet"],
+      type: ["channel"],
+      q: channelHandle,
+      maxResults: 1,
+    })
+
+    const channelData = channelIdRes.data as youtube_v3.Schema$SearchListResponse
+    return channelData.items?.[0]?.id?.channelId ?? null
+  } catch (error: any) {
+    if (error.code === 403 && error.errors?.[0]?.reason === "quotaExceeded") {
+      console.log("⚠️ YouTube API quota exceeded. Skipping operation.")
+      return null
+    }
+
+    if (retryCount < MAX_RETRIES) {
+      const delay = INITIAL_RETRY_DELAY * Math.pow(2, retryCount)
+      console.log(`Retry ${retryCount + 1}/${MAX_RETRIES} after ${delay}ms...`)
+      await wait(delay)
+      return getChannelId(channelHandle, retryCount + 1)
+    }
+
+    console.error(`Error fetching channel ID for ${channelHandle}:`, error)
+    return null
+  }
+}
+
 async function checkForNewVideos() {
   console.log("🔍 Checking for new videos...")
 
   for (const { url, maxResults } of CHANNELS) {
     try {
-      console.log(`📡 Fetching channel ID for ${url}...`)
-      const channelIdRes = await youtube.search.list({
-        part: ["snippet"],
-        type: ["channel"],
-        q: url.replace("https://www.youtube.com/@", ""),
-        maxResults: 1,
-      })
+      const channelHandle = url.replace("https://www.youtube.com/@", "")
+      console.log(`📡 Fetching channel ID for ${channelHandle}...`)
 
-      const channelData = channelIdRes.data as youtube_v3.Schema$SearchListResponse
-      if (!channelData.items || channelData.items.length === 0) {
-        console.log(`⚠️ No channel data found for ${url}`)
-        continue
-      }
-
-      const channelId = channelData.items[0].id?.channelId ?? ""
+      const channelId = await getChannelId(channelHandle)
       if (!channelId) {
-        console.log(`⚠️ Channel ID not found for ${url}, skipping.`)
+        console.log(`⚠️ Could not get channel ID for ${url}, skipping.`)
         continue
       }
 
       console.log(`📺 Found channel ID: ${channelId}`)
-
       const videos = await fetchLatestVideos(channelId, maxResults)
-      console.log(`🎥 Found ${videos.length} videos from ${url}`)
 
-      await importNewVideos(videos)
+      if (videos.length > 0) {
+        console.log(`🎥 Found ${videos.length} videos from ${url}`)
+        await importNewVideos(videos)
+      } else {
+        console.log(`ℹ️ No new videos found for ${url}`)
+      }
     } catch (error) {
       console.error(`🚨 Error processing channel ${url}:`, error)
     }
