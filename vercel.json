@@ -1,8 +1,8 @@
 {
-    "version": 2,
+    "version": 3,
     "functions": {
       "api/youtube-to-sanity.ts": {
-        "runtime": "nodejs18.x"
+        "runtime": "edge"
       }
     },
     "crons": [
