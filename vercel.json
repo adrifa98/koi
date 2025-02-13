@@ -1,9 +1,9 @@
 {
-    "crons": [
-      {
-        "path": "/api/youtube-to-sanity",
-        "schedule": "* * * * *"
-      }
-    ]
-  }
-  
+  "crons": [
+    {
+      "path": "/api/import-videos",
+      "schedule": "* * * * *"
+    }
+  ]
+}
+
