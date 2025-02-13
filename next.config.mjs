@@ -33,24 +33,13 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'static.vecteezy.com',
+        hostname: 'static.vecteezy.com', // Dominio del que se cargan las imágenes
         pathname: '/system/resources/thumbnails/**',
       },
+      
     ],
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' https://movistar-koi.vercel.app https://www.twitch.tv" 
-          }
-        ],
-      },
-    ];
   },
 };
  
+
 export default withNextIntl(nextConfig);
