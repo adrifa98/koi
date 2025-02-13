@@ -176,4 +176,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log('✅ Initial test completed.');
 })();
 
+const testVideo = {
+  _type: 'video',
+  title: `Test Video ${Math.floor(Math.random() * 10000)}`, // Genera un número aleatorio
+  videoId: `test-${Math.floor(Math.random() * 10000)}`, // ID aleatorio
+  channelName: 'Test Channel',
+  publishedAt: new Date().toISOString(),
+};
+
 console.log('🎬 YouTube to Sanity cron job ready with Vercel.');
