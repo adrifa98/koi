@@ -1,9 +1,8 @@
 import { createClient } from '@sanity/client';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { google, youtube_v3 } from 'googleapis';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-dotenv.config();
 
 // Tipado para el video obtenido de la API de YouTube
 type Video = Required<Pick<youtube_v3.Schema$SearchResult, 'id' | 'snippet'>> & {
@@ -98,21 +97,6 @@ async function isVideoInSanity(videoId: string): Promise<boolean> {
 
 // Función para importar nuevos videos a Sanity
 async function importNewVideos(videos: Video[]) {
-  const testVideo = {
-    _type: 'video',
-    title: `Test Video ${Math.floor(Math.random() * 10000)}`, // Genera un número aleatorio
-    videoId: `test-${Math.floor(Math.random() * 10000)}`, // ID aleatorio
-    channelName: 'Test Channel',
-    publishedAt: new Date().toISOString(),
-  };
-  
-  try {
-    const result = await client.create(testVideo);
-    console.log(`🛠️ Test Video Created: ${testVideo.title} with ID: ${result._id}`);
-  } catch (err) {
-    console.error('❌ Error creating test video:', err);
-  }
-  
   for (const video of videos) {
     if (!video.id.videoId || await isVideoInSanity(video.id.videoId)) continue;
 
@@ -191,3 +175,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   console.log('✅ Initial test completed.');
 })();
 
+console.log('🎬 YouTube to Sanity cron job ready with Vercel.');
