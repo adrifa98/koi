@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
   const redirectUrl = process.env.NODE_ENV === "development"
     ? process.env.KINDE_SITE_URL
-    : process.env.NEXT_PUBLIC_VERCEL_URL;
+    : `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
 
   if (!redirectUrl) {
     throw new Error("Redirect URL is not defined");
