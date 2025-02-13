@@ -137,7 +137,12 @@ async function checkForNewVideos() {
         continue;
       }
 
-      const channelId = channelData.items[0].id;
+      const channelId = channelData.items[0].id ?? ''; // Usa '' si es undefined
+        if (!channelId) {
+          console.log(`⚠️ Channel ID not found for ${url}, skipping.`);
+          continue;
+        }
+
       console.log(`📺 Found channel ID: ${channelId}`);
 
       const videos = await fetchLatestVideos(channelId, maxResults);
