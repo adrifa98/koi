@@ -1,91 +1,92 @@
+
 import { ChannelSidebar } from "@/components/tv/channel-sidebar"
 import { HeroSection } from "@/components/tv/hero-section"
 import { LiveCarousel } from "@/components/tv/live-carousel"
 import { VideoCarousel } from "@/components/tv/video-carousel"
+import { getVideos } from "@/lib/sanity"
+import { getTwitchStreams } from "@/lib/twitch"
+import type { SanityVideo } from "@/types/sanity"
 
-// Videos de ejemplo con IDs reales de YouTube
-const trendingVideos = [
-  {
-    id: 1,
-    title: "Never Gonna Give You Up",
-    videoId: "dQw4w9WgXcQ",
-  },
-  {
-    id: 2,
-    title: "Me at the zoo",
-    videoId: "jNQXAC9IVRw",
-  },
-  {
-    id: 3,
-    title: "Despacito",
-    videoId: "kJQP7kiw5Fk",
-  },
-  // ... más videos
-].concat(
-  Array.from({ length: 7 }, (_, i) => ({
-    id: i + 4,
-    title: `Trending Video ${i + 4}`,
-    videoId: "dQw4w9WgXcQ", // Video de ejemplo
-  })),
-)
+export const revalidate = 60 // Revalidate every minute
 
-// Streams de ejemplo de Twitch
-const liveStreams = [
-  {
-    id: 1,
-    title: "Just Chatting with viewers!",
-    channelName: "knekro",
-    viewers: 25000,
-  },
-  {
-    id: 2,
-    title: "Playing Fortnite",
-    channelName: "ninja",
-    viewers: 45000,
-  },
-  {
-    id: 3,
-    title: "League of Legends Ranked",
-    channelName: "tfue",
-    viewers: 30000,
-  },
-].concat(
-  Array.from({ length: 7 }, (_, i) => ({
-    id: i + 4,
-    title: `Live Stream ${i + 4}`,
-    channelName: "shroud",
-    viewers: Math.floor(Math.random() * 50000),
-  })),
-)
+export default async function Home() {
+  let videos: SanityVideo[] = []
+  let streams: any[] = []
+  let error: Error | null = null
 
-const popularVideos = Array.from({ length: 10 }, (_, i) => ({
-  id: i + 20,
-  title: `Popular Video ${i + 1}`,
-  videoId: "jNQXAC9IVRw",
-}))
+  try {
+    ;[videos, streams] = await Promise.all([getVideos(), getTwitchStreams()])
 
-const newReleasesVideos = Array.from({ length: 10 }, (_, i) => ({
-  id: i + 30,
-  title: `New Release ${i + 1}`,
-  videoId: "kJQP7kiw5Fk",
-}))
+    console.log("Fetched videos:", JSON.stringify(videos, null, 2))
 
-export default function Home() {
-  return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
-      <ChannelSidebar />
-      <div className="ml-[72px]">
-        <main>
-          <HeroSection />
-          <div className="space-y-8 pb-8">
-            <VideoCarousel title="Trending Now" videos={trendingVideos} />
-            <LiveCarousel title="Live Now" streams={liveStreams} />
-            <VideoCarousel title="Popular on Netflix" videos={popularVideos} />
-            <VideoCarousel title="New Releases" videos={newReleasesVideos} />
-          </div>
-        </main>
+    if (videos.length === 0) {
+      console.warn("No videos fetched from Sanity")
+    }
+
+    // Group videos by category
+    const videosByCategory = videos.reduce(
+      (acc, video) => {
+        if (!acc[video.category]) {
+          acc[video.category] = []
+        }
+        acc[video.category].push(video)
+        return acc
+      },
+      {} as Record<string, SanityVideo[]>,
+    )
+
+    console.log("Videos by category:", JSON.stringify(videosByCategory, null, 2))
+
+    // Filter live streams
+    const liveStreams = streams.filter((stream) => stream.is_live)
+
+    return (
+      <div className="min-h-screen bg-background overflow-x-hidden">
+        <ChannelSidebar streams={streams} />
+        <div className="ml-[62px]">
+          <main>
+            <HeroSection />
+            <div className="space-y-8 pb-8">
+              {liveStreams.length > 0 && <LiveCarousel title="Live Now" streams={liveStreams} />}
+              {Object.entries(videosByCategory).length > 0 ? (
+                Object.entries(videosByCategory).map(([category, categoryVideos]) => (
+                  <VideoCarousel
+                    key={category}
+                    title={category.charAt(0).toUpperCase() + category.slice(1)}
+                    videos={categoryVideos}
+                  />
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No videos available at the moment.</p>
+                  {process.env.NODE_ENV === "development" && (
+                    <pre className="mt-4 p-4 bg-gray-100 rounded text-left overflow-auto">
+                      {JSON.stringify({ videos, error }, null, 2)}
+                    </pre>
+                  )}
+                </div>
+              )}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
-  )
+    )
+  } catch (err) {
+    console.error("Error in Home page:", err)
+    error = err instanceof Error ? err : new Error("An unknown error occurred")
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold">Something went wrong</h1>
+          <p className="text-muted-foreground">Please try again later</p>
+          {process.env.NODE_ENV === "development" && (
+            <pre className="mt-4 p-4 bg-gray-100 rounded text-left overflow-auto">
+              {JSON.stringify({ error: error.message, stack: error.stack }, null, 2)}
+            </pre>
+          )}
+        </div>
+      </div>
+    )
+  }
 }
 

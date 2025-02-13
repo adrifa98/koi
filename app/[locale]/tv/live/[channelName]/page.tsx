@@ -1,76 +1,76 @@
-"use client"
+import { ArrowLeft, Heart, Share2, Users } from "lucide-react"
+import Link from "next/link"
+import { Suspense } from "react"
 
 import { Button } from "@/components/ui/button"
 import { VIDEO_PROVIDERS } from "@/lib/constants"
-import { ArrowLeft, Heart, Share2, Users } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
 
-interface StreamMetadata {
-  title: string
-  viewers: string
-  streamer: string
+interface LivePageProps {
+  params: { channelName: string }
 }
 
-export default function LivePage({ params }: { params: { channelName: string } }) {
-  const router = useRouter()
-  const [metadata, setMetadata] = useState<StreamMetadata>({
-    title: "Live Stream",
-    viewers: "0",
-    streamer: params.channelName,
-  })
-
+function LiveContent({ channelName }: { channelName: string }) {
   return (
     <div className="min-h-screen bg-background">
-      {/* Stream Section */}
-      <div className="w-full bg-black aspect-video relative">
-        <iframe src={VIDEO_PROVIDERS.twitch.embedFull(params.channelName)} className="w-full h-full" allowFullScreen />
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-4 left-4 text-white hover:bg-white/20"
-          onClick={() => router.back()}
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </Button>
+      <div className="relative">
+        <div className="w-full bg-black aspect-video">
+          <iframe
+            src={VIDEO_PROVIDERS.twitch.embedFull(channelName)}
+            className="w-full h-full"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
+        </div>
+        <Link href="/" className="absolute top-4 left-4 z-50">
+          <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
+            <ArrowLeft className="h-6 w-6" />
+          </Button>
+        </Link>
       </div>
 
-      {/* Stream Info */}
       <div className="max-w-screen-2xl mx-auto px-4 py-6">
         <div className="grid gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold">{metadata.title}</h1>
-                <p className="text-muted-foreground">{metadata.streamer}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <Users className="h-4 w-4" />
-                  {metadata.viewers}
-                </Button>
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <Share2 className="h-4 w-4" />
-                  Share
-                </Button>
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <Heart className="h-4 w-4" />
-                  Follow
-                </Button>
-              </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <Users className="h-4 w-4" />
+                Viewers
+              </Button>
+              <Button variant="ghost" size="sm" className="gap-2">
+                <Share2 className="h-4 w-4" />
+                Share
+              </Button>
+              <Button variant="ghost" size="sm" className="gap-2">
+                <Heart className="h-4 w-4" />
+                Follow
+              </Button>
             </div>
           </div>
 
-          {/* Chat (opcional) */}
-          <div className="bg-card rounded-lg p-4 h-[400px]">
+          <div className="bg-card rounded-lg">
             <iframe
-              src={`https://www.twitch.tv/embed/${params.channelName}/chat?parent=${window.location.hostname}`}
-              className="w-full h-full"
+              src={`https://www.twitch.tv/embed/${channelName}/chat?parent=${process.env.NEXT_PUBLIC_VERCEL_URL || "localhost"}`}
+              className="w-full h-[600px]"
+              allowFullScreen
             />
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LivePage({ params }: LivePageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full aspect-video bg-card animate-pulse flex items-center justify-center">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+      }
+    >
+      <LiveContent channelName={params.channelName} />
+    </Suspense>
   )
 }
 

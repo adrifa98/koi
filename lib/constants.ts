@@ -32,7 +32,7 @@ export const SHOPIFY_GRAPHQL_API_ENDPOINT = '/api/2023-01/graphql.json';
 
 
 export const HOVER_DELAY = 300
-export const PREVIEW_DURATION = 8000
+export const PREVIEW_DURATION = 5000
 export const SCROLL_AMOUNT = 400
 export const CARD_WIDTH = 320
 export const CARD_HEIGHT = 180
@@ -47,13 +47,10 @@ export const VIDEO_PROVIDERS = {
     thumbnail: (channelName: string) =>
       `https://static-cdn.jtvnw.net/previews-ttv/live_user_${channelName}-640x360.jpg`,
     embed: (channelName: string) =>
-      typeof window !== "undefined"
-        ? `https://player.twitch.tv/?channel=${channelName}&parent=${window.location.hostname}&muted=true`
-        : "", // Devuelve una cadena vacía en SSR para evitar errores
+      `https://player.twitch.tv/?channel=${channelName}&parent=${process.env.NEXT_PUBLIC_VERCEL_URL || "localhost"}&muted=true&autoplay=true`,
     embedFull: (channelName: string) =>
-      typeof window !== "undefined"
-        ? `https://player.twitch.tv/?channel=${channelName}&parent=${window.location.hostname}`
-        : "",
+      `https://player.twitch.tv/?channel=${channelName}&parent=${process.env.NEXT_PUBLIC_VERCEL_URL || "localhost"}`,
     share: (channelName: string) => `https://twitch.tv/${channelName}`,
   },
-} as const;
+} as const
+

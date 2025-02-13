@@ -1,32 +1,22 @@
 "use client"
 
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useMemo, useRef } from "react"
+import { useCallback, useRef } from "react"
 
 import { Button } from "@/components/ui/button"
-import { useDebounce } from "@/hooks/use-debounce"
 import { SCROLL_AMOUNT } from "@/lib/constants"
+import type { SanityVideo } from "@/types/sanity"
 import { VideoCard } from "./video-card"
-
-interface Video {
-  id: number
-  title: string
-  videoId: string
-}
 
 interface VideoCarouselProps {
   title: string
-  videos: Video[]
+  videos: SanityVideo[]
 }
 
 export function VideoCarousel({ title, videos }: VideoCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Memoize videos array to prevent unnecessary re-renders
-  const memoizedVideos = useMemo(() => videos, [videos])
-
-  // Debounced scroll handler
-  const debouncedScroll = useDebounce((direction: "left" | "right") => {
+  const handleScroll = useCallback((direction: "left" | "right") => {
     if (containerRef.current) {
       const scrollAmount = direction === "left" ? -SCROLL_AMOUNT : SCROLL_AMOUNT
       containerRef.current.scrollBy({
@@ -34,7 +24,9 @@ export function VideoCarousel({ title, videos }: VideoCarouselProps) {
         behavior: "smooth",
       })
     }
-  }, 100)
+  }, [])
+
+  if (videos.length === 0) return null
 
   return (
     <div className="py-16 space-y-4">
@@ -48,30 +40,34 @@ export function VideoCarousel({ title, videos }: VideoCarouselProps) {
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {memoizedVideos.map((video, index) => (
-            <VideoCard key={video.id} video={video} priority={index < 3} />
+          {videos.map((video, index) => (
+            <VideoCard key={video._id} video={video} priority={index < 2} />
           ))}
         </div>
-        <div className="absolute -left-4 top-10 bottom-20 flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background/90 rounded-full"
-            onClick={() => debouncedScroll("left")}
-          >
-            <ChevronLeft className="h-8 w-8" />
-          </Button>
-        </div>
-        <div className="absolute -right-4 top-10 bottom-20 flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background/90 rounded-full"
-            onClick={() => debouncedScroll("right")}
-          >
-            <ChevronRight className="h-8 w-8" />
-          </Button>
-        </div>
+        {videos.length > 1 && (
+          <>
+            <div className="absolute -left-4 top-10 bottom-20 flex items-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background/90 rounded-full"
+                onClick={() => handleScroll("left")}
+              >
+                <ChevronLeft className="h-8 w-8" />
+              </Button>
+            </div>
+            <div className="absolute -right-4 top-10 bottom-20 flex items-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background/90 rounded-full"
+                onClick={() => handleScroll("right")}
+              >
+                <ChevronRight className="h-8 w-8" />
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

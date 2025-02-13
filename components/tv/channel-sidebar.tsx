@@ -1,91 +1,73 @@
 "use client"
 
 import { useVirtualizer } from "@tanstack/react-virtual"
-import { AnimatePresence, motion } from "framer-motion"
-import { ChevronRight } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { motion } from "framer-motion"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import type { TwitchStream } from "@/lib/types"
 
-interface Channel {
-  id: number
-  name: string
-  avatar: string
-  game: string
-  viewers: number
-  isLive: boolean
+interface ChannelSidebarProps {
+  streams: TwitchStream[]
 }
 
-const SAMPLE_CHANNELS: Channel[] = Array.from({ length: 20 }, (_, i) => ({
-  id: i,
-  name: `Channel ${i + 1}`,
-  avatar: `/placeholder.svg`,
-  game: `Game ${i + 1}`,
-  viewers: Math.floor(Math.random() * 10000),
-  isLive: Math.random() > 0.3,
-}))
-
-export function ChannelSidebar() {
+export function ChannelSidebar({ streams }: ChannelSidebarProps) {
+  const router = useRouter()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const virtualizer = useVirtualizer({
-    count: SAMPLE_CHANNELS.length,
+    count: streams.length,
     getScrollElement: () => scrollRef.current,
     estimateSize: () => 64,
     overscan: 5,
   })
 
-  // 🔹 Al hacer hover, se expande y forzamos el recalculo del scroll
-  useEffect(() => {
-    if (isHovered) {
-      setTimeout(() => {
-        if (scrollRef.current) {
-          scrollRef.current.style.overflowY = "auto"
-        }
-      }, 100)
-    } else {
-      if (scrollRef.current) {
-        scrollRef.current.style.overflowY = "hidden"
+  const handleStreamClick = useCallback(
+    (stream: TwitchStream) => {
+      if (stream.is_live) {
+        router.push(`/live/${stream.user_login}`)
       }
+    },
+    [router]
+  )
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.style.overflowY = isHovered ? "auto" : "hidden"
     }
   }, [isHovered])
 
   return (
     <motion.aside
       initial={false}
-      animate={{ width: isExpanded || isHovered ? 300 : 68 }}
-      className="h-screen fixed left-0 top-0 bg-card border-r z-40 flex flex-col pt-16"
+      animate={{ width: isExpanded || isHovered ? 290 : 60 }}
+      transition={{ duration: 0.2, ease: "linear" }}
+      className="h-screen fixed left-0 top-0 bg-card border-r z-40 flex flex-col transition-all"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="h-16 flex items-center justify-between px-4 border-b">
-        <AnimatePresence>
-          {(isExpanded || isHovered) && (
-            <motion.h2 
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              className="font-semibold text-lg"
-            >
-            </motion.h2>
-          )}
-        </AnimatePresence>
-        <motion.button
-          className="p-2 rounded-full"
-          animate={{ rotate: isExpanded || isHovered ? 180 : 0 }}
-          transition={{ duration: 0.3 }}
+        {(isExpanded || isHovered) && <h2 className="font-semibold">Followed Channels</h2>}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="ml-auto"
           onClick={() => setIsExpanded(!isExpanded)}
+          aria-label="Expandir o contraer la barra lateral"
         >
-          <ChevronRight />
-        </motion.button>
+          {isExpanded || isHovered ? <ChevronLeft /> : <ChevronRight />}
+        </Button>
       </div>
 
-      {/* Contenedor de scroll con actualización dinámica */}
+      {/* Contenedor de scroll dinámico */}
       <div
         ref={scrollRef}
-        className="flex-1 transition-all overflow-hidden"
+        className={`flex-1 transition-all ${isHovered ? "overflow-auto" : "overflow-hidden"}`}
         style={{
           maxHeight: "calc(100vh - 4rem)",
         }}
@@ -98,10 +80,10 @@ export function ChannelSidebar() {
           }}
         >
           {virtualizer.getVirtualItems().map((virtualItem) => {
-            const channel = SAMPLE_CHANNELS[virtualItem.index]
+            const stream = streams[virtualItem.index]
             return (
               <div
-                key={channel.id}
+                key={virtualItem.key}
                 data-index={virtualItem.index}
                 style={{
                   position: "absolute",
@@ -112,26 +94,34 @@ export function ChannelSidebar() {
                   transform: `translateY(${virtualItem.start}px)`,
                 }}
               >
-                <div className="flex items-center justify-between gap-3 p-2 rounded-md hover:bg-accent cursor-pointer group">
+                <div
+                  className={`flex items-center justify-between gap-3 p-2 rounded-md hover:bg-accent cursor-pointer group ${
+                    stream.is_live ? "opacity-100" : "opacity-60"
+                  }`}
+                  onClick={() => handleStreamClick(stream)}
+                  tabIndex={0}
+                >
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={channel.avatar} loading="lazy" />
-                        <AvatarFallback>{channel.name[0]}</AvatarFallback>
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage
+                          src={stream.profile_image_url}
+                          className={!stream.is_live ? "grayscale" : ""}
+                        />
+                        <AvatarFallback>{stream.user_name[0]}</AvatarFallback>
                       </Avatar>
-                      {channel.isLive && (
-                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-background" />
-                      )}
                     </div>
                     <div className="flex flex-col">
-                      <p className="font-medium text-sm truncate">{channel.name}</p>
-                      <p className="text-xs text-muted-foreground truncate">{channel.game}</p>
+                      <p className="font-medium text-sm truncate">{stream.user_name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{stream.game_name}</p>
                     </div>
                   </div>
-                  {channel.isLive && (
+
+                  {/* Viewers alineados a la derecha */}
+                  {stream.is_live && (
                     <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <div className="w-2 h-2 rounded-full bg-red-500" />
-                      <span>{channel.viewers.toLocaleString()}</span>
+                      <span>{stream.viewer_count.toLocaleString()}</span>
                     </div>
                   )}
                 </div>

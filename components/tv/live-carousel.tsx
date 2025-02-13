@@ -1,33 +1,22 @@
 "use client"
 
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useMemo, useRef } from "react"
+import { useCallback, useRef } from "react"
 
 import { Button } from "@/components/ui/button"
-import { useDebounce } from "@/hooks/use-debounce"
 import { SCROLL_AMOUNT } from "@/lib/constants"
-import { LiveCard } from "./live-card"
-
-interface Stream {
-  id: number
-  title: string
-  channelName: string
-  viewers: number
-}
+import type { TwitchStream } from "@/lib/types"
+import { VideoCard } from "./video-card"
 
 interface LiveCarouselProps {
   title: string
-  streams: Stream[]
+  streams: TwitchStream[]
 }
 
 export function LiveCarousel({ title, streams }: LiveCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Memoize streams array to prevent unnecessary re-renders
-  const memoizedStreams = useMemo(() => streams, [streams])
-
-  // Debounced scroll handler
-  const debouncedScroll = useDebounce((direction: "left" | "right") => {
+  const handleScroll = useCallback((direction: "left" | "right") => {
     if (containerRef.current) {
       const scrollAmount = direction === "left" ? -SCROLL_AMOUNT : SCROLL_AMOUNT
       containerRef.current.scrollBy({
@@ -35,7 +24,9 @@ export function LiveCarousel({ title, streams }: LiveCarouselProps) {
         behavior: "smooth",
       })
     }
-  }, 100)
+  }, [])
+
+  if (streams.length === 0) return null
 
   return (
     <div className="py-16 space-y-4">
@@ -49,31 +40,34 @@ export function LiveCarousel({ title, streams }: LiveCarouselProps) {
             WebkitOverflowScrolling: "touch",
           }}
         >
-          {memoizedStreams.map((stream, index) => (
-            <LiveCard key={stream.id} stream={stream} priority={index < 3} />
+          {streams.map((stream, index) => (
+            <VideoCard key={stream.user_id} video={stream} priority={index < 2} type="twitch" />
           ))}
         </div>
-
-        <div className="absolute -left-4 top-10 bottom-20 flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background/90 rounded-full"
-            onClick={() => debouncedScroll("left")}
-          >
-            <ChevronLeft className="h-8 w-8" />
-          </Button>
-        </div>
-        <div className="absolute -right-4 top-10 bottom-20 flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background/90 rounded-full"
-            onClick={() => debouncedScroll("right")}
-          >
-            <ChevronRight className="h-8 w-8" />
-          </Button>
-        </div>
+        {streams.length > 1 && (
+          <>
+            <div className="absolute -left-4 top-1/2 -translate-y-1/2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background/90 rounded-full"
+                onClick={() => handleScroll("left")}
+              >
+                <ChevronLeft className="h-8 w-8" />
+              </Button>
+            </div>
+            <div className="absolute -right-4 top-1/2 -translate-y-1/2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background/90 rounded-full"
+                onClick={() => handleScroll("right")}
+              >
+                <ChevronRight className="h-8 w-8" />
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
