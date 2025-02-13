@@ -45,7 +45,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' https://movistar-koi.vercel.app https://www.twitch.tv"
+            value: "frame-ancestors 'self' https://movistar-koi.vercel.app https://www.twitch.tv" 
           }
         ],
       },
