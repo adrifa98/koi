@@ -1,0 +1,9 @@
+
+{
+   "crons": [
+     {
+       "path": "/app/api/youtube-to-sanity.ts",
+       "schedule": "0 * * * *"
+     }
+   ]
+}
