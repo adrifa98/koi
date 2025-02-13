@@ -1,10 +1,4 @@
 {
-    "version": 2,
-    "functions": {
-      "api/youtube-to-sanity.ts": {
-        "runtime": "edge"
-      }
-    },
     "crons": [
       {
         "path": "/api/youtube-to-sanity",
