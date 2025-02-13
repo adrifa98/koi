@@ -1,9 +1,15 @@
-
 {
-   "crons": [
-     {
-       "path": "/api/youtube-to-sanity.ts",
-       "schedule": "* * * * *"
-     }
-   ]
-}
+    "version": 2,
+    "functions": {
+      "api/youtube-to-sanity.ts": {
+        "runtime": "nodejs18.x"
+      }
+    },
+    "crons": [
+      {
+        "path": "/api/youtube-to-sanity",
+        "schedule": "* * * * *"
+      }
+    ]
+  }
+  
