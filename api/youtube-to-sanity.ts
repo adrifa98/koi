@@ -1,27 +1,24 @@
-const { createClient } = require('@sanity/client');
-require('dotenv/config');
-const { google } = require('googleapis');
-const { NextApiRequest, NextApiResponse } = require('next');
+import { createClient } from '@sanity/client';
+import 'dotenv/config';
+import { google, youtube_v3 } from 'googleapis';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 // Tipado para el video obtenido de la API de YouTube
-/**
- * @typedef {Object} Video
- * @property {Object} id
- * @property {string} id.videoId
- * @property {Object} snippet
- * @property {string} snippet.title
- * @property {string} snippet.channelTitle
- * @property {string} snippet.publishedAt
- * @property {Object} snippet.thumbnails
- * @property {Object} snippet.thumbnails.high
- * @property {string} snippet.thumbnails.high.url
- */
+type Video = Required<Pick<youtube_v3.Schema$SearchResult, 'id' | 'snippet'>> & {
+  id: { videoId: string };
+  snippet: {
+    title: string;
+    channelTitle: string;
+    publishedAt: string;
+    thumbnails: { high: { url: string } };
+  };
+};
 
 // Configuración del cliente de Sanity
 const client = createClient({
-  projectId: process.env.SANITY_PROJECT_ID,
-  dataset: process.env.SANITY_DATASET,
-  token: process.env.SANITY_TOKEN,
+  projectId: process.env.SANITY_PROJECT_ID!,
+  dataset: process.env.SANITY_DATASET!,
+  token: process.env.SANITY_TOKEN!,
   apiVersion: '2023-01-01',
   useCdn: false,
 });
@@ -30,17 +27,17 @@ const client = createClient({
 const youtube = google.youtube({ version: 'v3', auth: process.env.YOUTUBE_API_KEY });
 
 // Lista de canales a importar
-const CHANNELS = [
+const CHANNELS: { url: string; maxResults: number }[] = [
   { url: 'https://www.youtube.com/@MovistarKOITV', maxResults: 45 },
   { url: 'https://www.youtube.com/@MovistarKOILoL', maxResults: 80 },
   { url: 'https://www.youtube.com/@TorontoUltra', maxResults: 3 },
-  { url: 'https://www.youtube.com/@MovistarKOIValorant', maxResults: 1000 }, // Todos
-  { url: 'https://www.youtube.com/@MovistarKOIVODS', maxResults: 1000 }, // Todos
+  { url: 'https://www.youtube.com/@MovistarKOIValorant', maxResults: 1000 },
+  { url: 'https://www.youtube.com/@MovistarKOIVODS', maxResults: 1000 },
 ];
 
 // Función para obtener videos recientes de un canal
-async function fetchLatestVideos(channelId, maxResults) {
-  let videos = [];
+async function fetchLatestVideos(channelId: string, maxResults: number): Promise<Video[]> {
+  let videos: Video[] = [];
   try {
     const response = await youtube.search.list({
       part: ['snippet'],
@@ -48,20 +45,18 @@ async function fetchLatestVideos(channelId, maxResults) {
       maxResults,
       type: ['video'],
       order: 'date',
-    });
+    } as youtube_v3.Params$Resource$Search$List);
 
-    const data = response.data;
+    const data = response.data as youtube_v3.Schema$SearchListResponse;
     if (!data.items) return [];
 
-    // Obtener detalles del video en batch
-    const videoIds = data.items.map(item => item.id?.videoId).filter(Boolean);
+    const videoIds = data.items.map(item => item.id?.videoId).filter(Boolean) as string[];
     const videoDetails = await fetchVideoDetails(videoIds);
 
     for (const item of data.items) {
       if (!item.id?.videoId || !item.snippet) continue;
-
       if (videoDetails[item.id.videoId] >= 60) {
-        videos.push(item);
+        videos.push(item as Video);
       }
     }
   } catch (error) {
@@ -70,8 +65,7 @@ async function fetchLatestVideos(channelId, maxResults) {
   return videos;
 }
 
-// Función para obtener duración de videos en batch
-async function fetchVideoDetails(videoIds) {
+async function fetchVideoDetails(videoIds: string[]): Promise<{ [key: string]: number }> {
   if (videoIds.length === 0) return {};
 
   const response = await youtube.videos.list({
@@ -79,7 +73,7 @@ async function fetchVideoDetails(videoIds) {
     id: videoIds,
   });
 
-  return response.data.items?.reduce((acc, item) => {
+  return response.data.items?.reduce((acc: { [key: string]: number }, item) => {
     if (item.id && item.contentDetails?.duration) {
       acc[item.id] = parseISO8601Duration(item.contentDetails.duration);
     }
@@ -87,8 +81,7 @@ async function fetchVideoDetails(videoIds) {
   }, {}) || {};
 }
 
-// Función para convertir duración ISO 8601 a segundos
-function parseISO8601Duration(duration) {
+function parseISO8601Duration(duration: string): number {
   const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
   const matches = duration.match(regex);
   if (!matches) return 0;
@@ -99,15 +92,13 @@ function parseISO8601Duration(duration) {
   return hours * 3600 + minutes * 60 + seconds;
 }
 
-// Función para obtener todos los IDs de videos ya guardados en Sanity
-async function getExistingVideoIds() {
+async function getExistingVideoIds(): Promise<Set<string>> {
   const query = `*[_type == "video"]{videoId}`;
-  const results = await client.fetch(query);
+  const results = await client.fetch<{ videoId: string }[]>(query);
   return new Set(results.map(video => video.videoId));
 }
 
-// Función para importar nuevos videos a Sanity
-async function importNewVideos(videos) {
+async function importNewVideos(videos: Video[]) {
   const existingVideoIds = await getExistingVideoIds();
 
   for (const video of videos) {
@@ -130,7 +121,6 @@ async function importNewVideos(videos) {
   }
 }
 
-// Función para revisar si hay nuevos videos en los canales configurados
 async function checkForNewVideos() {
   console.log('🔍 Checking for new videos...');
 
@@ -144,7 +134,7 @@ async function checkForNewVideos() {
         maxResults: 1,
       });
 
-      const channelData = channelIdRes.data;
+      const channelData = channelIdRes.data as youtube_v3.Schema$SearchListResponse;
       if (!channelData.items || channelData.items.length === 0) {
         console.log(`⚠️ No channel data found for ${url}`);
         continue;
@@ -169,8 +159,7 @@ async function checkForNewVideos() {
   console.log('✅ Finished checking for new videos.');
 }
 
-// Endpoint API para ejecutar manualmente en Next.js
-async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     console.log('⏳ Starting manual video check...');
     await checkForNewVideos();
@@ -182,7 +171,6 @@ async function handler(req, res) {
   }
 }
 
-// Test automático al iniciar
 (async () => {
   console.log('🚀 Running initial test check...');
   await checkForNewVideos();
@@ -190,5 +178,3 @@ async function handler(req, res) {
 })();
 
 console.log('🎬 YouTube to Sanity cron job ready with Vercel.');
-
-module.exports = handler;
