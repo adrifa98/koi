@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/import-videos/youtube-to-sanity.ts",
-      "schedule": "0 */6 * * *"
+      "schedule": "* * * * *"
     }
   ]
 }
