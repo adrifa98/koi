@@ -1,33 +1,75 @@
 "use client"
 
+import { useInfiniteQuery } from "@tanstack/react-query"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useInView } from "react-intersection-observer"
 
 import { Button } from "@/components/ui/button"
+import type { TwitchStream } from "@/lib/types"
 import type { SanityVideo } from "@/types/sanity"
 import { VideoCard } from "./video-card"
 
 interface VideoCarouselProps {
   title: string
-  videos: SanityVideo[]
+  videosType: string
+  initialVideos: (SanityVideo | TwitchStream)[]
 }
 
-export function VideoCarousel({ title, videos }: VideoCarouselProps) {
+export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
 
+  // Infinite Query para cargar videos
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ["videos", videosType],
+    initialPageParam: "",
+    queryFn: async ({ pageParam }) => {
+      const searchParams = new URLSearchParams()
+      if (pageParam) searchParams.set("cursor", pageParam)
+      if (videosType) searchParams.set("type", videosType)
+      searchParams.set("limit", "15")
+
+      const response = await fetch(`/api/videos?${searchParams}`)
+      if (!response.ok) throw new Error("Error fetching videos")
+      return response.json()
+    },
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    initialData: {
+      pages: [{ items: initialVideos, nextCursor: null }],
+      pageParams: [""],
+    },
+  })
+
+  // Intersection Observer para el infinite scroll
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0.1,
+    rootMargin: "300px",
+  })
+
+  // Cargar más videos cuando llegamos al final
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  // Obtener todos los videos de las páginas cargadas
+  const videos = data?.pages.flatMap((page) => page.items) ?? initialVideos
+
   const updateArrows = useCallback(() => {
     if (!containerRef.current) return
 
-    const { scrollLeft, scrollWidth, clientWidth } = containerRef.current
-    // Solo mostrar la flecha izquierda si hemos scrolleado más del 25% del ancho de una card
-    const cardWidth = containerRef.current.querySelector("[data-card]")?.clientWidth ?? 0
-    const isAtStart = scrollLeft < cardWidth * 0.25
-    const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 1
+    requestAnimationFrame(() => {
+      const { scrollLeft, scrollWidth, clientWidth } = containerRef.current!
+      const cardWidth = containerRef.current!.querySelector("[data-card]")?.clientWidth ?? 0
+      const isAtStart = scrollLeft < cardWidth * 0.25
+      const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 1
 
-    setShowLeftArrow(!isAtStart)
-    setShowRightArrow(!isAtEnd)
+      setShowLeftArrow(!isAtStart)
+      setShowRightArrow(!isAtEnd)
+    })
   }, [])
 
   useEffect(() => {
@@ -49,10 +91,12 @@ export function VideoCarousel({ title, videos }: VideoCarouselProps) {
   }, [updateArrows])
 
   const handleScroll = useCallback((direction: "left" | "right") => {
-    if (containerRef.current) {
-      const container = containerRef.current
+    if (!containerRef.current) return
+
+    requestAnimationFrame(() => {
+      const container = containerRef.current!
       const cardWidth = container.querySelector("[data-card]")?.clientWidth ?? 0
-      const gap = 8 // gap-2 en pixels
+      const gap = 8
       const scrollAmount = cardWidth + gap
       const currentScroll = container.scrollLeft
       const targetScroll =
@@ -64,10 +108,10 @@ export function VideoCarousel({ title, videos }: VideoCarouselProps) {
         left: targetScroll,
         behavior: "smooth",
       })
-    }
+    })
   }, [])
 
-  if (videos.length === 0) return null
+  if (!videos?.length) return null
 
   return (
     <div className="group/carousel relative">
@@ -76,9 +120,7 @@ export function VideoCarousel({ title, videos }: VideoCarouselProps) {
       </div>
 
       <div className="relative overflow-visible">
-        {/* Contenedor principal con padding fijo */}
         <div className="ml-[60px] relative overflow-visible">
-          {/* Contenedor del scroll con margen negativo para permitir scroll completo */}
           <div
             ref={containerRef}
             className="flex gap-2 overflow-x-auto overflow-y-visible scrollbar-hide pb-48 pt-10 snap-x snap-mandatory"
@@ -91,18 +133,22 @@ export function VideoCarousel({ title, videos }: VideoCarouselProps) {
               WebkitOverflowScrolling: "touch",
             }}
           >
-            {videos.map((video, index) => (
-              <div
-                key={video._id}
-                className="snap-start flex-none"
-                data-card
-                style={{
-                  width: "var(--dynamic-card-width)",
-                }}
-              >
-                <VideoCard video={video} priority={index < 2} isFirstCard={index === 0} />
-              </div>
-            ))}
+            {videos.map((video, index) => {
+              const key = "user_login" in video ? video.user_login : video._id
+              return (
+                <div
+                  key={key}
+                  className="snap-start flex-none"
+                  data-card
+                  style={{
+                    width: "var(--dynamic-card-width)",
+                  }}
+                  ref={index === videos.length - 5 ? loadMoreRef : undefined}
+                >
+                  <VideoCard video={video} priority={index < 2} isFirstCard={index === 0} />
+                </div>
+              )
+            })}
           </div>
 
           {videos.length > 1 && (
@@ -126,7 +172,7 @@ export function VideoCarousel({ title, videos }: VideoCarouselProps) {
                   </Button>
                 </div>
               )}
-              {showRightArrow && (
+              {(showRightArrow || hasNextPage) && (
                 <div
                   className="absolute right-0 top-10 h-[200px] w-16 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                   style={{

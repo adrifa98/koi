@@ -13,8 +13,9 @@ import { getMessages } from 'next-intl/server';
 import { Inter } from "next/font/google";
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { ThemeProvider } from "../components/theme-provider";
+import { Providers } from "./providers";
  
 
 const inter = Inter({ subsets: ["latin"] });
@@ -62,8 +63,10 @@ export default async function RootLayout({ children, params: {locale} }: { child
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
+      <Providers>
         <NextIntlClientProvider messages={messages}>
         <CartProvider cartPromise={cart}>
+          <Suspense>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -71,14 +74,20 @@ export default async function RootLayout({ children, params: {locale} }: { child
           disableTransitionOnChange
         >
           <Navbar authStatus={authStatus} />
+          <Suspense>
           <main>
+            <Suspense>
             {children}
+            </Suspense>
             <WelcomeToast />
             <Toaster />
           </main>
+          </Suspense>
           </ThemeProvider>
+          </Suspense>
         </CartProvider>
         </NextIntlClientProvider>
+        </Providers>
       </body>
     </html>
   );
