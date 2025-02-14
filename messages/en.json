@@ -13,6 +13,10 @@
     "title": "hello",
     "about": "egosnhgoi"
   },
+
+
+
+  
   "CreatePost": {
     "post": "Post",
     "imageAndVideo": "Image & Video",
@@ -60,5 +64,75 @@
     "submit": "Comment",
     "errorTitle": "Error!",
     "errorCommentTooLong": "The comment cannot exceed 144 characters."
-  }
+  },
+
+
+
+
+
+
+
+
+    "navigation": {
+      "home": "Home",
+      "search": "Search",
+      "notifications": "Notifications"
+    },
+    "sidebar": {
+      "followedChannels": "Followed Channels",
+      "expand": "Expand sidebar",
+      "collapse": "Collapse sidebar"
+    },
+    "live": {
+      "status": "LIVE",
+      "viewers": "{count, plural, =1 {# viewer} other {# viewers}}",
+      "follow": "Follow",
+      "following": "Following",
+      "watchOnTwitch": "Watch on Twitch",
+      "shareChannel": "Share channel",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied to clipboard"
+    },
+    "video": {
+      "watchlist": {
+        "add": "Add to watchlist",
+        "added": "Added",
+        "addTooltip": "Add to watchlist",
+        "addedTooltip": "Added to watchlist"
+      },
+      "share": {
+        "button": "Share",
+        "inCommunity": "Share in community",
+        "copyLink": "Copy link",
+        "linkCopied": "Link copied"
+      },
+      "watch": {
+        "onYoutube": "Watch on YouTube",
+        "play": "Play",
+        "moreInfo": "More Info"
+      },
+      "latest": "Watch the latest content from {channel}"
+    },
+    "sections": {
+      "news": "News",
+      "liveNow": "Live Now",
+      "lol": "League of Legends",
+      "valorant": "Valorant",
+      "torontoUltra": "Toronto Ultra",
+      "vods": "VODs"
+    },
+    "errors": {
+      "notFound": {
+        "title": "404",
+        "message": "Video not found",
+        "backHome": "Back to Home"
+      },
+      "generic": {
+        "title": "Something went wrong!",
+        "message": "We're having trouble",
+        "tryAgain": "Try again",
+        "loading": "We're having trouble loading this content",
+        "application": "We're having trouble with the application"
+      }
+    }
 }

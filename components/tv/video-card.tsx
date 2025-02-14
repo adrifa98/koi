@@ -182,24 +182,29 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <Button variant="outline" size="icon" onClick={handleAdd} className="hover:bg-accent">
-                                <Button variant="outline" size="icon" onClick={handleAdd} className="hover:bg-accent relative">
-                                  <AnimatePresence>
-                                    {isAdded ? (
-                                      <motion.div
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        exit={{ scale: 0 }}
-                                        className="absolute inset-0 flex items-center justify-center"
-                                      >
-                                        <Check className="h-4 w-4 text-primary" />
-                                      </motion.div>
-                                    ) : (
-                                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                                        <Plus className="h-4 w-4" />
-                                      </motion.div>
-                                    )}
-                                  </AnimatePresence>
-                                </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={handleAdd}
+                                    className="hover:bg-accent relative"
+                                  >
+                                    <AnimatePresence>
+                                      {isAdded ? (
+                                        <motion.div
+                                          initial={{ scale: 0 }}
+                                          animate={{ scale: 1 }}
+                                          exit={{ scale: 0 }}
+                                          className="absolute inset-0 flex items-center justify-center"
+                                        >
+                                          <Check className="h-4 w-4 text-primary" />
+                                        </motion.div>
+                                      ) : (
+                                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                                          <Plus className="h-4 w-4" />
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
+                                  </Button>
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent>{isAdded ? "Added to Watchlist" : "Add to Watchlist"}</TooltipContent>

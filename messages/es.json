@@ -60,5 +60,69 @@
     "submit": "Enviar comentario",
     "errorTitle": "¡Error!",
     "errorCommentTooLong": "El comentario no puede superar los 144 caracteres."
+  },
+
+
+"navigation": {
+    "home": "Inicio",
+    "search": "Buscar",
+    "notifications": "Notificaciones"
+  },
+  "sidebar": {
+    "followedChannels": "Canales Seguidos",
+    "expand": "Expandir barra lateral",
+    "collapse": "Contraer barra lateral"
+  },
+  "live": {
+    "status": "EN VIVO",
+    "viewers": "{count, plural, =1 {# espectador} other {# espectadores}}",
+    "follow": "Seguir",
+    "following": "Siguiendo",
+    "watchOnTwitch": "Ver en Twitch",
+    "shareChannel": "Compartir canal",
+    "copyLink": "Copiar enlace",
+    "linkCopied": "Enlace copiado al portapapeles"
+  },
+  "video": {
+    "watchlist": {
+      "add": "Añadir a lista",
+      "added": "Añadido",
+      "addTooltip": "Añadir a lista de reproducción",
+      "addedTooltip": "Añadido a la lista"
+    },
+    "share": {
+      "button": "Compartir",
+      "inCommunity": "Compartir en la comunidad",
+      "copyLink": "Copiar enlace",
+      "linkCopied": "Enlace copiado"
+    },
+    "watch": {
+      "onYoutube": "Ver en YouTube",
+      "play": "Reproducir",
+      "moreInfo": "Más información"
+    },
+    "latest": "Ver el último contenido de {channel}"
+  },
+  "sections": {
+    "news": "Novedades",
+    "liveNow": "En directo",
+    "lol": "League of Legends",
+    "valorant": "Valorant",
+    "torontoUltra": "Toronto Ultra",
+    "vods": "VODs"
+  },
+  "errors": {
+    "notFound": {
+      "title": "404",
+      "message": "Video no encontrado",
+      "backHome": "Volver al inicio"
+    },
+    "generic": {
+      "title": "¡Algo salió mal!",
+      "message": "Estamos teniendo problemas",
+      "tryAgain": "Intentar de nuevo",
+      "loading": "Estamos teniendo problemas cargando este contenido",
+      "application": "Estamos teniendo problemas con la aplicación"
+    }
   }
 }
