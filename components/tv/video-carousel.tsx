@@ -188,7 +188,7 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
         <div className="ml-[60px] relative overflow-visible">
           <div
             ref={containerRef}
-            className="flex gap-2 overflow-x-auto overflow-y-visible scrollbar-hide pb-48 pt-10 snap-x snap-mandatory"
+            className="flex gap-2 overflow-x-auto overflow-y-visible scrollbar-hide pb-48 pt-8 snap-x snap-mandatory"
             style={{
               marginLeft: "-60px",
               paddingLeft: "0px",

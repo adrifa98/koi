@@ -43,7 +43,7 @@ export default async function Home() {
         <div className="md:ml-[80px]">
           <main>
             <HeroSection latestVideo={latestVideo} />
-            <div className="space-y-8 pb-8 mt-40 md:mt-[100px]">
+            <div className="space-y-8 pb-8 mt-40 md:mt-[150px]">
               {liveStreams.length > 0 && (
                 <VideoCarousel title="Live Now" videosType="twitch" initialVideos={liveStreams} />
               )}
