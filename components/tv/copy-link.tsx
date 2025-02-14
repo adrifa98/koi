@@ -13,13 +13,14 @@ interface CopyLinkProps {
 }
 
 export function CopyLink({ url, variant = "outline", size = "icon" }: CopyLinkProps) {
+  const t = useTranslations('video');
   async function copyToClipboard() {
     await navigator.clipboard.writeText(`${location.origin}${url}`)
     toast({
-      description: "Link copied to clipboard",
+      description: t('share.linkCopied')
     })
   }
-  const t = useTranslations('video');
+  
   return (
     <TooltipProvider>
       <Tooltip>

@@ -114,7 +114,7 @@
         "button": "Share",
         "inCommunity": "Share in community",
         "copyLink": "Copy link",
-        "linkCopied": "Link copied"
+        "linkCopied": "Link copied to clipboard"
       },
       "watch": {
         "onYoutube": "Watch on YouTube",
