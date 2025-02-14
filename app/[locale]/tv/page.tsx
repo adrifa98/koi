@@ -40,7 +40,7 @@ export default async function Home() {
       <div className="min-h-screen bg-background overflow-x-hidden">
         <ChannelSidebar streams={streams} />
         <StoriesBar streams={streams} />
-        <div className="md:ml-[80px]">
+        <div className="md:ml-[80px] mt-40 md:mt-6">
           <main>
             <HeroSection latestVideo={latestVideo} />
             <div className="space-y-8 pb-8">
