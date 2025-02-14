@@ -12,10 +12,10 @@ export default async function Home() {
 
     const channels = {
       "Movistar KOI": "Novedades",
-      MovistarKOILoL: "League of Legends",
-      MovistarKOIValorant: "Valorant",
+      "Movistar KOI League of Legends": "League of Legends",
+      "Movistar KOI Valorant": "Valorant",
       "Toronto Ultra": "Toronto Ultra",
-      MovistarKOIVODS: "VODs",
+      "Movistar KOI VODS": "VODs",
     }
 
     const videosByChannel = Object.keys(channels).reduce(
@@ -47,6 +47,7 @@ export default async function Home() {
                       key={channel}
                       title={title}
                       videosType="youtube"
+                      channelName={channel}
                       initialVideos={videosByChannel[channel]}
                     />
                   ),

@@ -1,5 +1,6 @@
 "use client"
 
+import { useDebounce } from "@/hooks/use-debounce"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -13,22 +14,26 @@ import { VideoCard } from "./video-card"
 interface VideoCarouselProps {
   title: string
   videosType: string
+  channelName?: string
   initialVideos: (SanityVideo | TwitchStream)[]
 }
 
-export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouselProps) {
+export function VideoCarousel({ title, videosType, channelName, initialVideos }: VideoCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
+  const [isScrolling, setIsScrolling] = useState(false)
+  const [isNearEnd, setIsNearEnd] = useState(false)
 
   // Infinite Query para cargar videos
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ["videos", videosType],
+    queryKey: ["videos", videosType, channelName],
     initialPageParam: "",
     queryFn: async ({ pageParam }) => {
       const searchParams = new URLSearchParams()
       if (pageParam) searchParams.set("cursor", pageParam)
       if (videosType) searchParams.set("type", videosType)
+      if (channelName) searchParams.set("channel", channelName)
       searchParams.set("limit", "15")
 
       const response = await fetch(`/api/videos?${searchParams}`)
@@ -37,12 +42,25 @@ export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouse
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     initialData: {
-      pages: [{ items: initialVideos, nextCursor: null }],
+      pages: [
+        {
+          items: initialVideos.sort((a, b) => {
+            if ("publishedAt" in a && "publishedAt" in b) {
+              return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+            }
+            if ("viewer_count" in a && "viewer_count" in b) {
+              return b.viewer_count - a.viewer_count
+            }
+            return 0
+          }),
+          nextCursor: initialVideos.length >= 15 ? "15" : null,
+        },
+      ],
       pageParams: [""],
     },
   })
 
-  // Intersection Observer para el infinite scroll
+  // Intersection Observer para el infinite scroll con buffer zone
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 0.1,
     rootMargin: "300px",
@@ -55,29 +73,49 @@ export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouse
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  // Obtener todos los videos de las páginas cargadas
+  // Obtener todos los videos de las páginas cargadas y mantener el orden
   const videos = data?.pages.flatMap((page) => page.items) ?? initialVideos
 
   const updateArrows = useCallback(() => {
     if (!containerRef.current) return
 
-    requestAnimationFrame(() => {
-      const { scrollLeft, scrollWidth, clientWidth } = containerRef.current!
-      const cardWidth = containerRef.current!.querySelector("[data-card]")?.clientWidth ?? 0
-      const isAtStart = scrollLeft < cardWidth * 0.25
-      const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 1
+    const container = containerRef.current
+    const { scrollLeft, scrollWidth, clientWidth } = container
+    const cardWidth = container.querySelector("[data-card]")?.clientWidth ?? 0
+    const isAtStart = scrollLeft < cardWidth * 0.25
+    const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < cardWidth
 
-      setShowLeftArrow(!isAtStart)
-      setShowRightArrow(!isAtEnd)
-    })
-  }, [])
+    // Detectar si estamos cerca del final para precargar
+    const isNearEndThreshold = scrollWidth - clientWidth - scrollLeft < cardWidth * 3
+    setIsNearEnd(isNearEndThreshold)
+
+    // Mantener la flecha derecha visible si:
+    // 1. No estamos al final del scroll O
+    // 2. Hay más páginas por cargar O
+    // 3. Estamos cargando la siguiente página
+    const shouldShowRightArrow = !isAtEnd || hasNextPage || isFetchingNextPage
+
+    setShowLeftArrow(!isAtStart)
+    setShowRightArrow(shouldShowRightArrow)
+  }, [hasNextPage, isFetchingNextPage])
+
+  // Efecto para precargar cuando nos acercamos al final
+  useEffect(() => {
+    if (isNearEnd && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
+    }
+  }, [isNearEnd, hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  const debouncedScroll = useDebounce(() => {
+    requestAnimationFrame(updateArrows)
+  }, 100)
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
     const handleScroll = () => {
-      requestAnimationFrame(updateArrows)
+      debouncedScroll()
     }
 
     container.addEventListener("scroll", handleScroll, { passive: true })
@@ -87,14 +125,16 @@ export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouse
     return () => {
       container.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", updateArrows)
+      debouncedScroll.cancel?.()
     }
-  }, [updateArrows])
+  }, [updateArrows, debouncedScroll])
 
-  const handleScroll = useCallback((direction: "left" | "right") => {
-    if (!containerRef.current) return
+  const handleScroll = useCallback(
+    (direction: "left" | "right") => {
+      if (!containerRef.current || isScrolling) return
 
-    requestAnimationFrame(() => {
-      const container = containerRef.current!
+      setIsScrolling(true)
+      const container = containerRef.current
       const cardWidth = container.querySelector("[data-card]")?.clientWidth ?? 0
       const gap = 8
       const scrollAmount = cardWidth + gap
@@ -108,10 +148,21 @@ export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouse
         left: targetScroll,
         behavior: "smooth",
       })
-    })
-  }, [])
 
+      // Reset scrolling state after animation
+      setTimeout(() => {
+        setIsScrolling(false)
+        updateArrows()
+      }, 500)
+    },
+    [isScrolling, updateArrows],
+  )
+
+  // No mostrar el carousel si no hay videos
   if (!videos?.length) return null
+
+  // Para streams en vivo, no mostrar infinite scroll si no hay suficientes items
+  const showInfiniteScroll = videosType === "twitch" ? videos.length >= 15 : true
 
   return (
     <div className="group/carousel relative">
@@ -143,12 +194,28 @@ export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouse
                   style={{
                     width: "var(--dynamic-card-width)",
                   }}
-                  ref={index === videos.length - 5 ? loadMoreRef : undefined}
+                  ref={showInfiniteScroll && index === videos.length - 5 ? loadMoreRef : undefined}
                 >
-                  <VideoCard video={video} priority={index < 2} isFirstCard={index === 0} />
+                  <VideoCard
+                    video={video}
+                    priority={index < 2}
+                    type={videosType as "youtube" | "twitch"}
+                    isFirstCard={index === 0}
+                  />
                 </div>
               )
             })}
+
+            {/* Loading placeholder */}
+            {isFetchingNextPage && (
+              <div
+                className="snap-start flex-none animate-pulse bg-muted"
+                style={{
+                  width: "var(--dynamic-card-width)",
+                  aspectRatio: "16/9",
+                }}
+              />
+            )}
           </div>
 
           {videos.length > 1 && (
@@ -167,12 +234,13 @@ export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouse
                     size="icon"
                     className="h-[200px] w-16 rounded-none hover:bg-transparent"
                     onClick={() => handleScroll("left")}
+                    disabled={isScrolling}
                   >
-                    <ChevronLeft className="h-8 w-8" />
+                    <ChevronLeft className={`h-8 w-8 ${isScrolling ? "opacity-50" : ""}`} />
                   </Button>
                 </div>
               )}
-              {(showRightArrow || hasNextPage) && (
+              {(showRightArrow || isFetchingNextPage) && (
                 <div
                   className="absolute right-0 top-10 h-[200px] w-16 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                   style={{
@@ -185,8 +253,9 @@ export function VideoCarousel({ title, videosType, initialVideos }: VideoCarouse
                     size="icon"
                     className="h-[200px] w-16 rounded-none hover:bg-transparent"
                     onClick={() => handleScroll("right")}
+                    disabled={isScrolling}
                   >
-                    <ChevronRight className="h-8 w-8" />
+                    <ChevronRight className={`h-8 w-8 ${isScrolling ? "opacity-50" : ""}`} />
                   </Button>
                 </div>
               )}
