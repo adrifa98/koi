@@ -4,17 +4,17 @@
 
 @layer base {
   :root {
-    --background: 230 80% 3%; /* Azul aún más oscuro */
-    --foreground: 60 9.1% 97.8%; /* Blanco grisáceo */
-    --card: 230 75% 4%; /* Ajuste sutil para más contraste */
+    --background: 230 80% 3%;
+    --foreground: 60 9.1% 97.8%;
+    --card: 230 75% 4%;
     --card-foreground: 60 9.1% 97.8%;
     --popover: 230 75% 4%;
     --popover-foreground: 60 9.1% 97.8%;
-    --primary: 220 88% 58%; /* Azul un poco más vibrante */
+    --primary: 220 88% 58%;
     --primary-foreground: 60 9.1% 97.8%;
     --secondary: 220 55% 25%;
-    --secondary-foreground: 210 10% 85%; /* Más claro para mejor contraste */
-    --muted: 220 35% 18%; /* Un poco más brillante */
+    --secondary-foreground: 210 10% 85%;
+    --muted: 220 35% 18%;
     --muted-foreground: 220 12% 65%;
     --accent: 220 55% 25%;
     --accent-foreground: 60 9.1% 97.8%;
@@ -22,35 +22,76 @@
     --destructive-foreground: 60 9.1% 97.8%;
     --border: 220 35% 18%;
     --input: 220 35% 18%;
-    --ring: 220 85% 60%; /* Más brillante para resaltar */
+    --ring: 220 85% 60%;
     --radius: 0.5rem;
+
+    --sidebar-width: 72px;
+    --initial-margin: 60px;
+    --container-padding: 76px; /* 60px izquierda + 16px derecha */
+    --gap: 8px;
+
+    /* Por defecto: 5 cards */
+    --dynamic-card-width: calc((100vw - var(--sidebar-width) - var(--container-padding) - (4 * var(--gap))) / 5);
+
+    @media (max-width: 1536px) {
+      /* 4 cards */
+      --dynamic-card-width: calc((100vw - var(--sidebar-width) - var(--container-padding) - (3 * var(--gap))) / 4);
+    }
+
+    @media (max-width: 1280px) {
+      /* 3 cards */
+      --dynamic-card-width: calc((100vw - var(--sidebar-width) - var(--container-padding) - (2 * var(--gap))) / 3);
+    }
+
+    @media (max-width: 1024px) {
+      /* 2 cards */
+      --dynamic-card-width: calc((100vw - var(--sidebar-width) - var(--container-padding) - var(--gap)) / 2);
+    }
+
+    @media (max-width: 640px) {
+      /* 1 card */
+      --dynamic-card-width: calc(100vw - var(--sidebar-width) - var(--container-padding));
+    }
+
+    @screen 2xl {
+      --card-width: calc((100vw - 12rem) / 6);
+    }
+    @screen xl {
+      --card-width: calc((100vw - 12rem) / 5);
+    }
+    @screen lg {
+      --card-width: calc((100vw - 12rem) / 4);
+    }
+    @screen md {
+      --card-width: calc((100vw - 12rem) / 3);
+    }
+    @screen sm {
+      --card-width: calc((100vw - 12rem) / 2);
+    }
   }
 
   .light {
-    --background: 0 0% 100%; /* Blanco */
-    --foreground: 20 14.3% 4.1%; /* Gris oscuro */
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 20 14.3% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 20 14.3% 4.1%;
-    --primary: 220 88% 58%; /* Azul en lugar de naranja */
+    --primary: 220 88% 58%;
     --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 220 50% 90%; /* Azul claro en lugar de beige */
-    --secondary-foreground: 220 20% 25%; /* Azul más oscuro */
-    --muted: 220 45% 95%; /* Azul muy claro */
-    --muted-foreground: 220 20% 35%; /* Azul grisáceo más oscuro */
-    --accent: 220 50% 90%; /* Azul claro */
-    --accent-foreground: 220 20% 25%; /* Azul más oscuro */
+    --secondary: 220 50% 90%;
+    --secondary-foreground: 220 20% 25%;
+    --muted: 220 45% 95%;
+    --muted-foreground: 220 20% 35%;
+    --accent: 220 50% 90%;
+    --accent-foreground: 220 20% 25%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 60 9.1% 97.8%;
-    --border: 220 15% 85%; /* Azul tenue en lugar de gris */
-    --input: 220 15% 85%; /* Azul tenue en lugar de gris */
-    --ring: 220 85% 60%; /* Azul vibrante */
+    --border: 220 15% 85%;
+    --input: 220 15% 85%;
+    --ring: 220 85% 60%;
   }
-}
 
-
-@layer base {
   * {
     @apply border-border;
   }
@@ -60,42 +101,41 @@
 }
 
 @layer utilities {
-  /* Scrollbar General */
   ::-webkit-scrollbar {
-    width: 12px; /* Ancho del scrollbar */
+    width: 12px;
   }
-
-  /* Light Mode */
   .light ::-webkit-scrollbar-track {
-    background: hsl(0, 0%, 100%); /* Blanco */
+    background: hsl(0, 0%, 100%);
   }
-
   .light ::-webkit-scrollbar-thumb {
-    background: hsl(220, 15%, 85%); /* Azul tenue en lugar de gris */
-    border-radius: 6px; /* Bordes redondeados */
+    background: hsl(220, 15%, 85%);
+    border-radius: 6px;
   }
-
   .light ::-webkit-scrollbar-thumb:hover {
-    background: hsl(220, 20%, 35%); /* Azul grisáceo más oscuro */
+    background: hsl(220, 20%, 35%);
   }
-
-  /* Dark Mode */
   .dark ::-webkit-scrollbar-track {
-    background: hsl(230, 80%, 3%); /* Fondo oscuro */
+    background: hsl(230, 80%, 3%);
   }
-
   .dark ::-webkit-scrollbar-thumb {
-    background: hsl(220, 35%, 18%); /* Azul oscuro suave */
-    border-radius: 6px; /* Bordes redondeados */
+    background: hsl(220, 35%, 18%);
+    border-radius: 6px;
   }
-
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: hsl(220, 55%, 25%); /* Azul más vibrante en hover */
+    background: hsl(220, 55%, 25%);
   }
 }
-
-
 
 .ProseMirror:focus {
   outline: none;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

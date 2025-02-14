@@ -4,7 +4,7 @@ const SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET
 
 export async function getVideos(): Promise<SanityVideo[]> {
-  const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-02-12/data/query/${SANITY_DATASET}?query=*[_type == "video"]{_id,title,description,videoId,thumbnailUrl,category}`
+  const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-02-12/data/query/${SANITY_DATASET}?query=*[_type == "video"]{_id,title,videoId,channelName,publishedAt,duration}`
   const response = await fetch(url, { next: { revalidate: 60 } })
 
   if (!response.ok) {
@@ -20,7 +20,7 @@ export async function getVideos(): Promise<SanityVideo[]> {
 }
 
 export async function getVideo(videoId: string): Promise<SanityVideo | null> {
-  const query = `*[_type == "video" && (videoId match "*${videoId}*")][0]{_id,title,description,videoId,thumbnailUrl,category}`
+  const query = `*[_type == "video" && (videoId match "*${videoId}*")][0]{_id,title,videoId,channelName,publishedAt,duration}`
   const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-02-12/data/query/${SANITY_DATASET}?query=${encodeURIComponent(query)}`
 
   const response = await fetch(url, { next: { revalidate: 60 } })

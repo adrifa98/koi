@@ -52,7 +52,7 @@ async function VideoContent({ videoId }: { videoId: string }) {
           </div>
 
           <div className="bg-card rounded-lg p-4">
-            <p className="text-sm text-muted-foreground">{video.description}</p>
+            <p className="text-sm text-muted-foreground"></p>
           </div>
         </div>
       </div>

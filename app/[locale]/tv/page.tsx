@@ -1,4 +1,3 @@
-
 import { ChannelSidebar } from "@/components/tv/channel-sidebar"
 import { HeroSection } from "@/components/tv/hero-section"
 import { LiveCarousel } from "@/components/tv/live-carousel"
@@ -17,55 +16,40 @@ export default async function Home() {
   try {
     ;[videos, streams] = await Promise.all([getVideos(), getTwitchStreams()])
 
-    console.log("Fetched videos:", JSON.stringify(videos, null, 2))
-
-    if (videos.length === 0) {
-      console.warn("No videos fetched from Sanity")
+    const channels = {
+      "Movistar KOI": "Novedades",
+      "Movistar KOI League of Legends": "League of Legends",
+      "Movistar KOI Valorant": "Valorant",
+      "Toronto Ultra": "Toronto Ultra",
+      "Movistar KOI VODS": "VODs"
     }
 
-    // Group videos by category
-    const videosByCategory = videos.reduce(
-      (acc, video) => {
-        if (!acc[video.category]) {
-          acc[video.category] = []
-        }
-        acc[video.category].push(video)
-        return acc
-      },
-      {} as Record<string, SanityVideo[]>,
-    )
+    const videosByChannel = Object.keys(channels).reduce((acc, channel) => {
+      acc[channel] = videos
+        .filter(video => video.channelName === channel)
+        .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+      return acc
+    }, {} as Record<string, SanityVideo[]>)
 
-    console.log("Videos by category:", JSON.stringify(videosByCategory, null, 2))
-
-    // Filter live streams
     const liveStreams = streams.filter((stream) => stream.is_live)
 
     return (
       <div className="min-h-screen bg-background overflow-x-hidden">
         <ChannelSidebar streams={streams} />
-        <div className="ml-[62px]">
+        <div className="ml-[82px]">
           <main>
             <HeroSection />
-            <div className="space-y-8 pb-8">
+            <div className="space-y-8">
               {liveStreams.length > 0 && <LiveCarousel title="Live Now" streams={liveStreams} />}
-              {Object.entries(videosByCategory).length > 0 ? (
-                Object.entries(videosByCategory).map(([category, categoryVideos]) => (
+              {Object.entries(channels).map(([channel, title]) => (
+                videosByChannel[channel]?.length > 0 && (
                   <VideoCarousel
-                    key={category}
-                    title={category.charAt(0).toUpperCase() + category.slice(1)}
-                    videos={categoryVideos}
+                    key={channel}
+                    title={title}
+                    videos={videosByChannel[channel]}
                   />
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">No videos available at the moment.</p>
-                  {process.env.NODE_ENV === "development" && (
-                    <pre className="mt-4 p-4 bg-gray-100 rounded text-left overflow-auto">
-                      {JSON.stringify({ videos, error }, null, 2)}
-                    </pre>
-                  )}
-                </div>
-              )}
+                )
+              ))}
             </div>
           </main>
         </div>
@@ -89,4 +73,3 @@ export default async function Home() {
     )
   }
 }
-

@@ -11,13 +11,10 @@ export interface TwitchStream {
   profile_image_url: string 
 }
   
-  export interface SanityVideo {
-    _id: string
-    title: string
-    description: string
-    videoId: string
-    thumbnailUrl: string
-    category: string
-  }
-  
-  
+export interface SanityVideo {
+  _id: string
+  title: string
+  videoId: string
+  channelName: string
+  publishedAt: string
+}

@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import { Check, Play, Plus, Share } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import type React from "react"
 import { memo, useCallback, useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -18,9 +19,10 @@ interface VideoCardProps {
   video: SanityVideo | TwitchStream
   priority?: boolean
   type?: "youtube" | "twitch"
+  isFirstCard?: boolean
 }
 
-function VideoCardComponent({ video, priority = false, type = "youtube" }: VideoCardProps) {
+function VideoCardComponent({ video, priority = false, type = "youtube", isFirstCard = false }: VideoCardProps) {
   const router = useRouter()
   const [isHovering, setIsHovering] = useState(false)
   const [isAdded, setIsAdded] = useState(false)
@@ -46,7 +48,7 @@ function VideoCardComponent({ video, priority = false, type = "youtube" }: Video
 
     const vid = video as SanityVideo
     return {
-      thumbnail: vid.thumbnailUrl || VIDEO_PROVIDERS.youtube.thumbnail(vid.videoId),
+      thumbnail: VIDEO_PROVIDERS.youtube.thumbnail(vid.videoId),
       preview: VIDEO_PROVIDERS.youtube.embed(vid.videoId),
       share: VIDEO_PROVIDERS.youtube.share(vid.videoId),
     }
@@ -71,27 +73,54 @@ function VideoCardComponent({ video, priority = false, type = "youtube" }: Video
   const handleAdd = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     setIsAdded(true)
-    // Aquí iría la lógica para añadir a la watchlist
-    setTimeout(() => setIsAdded(false), 2000) // Reset después de 2 segundos
+    setTimeout(() => setIsAdded(false), 2000)
   }, [])
 
   return (
     <TooltipProvider>
       <div
         ref={targetRef}
-        className="relative flex-none w-80 [&:hover]:z-50"
+        className="relative flex-none w-full"
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
+        style={{
+          // Reducimos el margen para la primera card cuando está en hover
+          marginLeft: isFirstCard && isHovering ? "40px" : "0",
+          marginRight: isFirstCard && isHovering ? "-40px" : "0",
+          transition: "margin 200ms ease-out",
+        }}
       >
+        {/* Placeholder div to maintain space */}
+        <div className="w-full aspect-video invisible">
+          <Card>
+            <CardContent className="p-0">
+              <div className="aspect-video" />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Actual card with hover effect */}
         <motion.div
-          className="origin-center"
-          whileHover={{
-            scale: isTwitch ? 1.15 : 1.2,
+          className="absolute top-0 left-0 w-full origin-center"
+          animate={{
+            scale: isHovering ? (isTwitch ? 1.15 : 1.2) : 1,
             zIndex: isHovering ? 50 : 0,
-            transition: { duration: 0.3 },
+          }}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
           }}
         >
-          <Card className="overflow-hidden cursor-pointer bg-card h-full" onClick={handleVideoClick}>
+          <Card
+            className="overflow-hidden cursor-pointer bg-card h-full"
+            onClick={handleVideoClick}
+            style={{
+              transformOrigin: "center center",
+              position: "relative",
+            }}
+          >
             <CardContent className="p-0">
               <div className="relative">
                 <div className="aspect-video relative bg-black">
