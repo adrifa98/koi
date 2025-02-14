@@ -1,4 +1,3 @@
-import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
  
 export default function Home() {
@@ -6,7 +5,6 @@ export default function Home() {
   return (
     <div>
       <h1>{t('title')}</h1>
-      <Link href="/about">{t('about')}</Link>
     </div>
   );
 }

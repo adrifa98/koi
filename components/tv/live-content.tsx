@@ -1,16 +1,15 @@
 "use client"
 
-import { AnimatePresence, motion } from "framer-motion"
-import { ArrowLeft, Check, ExternalLink, Heart, Plus, Users } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
+import { ArrowLeft, ExternalLink, Heart, Users } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 import { CopyLink } from "@/components/tv/copy-link"; // Updated import path
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { VIDEO_PROVIDERS } from "@/lib/constants"
-import type { TwitchStream } from "@/lib/types"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { VIDEO_PROVIDERS } from "@/lib/constants";
+import type { TwitchStream } from "@/lib/types";
 
 interface LiveContentProps {
   stream: TwitchStream
@@ -91,37 +90,13 @@ export function LiveContent({ stream }: LiveContentProps) {
 
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="outline" size="sm" asChild className="hover:bg-accent">
+                      <Button variant="outline" size="icon" asChild className="hover:bg-accent">
                         <a href={`https://twitch.tv/${stream.user_login}`} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="h-4 w-4" />
                         </a>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Watch on Twitch</TooltipContent>
-                  </Tooltip>
-
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="outline" size="icon" onClick={handleAdd} className="hover:bg-accent relative">
-                        <AnimatePresence>
-                          {isAdded ? (
-                            <motion.div
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              exit={{ scale: 0 }}
-                              className="absolute inset-0 flex items-center justify-center"
-                            >
-                              <Check className="h-4 w-4 text-primary" />
-                            </motion.div>
-                          ) : (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
-                              <Plus className="h-4 w-4" />
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>{isAdded ? "Added to Watchlist" : "Add to Watchlist"}</TooltipContent>
                   </Tooltip>
                 </div>
               </TooltipProvider>
