@@ -16,11 +16,10 @@ const TWITCH_STREAMERS = [
   "Perxitaa",
   "jaimemellado_",
   "supa_lol",
-  "el_yuste",
-  "danilg10",
-  "mfreak00",
-  "Gaules",
-  "otplol_",
+  "rodenasink",
+  "aMONSTERR",
+  "Guardy",
+  
 ]
 
 interface TwitchStream {

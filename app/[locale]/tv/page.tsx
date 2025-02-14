@@ -44,21 +44,32 @@ export default async function Home() {
           <main>
             <HeroSection latestVideo={latestVideo} />
             <div className="space-y-8 pb-8 mt-40 md:mt-[150px]">
+              {videosByChannel["Movistar KOI"]?.length > 0 && (
+                <VideoCarousel
+                  key="Movistar KOI"
+                  title="Novedades"
+                  videosType="youtube"
+                  channelName="Movistar KOI"
+                  initialVideos={videosByChannel["Movistar KOI"]}
+                />
+              )}
               {liveStreams.length > 0 && (
                 <VideoCarousel title="Live Now" videosType="twitch" initialVideos={liveStreams} />
               )}
-              {Object.entries(channels).map(
-                ([channel, title]) =>
-                  videosByChannel[channel]?.length > 0 && (
-                    <VideoCarousel
-                      key={channel}
-                      title={title}
-                      videosType="youtube"
-                      channelName={channel}
-                      initialVideos={videosByChannel[channel]}
-                    />
-                  ),
-              )}
+              {Object.entries(channels)
+                .filter(([channel]) => channel !== "Movistar KOI") // Exclude Novedades since it's already shown
+                .map(
+                  ([channel, title]) =>
+                    videosByChannel[channel]?.length > 0 && (
+                      <VideoCarousel
+                        key={channel}
+                        title={title}
+                        videosType="youtube"
+                        channelName={channel}
+                        initialVideos={videosByChannel[channel]}
+                      />
+                    ),
+                )}
             </div>
           </main>
         </div>

@@ -1,76 +1,96 @@
-import { ArrowLeft, Plus, Share2, ThumbsUp } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Suspense } from "react"
 
-import { YouTubePlayer } from "@/components/tv/youtube-player"
+import { ChannelSidebar } from "@/components/tv/channel-sidebar"
+import { VideoActions } from "@/components/tv/video-actions"
+import { VideoCard } from "@/components/tv/video-card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { getVideo } from "@/lib/sanity"
+import { Separator } from "@/components/ui/separator"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { getVideo, getVideos } from "@/lib/sanity"
+import { getTwitchStreams } from "@/lib/twitch"
+import { formatDate } from "@/lib/utils"
 
 interface WatchPageProps {
-  params: { videoId: string }
+  params: {
+    videoId: string
+  }
 }
 
-async function VideoContent({ videoId }: { videoId: string }) {
-  const video = await getVideo(videoId)
+export default async function WatchPage({ params }: WatchPageProps) {
+  const [video, streams] = await Promise.all([getVideo(params.videoId), getTwitchStreams()])
 
   if (!video) {
     notFound()
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="relative">
-        <div className="w-full bg-black aspect-video">
-          <YouTubePlayer videoId={video.videoId} className="w-full h-full" controls={true} />
-        </div>
-        <Link href="/" className="absolute top-4 left-4 z-50">
-          <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-            <ArrowLeft className="h-6 w-6" />
-          </Button>
-        </Link>
-      </div>
+  // Get recommended videos from the same channel
+  const recommendedVideos = (await getVideos())
+    .filter((v) => v.channelName === video.channelName && v._id !== video._id)
+    .sort(() => Math.random() - 0.5) // Shuffle array
+    .slice(0, 10) // Take first 10 videos
 
-      <div className="max-w-screen-2xl mx-auto px-4 py-6">
-        <div className="grid gap-6">
-          <div className="space-y-4">
-            <h1 className="text-2xl font-bold">{video.title}</h1>
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <ThumbsUp className="h-4 w-4" />
-                Like
-              </Button>
-              <Button variant="ghost" size="sm" className="gap-2">
-                <Share2 className="h-4 w-4" />
-                Share
-              </Button>
-              <Button variant="ghost" size="sm" className="gap-2">
-                <Plus className="h-4 w-4" />
-                Save
-              </Button>
+  return (
+    <TooltipProvider>
+      <div className="min-h-screen bg-background">
+        <ChannelSidebar streams={streams} />
+        <div className="flex flex-col lg:flex-row lg:gap-6 max-w-[1800px] mx-auto md:ml-[80px]">
+          {/* Main Content */}
+          <div className="flex-1">
+            {/* Video Player Section */}
+            <div className="relative w-full bg-black aspect-video">
+              <iframe
+                src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&modestbranding=1`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+              <Link href="/" className="absolute top-4 left-4 lg:hidden bg-background/80 backdrop-blur-sm rounded-full">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
+                  <ArrowLeft className="h-6 w-6" />
+                </Button>
+              </Link>
+            </div>
+
+            {/* Video Info Section */}
+            <div className="p-4 lg:p-6">
+              <h1 className="text-xl lg:text-2xl font-bold mb-4">{video.title}</h1>
+
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={`/channels/${video.channelName.toLowerCase().replace(/ /g, "-")}.jpg`} />
+                    <AvatarFallback>{video.channelName[0]}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{video.channelName}</span>
+                    <span className="text-sm text-muted-foreground">{formatDate(video.publishedAt)}</span>
+                  </div>
+                </div>
+
+                <VideoActions videoId={video.videoId} title={video.title} />
+              </div>
+
+              <Separator className="mb-6" />
             </div>
           </div>
 
-          <div className="bg-card rounded-lg p-4">
-            <p className="text-sm text-muted-foreground"></p>
+          {/* Sidebar with recommended videos */}
+          <div className="lg:w-[400px] p-4 lg:p-6 lg:pt-0">
+            <h2 className="text-lg font-semibold mb-4">More from {video.channelName}</h2>
+            <div className="grid gap-4">
+              {recommendedVideos.map((recommendedVideo) => (
+                <div key={recommendedVideo._id} className="w-full">
+                  <VideoCard video={recommendedVideo} type="youtube" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  )
-}
-
-export default function WatchPage({ params }: WatchPageProps) {
-  return (
-    <Suspense
-      fallback={
-        <div className="w-full aspect-video bg-card animate-pulse flex items-center justify-center">
-          <div className="text-muted-foreground">Loading...</div>
-        </div>
-      }
-    >
-      <VideoContent videoId={params.videoId} />
-    </Suspense>
+    </TooltipProvider>
   )
 }
 
