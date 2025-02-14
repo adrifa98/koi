@@ -12,6 +12,8 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { getVideo, getVideos } from "@/lib/sanity"
 import { getTwitchStreams } from "@/lib/twitch"
 import { formatDate } from "@/lib/utils"
+import { getTranslations } from 'next-intl/server'
+
 
 interface WatchPageProps {
   params: {
@@ -25,22 +27,22 @@ export default async function WatchPage({ params }: WatchPageProps) {
   if (!video) {
     notFound()
   }
-
+  const t = await getTranslations('video');
   // Get channel URL based on channel name
   const getChannelUrl = (channelName: string) => {
     switch (channelName) {
       case "Movistar KOI":
-        return "/club"
+        return `/${t('idioma')}/club`
       case "Movistar KOI League of Legends":
-        return "/es/teams/lol"
+        return `/${t('idioma')}/teams/lol`
       case "Movistar KOI Valorant":
-        return "/es/teams/valorant"
+        return `/${t('idioma')}/teams/valorant`
       case "Toronto Ultra":
-        return "/es/teams/cod"
+        return `/${t('idioma')}/teams/cod`
       case "Movistar KOI VODS":
-        return "/club"
+        return `/${t('idioma')}/club"`
       default:
-        return "/club"
+        return `/${t('idioma')}/club"`
     }
   }
 
@@ -97,7 +99,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
 
           {/* Sidebar with recommended videos */}
           <div className="lg:w-[400px] p-4 lg:p-6 lg:pt-0">
-            <h2 className="text-lg font-semibold mb-4">More from {video.channelName}</h2>
+            <h2 className="text-lg font-semibold mb-4">{t('watch.more')} {video.channelName}</h2>
             <div className="grid gap-4">
               {recommendedVideos.map((recommendedVideo) => (
                 <div key={recommendedVideo._id} className="w-full">

@@ -15,6 +15,9 @@ import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 import { CARD_HEIGHT, CARD_WIDTH, VIDEO_PROVIDERS } from "@/lib/constants"
 import type { TwitchStream } from "@/lib/types"
 import type { SanityVideo } from "@/types/sanity"
+import { useLocale, useTranslations } from 'next-intl'
+
+
 
 interface VideoCardProps {
   video: SanityVideo | TwitchStream
@@ -61,6 +64,9 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
     setTimeout(() => setIsAdded(false), 2000)
   }, [])
 
+  const t = useTranslations('live');
+  const locale = useLocale();
+  
   return (
     <TooltipProvider>
       <div
@@ -142,10 +148,10 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
                   {isTwitch && (
                     <>
                       <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded z-30">
-                        LIVE
+                      {t('status')}
                       </div>
                       <div className="absolute top-2 right-2 bg-black/60 text-white text-xs font-semibold px-2 py-1 rounded z-30">
-                        {(video as TwitchStream).viewer_count.toLocaleString()} viewers
+                        {(video as TwitchStream).viewer_count.toLocaleString()} {t('viewers')}
                       </div>
                     </>
                   )}
@@ -207,9 +213,9 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
                                   </Button>
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent>{isAdded ? "Added to Watchlist" : "Add to Watchlist"}</TooltipContent>
+                              <TooltipContent>{isAdded ? t('watchlist.addedTooltip') : t('watchlist.add')}</TooltipContent>
                             </Tooltip>
-                            <CopyLink url={isTwitch ? `/live/${videoId}` : `/watch/${videoId}`} />
+                            <CopyLink url={isTwitch ? `/${locale}/tv/live/${videoId}` : `/${locale}/tv/watch/${videoId}`} />
                           </div>
                         )}
                       </div>

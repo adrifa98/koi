@@ -15,7 +15,6 @@
   },
 
 
-
   
   "CreatePost": {
     "post": "Post",
@@ -91,10 +90,21 @@
       "watchOnTwitch": "Watch on Twitch",
       "shareChannel": "Share channel",
       "copyLink": "Copy link",
-      "linkCopied": "Link copied to clipboard"
+      "linkCopied": "Link copied to clipboard",
+      "unfollow": "Unfollow Channel",
+      "followChannel": "Follow Channel",
+      "watchlist": {
+        "watchlist": "WatchList",
+        "add": "Add to watchlist",
+        "added": "Added",
+        "addTooltip": "Add to watchlist",
+        "addedTooltip": "Added to watchlist"
+      }
     },
     "video": {
+      "idioma": "en",
       "watchlist": {
+        "watchlist": "WatchList",
         "add": "Add to watchlist",
         "added": "Added",
         "addTooltip": "Add to watchlist",
@@ -109,9 +119,11 @@
       "watch": {
         "onYoutube": "Watch on YouTube",
         "play": "Play",
-        "moreInfo": "More Info"
-      },
-      "latest": "Watch the latest content from {channel}"
+        "moreInfo": "More Info",
+        "latest": "Watch the latest content from Movistar KOI",
+        "more": "More from "
+      }
+      
     },
     "sections": {
       "news": "News",

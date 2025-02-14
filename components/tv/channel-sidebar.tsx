@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import type { TwitchStream } from "@/lib/types"
+import { useLocale, useTranslations } from 'next-intl'
 
 interface ChannelSidebarProps {
   streams: TwitchStream[]
@@ -26,11 +27,11 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
     estimateSize: () => 64,
     overscan: 5,
   })
-
+  const locale = useLocale();
   const handleStreamClick = useCallback(
     (stream: TwitchStream) => {
       if (stream.is_live) {
-        router.push(`/live/${stream.user_login}`)
+        router.push(`/${locale}/tv/live/${stream.user_login}`)
       }
     },
     [router],
@@ -42,6 +43,8 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
     }
   }, [isHovered])
 
+  const t = useTranslations('sidebar');
+
   return (
     <motion.aside
       initial={false}
@@ -52,7 +55,7 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="h-16 flex items-center justify-between px-4 border-b">
-        {(isExpanded || isHovered) && <h2 className="font-semibold">Followed Channels</h2>}
+        {(isExpanded || isHovered) && <h2 className="font-semibold">{t('followedChannels')}</h2>}
         <Button
           variant="ghost"
           size="sm"

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { toast } from "@/components/ui/use-toast"
 import { Share } from "lucide-react"
+import { useTranslations } from 'next-intl'
 
 interface CopyLinkProps {
   url: string
@@ -18,7 +19,7 @@ export function CopyLink({ url, variant = "outline", size = "icon" }: CopyLinkPr
       description: "Link copied to clipboard",
     })
   }
-
+  const t = useTranslations('video');
   return (
     <TooltipProvider>
       <Tooltip>
@@ -27,7 +28,7 @@ export function CopyLink({ url, variant = "outline", size = "icon" }: CopyLinkPr
             <Share className="h-4 w-4" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Copy Link</TooltipContent>
+        <TooltipContent>{t('share.copyLink')}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )

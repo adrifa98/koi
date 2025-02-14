@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import type { SanityVideo } from "@/types/sanity"
+import { useTranslations } from 'next-intl'
 
 interface HeroSectionProps {
   latestVideo: SanityVideo
@@ -46,7 +47,7 @@ export function HeroSection({ latestVideo }: HeroSectionProps) {
   const handlePlay = () => {
     router.push(`/watch/${latestVideo.videoId}`)
   }
-
+  const t = useTranslations('video');
   return (
     <div ref={heroRef} className="relative h-[50vh] md:h-[80vh] w-full overflow-hidden">
       <div className="absolute inset-0">
@@ -74,11 +75,11 @@ export function HeroSection({ latestVideo }: HeroSectionProps) {
             ref={descriptionRef}
             className="text-base md:text-lg text-muted-foreground line-clamp-3 md:line-clamp-none"
           >
-            {"Watch the latest content from Movistar KOI"}
+            {t('watch.latest')}
           </p>
           <div className="flex gap-4">
             <Button size="lg" className="font-semibold" onClick={handlePlay}>
-              <Play className="mr-2 h-5 w-5" /> Play
+              <Play className="mr-2 h-5 w-5" /> {t('watch.play')}
             </Button>
           </div>
         </div>

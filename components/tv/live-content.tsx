@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { VIDEO_PROVIDERS } from "@/lib/constants";
 import type { TwitchStream } from "@/lib/types";
+import { useLocale, useTranslations } from 'next-intl';
 
 interface LiveContentProps {
   stream: TwitchStream
@@ -23,7 +24,8 @@ export function LiveContent({ stream }: LiveContentProps) {
     setIsAdded(true)
     setTimeout(() => setIsAdded(false), 2000)
   }
-
+  const locale = useLocale();
+  const t = useTranslations('live');
   return (
     <div className="md:ml-[80px] w-[90%] mx-auto">
       <div className="flex flex-col lg:flex-row max-w-[1800px] mx-auto gap-4">
@@ -49,7 +51,7 @@ export function LiveContent({ stream }: LiveContentProps) {
             <h1 className="text-xl lg:text-2xl font-bold mb-4">{stream.title}</h1>
 
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <Link href={`/creators/${stream.user_login}`} className="flex items-center gap-4 hover:opacity-80">
+              <Link href={`${locale}/creators/${stream.user_login}`} className="flex items-center gap-4 hover:opacity-80">
                 <Avatar
                   className={`h-10 w-10 ${stream.is_live ? "ring-1 ring-red-500 ring-offset-2 ring-offset-background" : ""}`}
                 >
@@ -80,13 +82,13 @@ export function LiveContent({ stream }: LiveContentProps) {
                         onClick={() => setIsFollowing(!isFollowing)}
                       >
                         <Heart className={`h-4 w-4 mr-2 ${isFollowing ? "fill-current" : ""}`} />
-                        {isFollowing ? "Following" : "Follow"}
+                        {isFollowing ? t('following') : t('follow')}
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>{isFollowing ? "Unfollow Channel" : "Follow Channel"}</TooltipContent>
+                    <TooltipContent>{isFollowing ? t('unfollow') : t('followChannel')}</TooltipContent>
                   </Tooltip>
 
-                  <CopyLink url={`/live/${stream.user_login}`} />
+                  <CopyLink url={`${locale}/live/${stream.user_login}`} />
 
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -96,7 +98,7 @@ export function LiveContent({ stream }: LiveContentProps) {
                         </a>
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Watch on Twitch</TooltipContent>
+                    <TooltipContent>{t('watchOnTwitch')}</TooltipContent>
                   </Tooltip>
                 </div>
               </TooltipProvider>

@@ -4,15 +4,17 @@ import { StoriesBar } from "@/components/tv/stories-bar"
 import { VideoCarousel } from "@/components/tv/video-carousel"
 import { getVideos } from "@/lib/sanity"
 import { getTwitchStreams } from "@/lib/twitch"
+import { getTranslations } from 'next-intl/server'
 
 export const revalidate = 60 // Revalidate every minute
 
 export default async function Home() {
+  const t = await getTranslations('sections');
   try {
     const [videos, streams] = await Promise.all([getVideos(), getTwitchStreams()])
 
     const channels = {
-      "Movistar KOI": "Novedades",
+      "Movistar KOI": t('news'),
       "Movistar KOI League of Legends": "League of Legends",
       "Movistar KOI Valorant": "Valorant",
       "Toronto Ultra": "Toronto Ultra",
@@ -45,7 +47,7 @@ export default async function Home() {
             <HeroSection latestVideo={latestVideo} />
             <div className="space-y-8 pb-8 mt-40 md:mt-[150px]">
               {liveStreams.length > 0 && (
-                <VideoCarousel title="Live Now" videosType="twitch" initialVideos={liveStreams} />
+                <VideoCarousel title={t('liveNow')} videosType="twitch" initialVideos={liveStreams} />
               )}
               {Object.entries(channels).map(
                 ([channel, title]) =>

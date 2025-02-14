@@ -7,6 +7,7 @@ import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { useLocale, useTranslations } from 'next-intl'
 
 interface VideoActionsProps {
   videoId: string
@@ -39,13 +40,14 @@ export function VideoActions({ videoId, title, channelName }: VideoActionsProps)
     setIsAdded(true)
     setTimeout(() => setIsAdded(false), 2000)
   }
-
+  const locale = useLocale();
   const handleShare = () => {
     const channelSlug = getChannelSlug(channelName)
-    const shareUrl = `/community/${channelSlug}/create?video=${videoId}`
+    
+    const shareUrl = `/${locale}/community/${channelSlug}/create?video=${videoId}`
     router.push(shareUrl)
   }
-
+  const t = useTranslations('video');
   return (
     <TooltipProvider>
       <div className="flex items-center gap-2">
@@ -61,7 +63,7 @@ export function VideoActions({ videoId, title, channelName }: VideoActionsProps)
                     className="flex items-center"
                   >
                     <Check className="h-4 w-4 mr-2" />
-                    Added
+                    {t('watchlist.added')}
                   </motion.div>
                 ) : (
                   <motion.div
@@ -77,7 +79,7 @@ export function VideoActions({ videoId, title, channelName }: VideoActionsProps)
               </AnimatePresence>
             </Button>
           </TooltipTrigger>
-          <TooltipContent>{isAdded ? "Added to Watchlist" : "Add to Watchlist"}</TooltipContent>
+          <TooltipContent>{isAdded ? t('watchlist.addTooltip') : t('watchlist.add')}</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -86,7 +88,7 @@ export function VideoActions({ videoId, title, channelName }: VideoActionsProps)
               <Share2 className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Share in Community</TooltipContent>
+          <TooltipContent>{t('share.inCommunity')}</TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -97,7 +99,7 @@ export function VideoActions({ videoId, title, channelName }: VideoActionsProps)
               </a>
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Watch on YouTube</TooltipContent>
+          <TooltipContent>{t('watch.onYoutube')}</TooltipContent>
         </Tooltip>
       </div>
     </TooltipProvider>
