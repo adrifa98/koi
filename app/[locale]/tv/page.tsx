@@ -40,10 +40,10 @@ export default async function Home() {
       <div className="min-h-screen bg-background overflow-x-hidden">
         <ChannelSidebar streams={streams} />
         <StoriesBar streams={streams} />
-        <div className="md:ml-[80px] mt-40 md:mt-6">
+        <div className="md:ml-[80px]">
           <main>
             <HeroSection latestVideo={latestVideo} />
-            <div className="space-y-8 pb-8">
+            <div className="space-y-8 pb-8 mt-40 md:mt-6">
               {liveStreams.length > 0 && (
                 <VideoCarousel title="Live Now" videosType="twitch" initialVideos={liveStreams} />
               )}

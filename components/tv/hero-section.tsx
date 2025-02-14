@@ -65,7 +65,7 @@ export function HeroSection({ latestVideo }: HeroSectionProps) {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background to-background/60" />
       </div>
-      <div className="relative container mx-8 h-full flex items-center px-4">
+      <div className="relative container mx-2 md:mx-8 h-full flex items-center px-4">
         <div className="max-w-2xl space-y-4 pt-0">
           <h1 ref={titleRef} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
             {latestVideo.title}
