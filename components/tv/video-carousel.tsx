@@ -25,11 +25,19 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
   const [isScrolling, setIsScrolling] = useState(false)
   const [isNearEnd, setIsNearEnd] = useState(false)
 
-  // Infinite Query para cargar videos
+  // Infinite Query para cargar videos (solo para YouTube)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ["videos", videosType, channelName],
     initialPageParam: "",
     queryFn: async ({ pageParam }) => {
+      // Si es Twitch, no hacer la petición
+      if (videosType === "twitch") {
+        return {
+          items: initialVideos,
+          nextCursor: null,
+        }
+      }
+
       const searchParams = new URLSearchParams()
       if (pageParam) searchParams.set("cursor", pageParam)
       if (videosType) searchParams.set("type", videosType)
@@ -53,7 +61,7 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
             }
             return 0
           }),
-          nextCursor: initialVideos.length >= 15 ? "15" : null,
+          nextCursor: videosType === "twitch" ? null : initialVideos.length >= 15 ? "15" : null,
         },
       ],
       pageParams: [""],
@@ -73,8 +81,8 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  // Obtener todos los videos de las páginas cargadas y mantener el orden
-  const videos = data?.pages.flatMap((page) => page.items) ?? initialVideos
+  // Obtener todos los videos
+  const videos = videosType === "twitch" ? initialVideos : (data?.pages.flatMap((page) => page.items) ?? initialVideos)
 
   const updateArrows = useCallback(() => {
     if (!containerRef.current) return

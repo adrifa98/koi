@@ -6,11 +6,14 @@ import type { SanityVideo } from "@/types/sanity"
 import type { NextRequest } from "next/server"
 import { z } from "zod"
 
+// Define a union type for VideoItem
+type VideoItem = SanityVideo | TwitchStream
+
 const QuerySchema = z
   .object({
     cursor: z.string().nullable().optional(),
     limit: z.coerce.number().default(15),
-    type: z.enum(["youtube", "twitch"]),
+    type: z.enum(["youtube", "twitch"]).optional(),
     channel: z.string().optional(),
   })
   .partial() // Make all fields optional
@@ -30,12 +33,11 @@ export async function GET(request: NextRequest) {
     }
 
     const { cursor, limit = 15, type, channel } = parsed.data
-    let items: (SanityVideo | TwitchStream)[] = []
+    let items: VideoItem[] = []
     let nextCursor: string | null = null
 
     if (type === "youtube") {
       const allVideos = await getVideos()
-      // Filtrar por canal y ordenar por fecha
       const filteredVideos = channel
         ? allVideos
             .filter((video) => video.channelName === channel)
@@ -49,7 +51,6 @@ export async function GET(request: NextRequest) {
       nextCursor = endIndex < filteredVideos.length ? endIndex.toString() : null
     } else if (type === "twitch") {
       const streams = await getTwitchStreams()
-      // Para streams de Twitch, solo mostrar los que están en vivo y ordenar por viewers
       const liveStreams = streams.filter((stream) => stream.is_live).sort((a, b) => b.viewer_count - a.viewer_count)
 
       const startIndex = cursor ? Number.parseInt(cursor) : 0
@@ -57,6 +58,18 @@ export async function GET(request: NextRequest) {
 
       items = liveStreams.slice(startIndex, endIndex)
       nextCursor = endIndex < liveStreams.length ? endIndex.toString() : null
+    } else {
+      // Handle case when type is not provided
+      const [videos, streams] = await Promise.all([getVideos(), getTwitchStreams()])
+      const liveStreams = streams.filter((stream) => stream.is_live)
+
+      // Combine arrays with type assertion
+      const allItems: VideoItem[] = [...videos, ...liveStreams]
+
+      const startIndex = cursor ? Number.parseInt(cursor) : 0
+      const endIndex = startIndex + limit
+      items = allItems.slice(startIndex, endIndex)
+      nextCursor = endIndex < allItems.length ? endIndex.toString() : null
     }
 
     const response: ApiResponse = {
