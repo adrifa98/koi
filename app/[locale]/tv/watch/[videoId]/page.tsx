@@ -54,7 +54,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
 
   return (
     <TooltipProvider>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pt-0 md:pt-4">
         <ChannelSidebar streams={streams} />
         <div className="flex flex-col lg:flex-row lg:gap-6 max-w-[1800px] mx-auto md:ml-[80px]">
           {/* Main Content */}

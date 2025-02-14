@@ -18,7 +18,7 @@ export default async function LivePage({ params }: LivePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-2 md:pt-4">
       <ChannelSidebar streams={streams} />
       <Suspense
         fallback={
