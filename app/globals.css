@@ -84,6 +84,10 @@
   body {
     @apply bg-background text-foreground;
   }
+  [data-theme="dark"] {
+    --primary: 220 88% 58%;
+    --primary-foreground: 60 9.1% 97.8%;
+  }
 }
 
 @layer utilities {

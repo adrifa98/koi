@@ -1,12 +1,13 @@
 "use client"
 
 import { AnimatePresence, motion } from "framer-motion"
-import { Check, Play, Plus, Share } from "lucide-react"
+import { Check, Play, Plus } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import type React from "react"
 import { memo, useCallback, useMemo, useState } from "react"
 
+import CopyLink from "@/components/tv/copy-link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -54,22 +55,6 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
     }
   }, [video, isTwitch])
 
-  const handleShare = useCallback(async () => {
-    try {
-      await navigator.share({
-        title: isTwitch ? (video as TwitchStream).title : (video as SanityVideo).title,
-        url: urls.share,
-      })
-    } catch (err) {
-      console.error("Error sharing:", err)
-    }
-  }, [video, urls.share, isTwitch])
-
-  const handleVideoClick = useCallback(() => {
-    const path = isTwitch ? `tv/live/${videoId}` : `tv/watch/${videoId}`
-    router.push(path)
-  }, [router, videoId, isTwitch])
-
   const handleAdd = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     setIsAdded(true)
@@ -115,7 +100,10 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
         >
           <Card
             className="overflow-hidden cursor-pointer bg-card h-full"
-            onClick={handleVideoClick}
+            onClick={() => {
+              const path = isTwitch ? `tv/live/${videoId}` : `tv/watch/${videoId}`
+              router.push(path)
+            }}
             style={{
               transformOrigin: "center center",
               position: "relative",
@@ -193,16 +181,8 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
                           <div className="flex items-center gap-2">
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <Button size="icon" variant="secondary" onClick={handleShare}>
-                                  <Share className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Share</TooltipContent>
-                            </Tooltip>
-
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button size="icon" variant="secondary" onClick={handleAdd} className="relative">
+                                <Button variant="outline" size="icon" onClick={handleAdd} className="hover:bg-accent">
+                                <Button variant="outline" size="icon" onClick={handleAdd} className="hover:bg-accent relative">
                                   <AnimatePresence>
                                     {isAdded ? (
                                       <motion.div
@@ -211,7 +191,7 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
                                         exit={{ scale: 0 }}
                                         className="absolute inset-0 flex items-center justify-center"
                                       >
-                                        <Check className="h-4 w-4 text-green-500" />
+                                        <Check className="h-4 w-4 text-primary" />
                                       </motion.div>
                                     ) : (
                                       <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
@@ -220,9 +200,11 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
                                     )}
                                   </AnimatePresence>
                                 </Button>
+                                </Button>
                               </TooltipTrigger>
                               <TooltipContent>{isAdded ? "Added to Watchlist" : "Add to Watchlist"}</TooltipContent>
                             </Tooltip>
+                            <CopyLink url={isTwitch ? `/live/${videoId}` : `/watch/${videoId}`} />
                           </div>
                         )}
                       </div>

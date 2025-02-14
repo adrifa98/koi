@@ -26,11 +26,29 @@ export default async function WatchPage({ params }: WatchPageProps) {
     notFound()
   }
 
+  // Get channel URL based on channel name
+  const getChannelUrl = (channelName: string) => {
+    switch (channelName) {
+      case "Movistar KOI":
+        return "/club"
+      case "Movistar KOI League of Legends":
+        return "/es/teams/lol"
+      case "Movistar KOI Valorant":
+        return "/es/teams/valorant"
+      case "Toronto Ultra":
+        return "/es/teams/cod"
+      case "Movistar KOI VODS":
+        return "/club"
+      default:
+        return "/club"
+    }
+  }
+
   // Get recommended videos from the same channel
   const recommendedVideos = (await getVideos())
     .filter((v) => v.channelName === video.channelName && v._id !== video._id)
-    .sort(() => Math.random() - 0.5) // Shuffle array
-    .slice(0, 10) // Take first 10 videos
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 10)
 
   return (
     <TooltipProvider>
@@ -59,7 +77,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
               <h1 className="text-xl lg:text-2xl font-bold mb-4">{video.title}</h1>
 
               <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-4">
+                <Link href={getChannelUrl(video.channelName)} className="flex items-center gap-4 hover:opacity-80">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={`/channels/${video.channelName.toLowerCase().replace(/ /g, "-")}.jpg`} />
                     <AvatarFallback>{video.channelName[0]}</AvatarFallback>
@@ -68,9 +86,9 @@ export default async function WatchPage({ params }: WatchPageProps) {
                     <span className="font-medium">{video.channelName}</span>
                     <span className="text-sm text-muted-foreground">{formatDate(video.publishedAt)}</span>
                   </div>
-                </div>
+                </Link>
 
-                <VideoActions videoId={video.videoId} title={video.title} />
+                <VideoActions videoId={video.videoId} title={video.title} channelName={video.channelName} />
               </div>
 
               <Separator className="mb-6" />
