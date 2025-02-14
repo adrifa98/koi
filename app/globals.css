@@ -45,28 +45,14 @@
 
     @media (max-width: 1024px) {
       /* 2 cards */
-      --dynamic-card-width: calc((100vw - var(--sidebar-width) - var(--container-padding) - var(--gap)) / 2);
+      --container-padding: 32px; /* Reduced padding for mobile */
+      --dynamic-card-width: calc((100vw - var(--container-padding) - var(--gap)) / 2);
     }
 
     @media (max-width: 640px) {
       /* 1 card */
-      --dynamic-card-width: calc(100vw - var(--sidebar-width) - var(--container-padding));
-    }
-
-    @screen 2xl {
-      --card-width: calc((100vw - 12rem) / 6);
-    }
-    @screen xl {
-      --card-width: calc((100vw - 12rem) / 5);
-    }
-    @screen lg {
-      --card-width: calc((100vw - 12rem) / 4);
-    }
-    @screen md {
-      --card-width: calc((100vw - 12rem) / 3);
-    }
-    @screen sm {
-      --card-width: calc((100vw - 12rem) / 2);
+      --container-padding: 32px; /* Reduced padding for mobile */
+      --dynamic-card-width: calc(100vw - var(--container-padding));
     }
   }
 

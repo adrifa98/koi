@@ -85,8 +85,8 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
         onMouseLeave={() => setIsHovering(false)}
         style={{
           // Reducimos el margen para la primera card cuando está en hover
-          marginLeft: isFirstCard && isHovering ? "40px" : "0",
-          marginRight: isFirstCard && isHovering ? "-40px" : "0",
+          marginLeft: isFirstCard && isHovering ? "35px" : "0",
+          marginRight: isFirstCard && isHovering ? "-35px" : "0",
           transition: "margin 200ms ease-out",
         }}
       >

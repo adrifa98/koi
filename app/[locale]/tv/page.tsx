@@ -1,5 +1,6 @@
 import { ChannelSidebar } from "@/components/tv/channel-sidebar"
 import { HeroSection } from "@/components/tv/hero-section"
+import { StoriesBar } from "@/components/tv/stories-bar"
 import { VideoCarousel } from "@/components/tv/video-carousel"
 import { getVideos } from "@/lib/sanity"
 import { getTwitchStreams } from "@/lib/twitch"
@@ -33,7 +34,8 @@ export default async function Home() {
     return (
       <div className="min-h-screen bg-background overflow-x-hidden">
         <ChannelSidebar streams={streams} />
-        <div className="ml-[80px]">
+        <StoriesBar streams={streams} />
+        <div className="md:ml-[80px]">
           <main>
             <HeroSection />
             <div className="space-y-8 pb-8">

@@ -16,15 +16,22 @@ export function LiveCarousel({ title, streams }: LiveCarouselProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
+  // Add state for firstVisibleIndex
+  const [firstVisibleIndex, setFirstVisibleIndex] = useState(0)
 
   const updateArrows = useCallback(() => {
     if (!containerRef.current) return
 
-    const { scrollLeft, scrollWidth, clientWidth } = containerRef.current
-    // Solo mostrar la flecha izquierda si hemos scrolleado más del 25% del ancho de una card
-    const cardWidth = containerRef.current.querySelector("[data-card]")?.clientWidth ?? 0
+    const container = containerRef.current
+    const { scrollLeft, scrollWidth, clientWidth } = container
+    const cardWidth = container.querySelector("[data-card]")?.clientWidth ?? 0
+    const gap = 8 // gap-2 en pixels
     const isAtStart = scrollLeft < cardWidth * 0.25
     const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 1
+
+    // Calculate which card is first visible based on scroll position
+    const newFirstVisibleIndex = Math.floor(scrollLeft / (cardWidth + gap))
+    setFirstVisibleIndex(newFirstVisibleIndex)
 
     setShowLeftArrow(!isAtStart)
     setShowRightArrow(!isAtEnd)
@@ -85,8 +92,9 @@ export function LiveCarousel({ title, streams }: LiveCarouselProps) {
             style={{
               marginLeft: "-60px",
               paddingLeft: "60px",
-              paddingRight: "16px",
-              width: "calc(100% + 60px)",
+              paddingRight: "60px",
+              width: "calc(100% + 120px)",
+              minWidth: "calc(var(--dynamic-card-width) + 120px)",
               overscrollBehaviorX: "contain",
               WebkitOverflowScrolling: "touch",
             }}
@@ -100,7 +108,12 @@ export function LiveCarousel({ title, streams }: LiveCarouselProps) {
                   width: "var(--dynamic-card-width)",
                 }}
               >
-                <VideoCard video={stream} priority={index < 2} type="twitch" isFirstCard={index === 0} />
+                <VideoCard
+                  video={stream}
+                  priority={index < 2}
+                  type="twitch"
+                  isFirstCard={index === firstVisibleIndex}
+                />
               </div>
             ))}
           </div>

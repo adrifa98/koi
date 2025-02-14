@@ -35,7 +35,7 @@ export function HeroSection() {
   }, [])
 
   return (
-    <div ref={heroRef} className="relative h-[80vh] w-full overflow-hidden">
+    <div ref={heroRef} className="relative h-[50vh] md:h-[80vh] w-full overflow-hidden">
       <div className="absolute inset-0">
         <video autoPlay muted loop className="h-full w-full object-cover" poster="/placeholder.svg">
           <source
@@ -47,10 +47,13 @@ export function HeroSection() {
       </div>
       <div className="relative container mx-auto h-full flex items-center px-4">
         <div className="max-w-2xl space-y-4 pt-16">
-          <h1 ref={titleRef} className="text-4xl sm:text-5xl md:text-6xl font-bold">
+          <h1 ref={titleRef} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">
             Tears of Steel
           </h1>
-          <p ref={descriptionRef} className="text-lg text-muted-foreground">
+          <p
+            ref={descriptionRef}
+            className="text-base md:text-lg text-muted-foreground line-clamp-3 md:line-clamp-none"
+          >
             In an apocalyptic future, a group of soldiers and scientists takes refuge in Amsterdam to try to understand
             what was destroyed the world.
           </p>

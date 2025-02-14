@@ -24,6 +24,7 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
   const [showRightArrow, setShowRightArrow] = useState(true)
   const [isScrolling, setIsScrolling] = useState(false)
   const [isNearEnd, setIsNearEnd] = useState(false)
+  const [firstVisibleIndex, setFirstVisibleIndex] = useState(0)
 
   // Infinite Query para cargar videos (solo para YouTube)
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
@@ -90,8 +91,13 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
     const container = containerRef.current
     const { scrollLeft, scrollWidth, clientWidth } = container
     const cardWidth = container.querySelector("[data-card]")?.clientWidth ?? 0
+    const gap = 8 // gap-2 en pixels
     const isAtStart = scrollLeft < cardWidth * 0.25
-    const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < cardWidth
+    const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 1
+
+    // Calculate which card is first visible based on scroll position
+    const newFirstVisibleIndex = Math.floor(scrollLeft / (cardWidth + gap))
+    setFirstVisibleIndex(newFirstVisibleIndex)
 
     // Detectar si estamos cerca del final para precargar
     const isNearEndThreshold = scrollWidth - clientWidth - scrollLeft < cardWidth * 3
@@ -173,7 +179,7 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
   const showInfiniteScroll = videosType === "twitch" ? videos.length >= 15 : true
 
   return (
-    <div className="group/carousel relative">
+    <div className="group/carousel relative ml-2 md:ml-0">
       <div className="ml-[60px]">
         <h2 className="text-2xl font-semibold mb-4 mt-[-100px]">{title}</h2>
       </div>
@@ -185,9 +191,10 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
             className="flex gap-2 overflow-x-auto overflow-y-visible scrollbar-hide pb-48 pt-10 snap-x snap-mandatory"
             style={{
               marginLeft: "-60px",
-              paddingLeft: "60px",
-              paddingRight: "16px",
-              width: "calc(100% + 60px)",
+              paddingLeft: "0px",
+              paddingRight: "60px",
+              width: "calc(100% + 120px)",
+              minWidth: "calc(var(--dynamic-card-width) + 120px)",
               overscrollBehaviorX: "contain",
               WebkitOverflowScrolling: "touch",
             }}
@@ -208,7 +215,7 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
                     video={video}
                     priority={index < 2}
                     type={videosType as "youtube" | "twitch"}
-                    isFirstCard={index === 0}
+                    isFirstCard={index === firstVisibleIndex}
                   />
                 </div>
               )

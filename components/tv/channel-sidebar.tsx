@@ -33,7 +33,7 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
         router.push(`/live/${stream.user_login}`)
       }
     },
-    [router]
+    [router],
   )
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
       initial={false}
       animate={{ width: isExpanded || isHovered ? 290 : 60 }}
       transition={{ duration: 0.2, ease: "linear" }}
-      className="h-screen fixed left-0 top-0 bg-card border-r z-40 flex flex-col transition-all"
+      className="h-screen fixed left-0 top-0 bg-card border-r z-40 flex-col transition-all hidden md:flex"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -103,11 +103,8 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
                 >
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage
-                          src={stream.profile_image_url}
-                          className={!stream.is_live ? "grayscale" : ""}
-                        />
+                      <Avatar className={`h-10 w-10 ${stream.is_live ? "ring-1 ring-red-500 ring-offset-2 ring-offset-background" : ""}`}>
+                        <AvatarImage src={stream.profile_image_url} className={!stream.is_live ? "grayscale" : ""} />
                         <AvatarFallback>{stream.user_name[0]}</AvatarFallback>
                       </Avatar>
                     </div>
@@ -133,3 +130,4 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
     </motion.aside>
   )
 }
+
