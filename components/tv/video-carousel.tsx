@@ -180,7 +180,7 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
 
   return (
     <div className="group/carousel relative ml-2 md:ml-0">
-      <div className="ml-[60px]">
+      <div className="">
         <h2 className="text-2xl font-semibold mb-4 mt-[-100px]">{title}</h2>
       </div>
 
