@@ -3,20 +3,20 @@
 import { ScrollArea, ScrollBar } from "@/app/components/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { TwitchStream } from "@/lib/types"
+import { useLocale } from 'next-intl'
 import { useRouter } from "next/navigation"
 import { useCallback } from "react"
-
 interface StoriesBarProps {
   streams: TwitchStream[]
 }
 
 export function StoriesBar({ streams }: StoriesBarProps) {
   const router = useRouter()
-
+  const locale = useLocale();
   const handleStreamClick = useCallback(
     (stream: TwitchStream) => {
       if (stream.is_live) {
-        router.push(`/live/${stream.user_login}`)
+        router.push(`/${locale}/tv/live/${stream.user_login}`)
       }
     },
     [router],

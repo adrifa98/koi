@@ -107,7 +107,7 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
           <Card
             className="overflow-hidden cursor-pointer bg-card h-full"
             onClick={() => {
-              const path = isTwitch ? `tv/live/${videoId}` : `tv/watch/${videoId}`
+              const path = isTwitch ? `/${locale}/tv/live/${videoId}` : `/${locale}/tv/watch/${videoId}`
               router.push(path)
             }}
             style={{

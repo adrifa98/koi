@@ -7,7 +7,8 @@ import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import type { SanityVideo } from "@/types/sanity"
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
+
 
 interface HeroSectionProps {
   latestVideo: SanityVideo
@@ -20,7 +21,7 @@ export function HeroSection({ latestVideo }: HeroSectionProps) {
   const descriptionRef = useRef(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
-
+  const locale = useLocale();
   useEffect(() => {
     const tl = gsap.timeline()
 
@@ -45,7 +46,7 @@ export function HeroSection({ latestVideo }: HeroSectionProps) {
   }, [])
 
   const handlePlay = () => {
-    router.push(`/watch/${latestVideo.videoId}`)
+    router.push(`${locale}/tv/watch/${latestVideo.videoId}`)
   }
   const t = useTranslations('video');
   return (

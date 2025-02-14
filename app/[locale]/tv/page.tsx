@@ -4,28 +4,30 @@ import { StoriesBar } from "@/components/tv/stories-bar"
 import { VideoCarousel } from "@/components/tv/video-carousel"
 import { getVideos } from "@/lib/sanity"
 import { getTwitchStreams } from "@/lib/twitch"
-import { getTranslations } from 'next-intl/server'
+import { getTranslations } from "next-intl/server"
 
-export const revalidate = 60 // Revalidate every minute
+export const revalidate = 60 // Revalidate every minuto
 
 export default async function Home() {
-  const t = await getTranslations('sections');
+  const t = await getTranslations("sections")
+
   try {
     const [videos, streams] = await Promise.all([getVideos(), getTwitchStreams()])
 
     const channels = {
-      "Movistar KOI": t('news'),
+      "Movistar KOI": t("news"),
       "Movistar KOI League of Legends": "League of Legends",
       "Movistar KOI Valorant": "Valorant",
       "Toronto Ultra": "Toronto Ultra",
       "Movistar KOI VODS": "VODs",
     }
 
-    // Get the latest video from Movistar KOI
+    // Tomamos el último video de Movistar KOI
     const latestVideo = videos
       .filter((video) => video.channelName === "Movistar KOI")
       .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())[0]
 
+    // Agrupamos videos por canal
     const videosByChannel = Object.keys(channels).reduce(
       (acc, channel) => {
         acc[channel] = videos
@@ -36,6 +38,7 @@ export default async function Home() {
       {} as Record<string, typeof videos>,
     )
 
+    // Filtramos los streams en vivo
     const liveStreams = streams.filter((stream) => stream.is_live)
 
     return (
@@ -45,12 +48,32 @@ export default async function Home() {
         <div className="md:ml-[80px]">
           <main>
             <HeroSection latestVideo={latestVideo} />
+
             <div className="space-y-8 pb-8 mt-40 md:mt-[150px]">
-              {liveStreams.length > 0 && (
-                <VideoCarousel title={t('liveNow')} videosType="twitch" initialVideos={liveStreams} />
+              {/* 1) Carrusel de novedades (Movistar KOI) */}
+              {videosByChannel["Movistar KOI"]?.length > 0 && (
+                <VideoCarousel
+                  key="Movistar KOI"
+                  title={channels["Movistar KOI"]} 
+                  videosType="youtube"
+                  channelName="Movistar KOI"
+                  initialVideos={videosByChannel["Movistar KOI"]}
+                />
               )}
-              {Object.entries(channels).map(
-                ([channel, title]) =>
+
+              {/* 2) Carrusel de streams en vivo */}
+              {liveStreams.length > 0 && (
+                <VideoCarousel
+                  title={t("liveNow")}
+                  videosType="twitch"
+                  initialVideos={liveStreams}
+                />
+              )}
+
+              {/* 3) El resto de canales (excluyendo Movistar KOI para no repetir) */}
+              {Object.entries(channels)
+                .filter(([channel]) => channel !== "Movistar KOI") 
+                .map(([channel, title]) => 
                   videosByChannel[channel]?.length > 0 && (
                     <VideoCarousel
                       key={channel}
@@ -60,7 +83,7 @@ export default async function Home() {
                       initialVideos={videosByChannel[channel]}
                     />
                   ),
-              )}
+                )}
             </div>
           </main>
         </div>
@@ -84,4 +107,3 @@ export default async function Home() {
     )
   }
 }
-
