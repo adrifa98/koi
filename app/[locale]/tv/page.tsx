@@ -19,6 +19,11 @@ export default async function Home() {
       "Movistar KOI VODS": "VODs",
     }
 
+    // Get the latest video from Movistar KOI
+    const latestVideo = videos
+      .filter((video) => video.channelName === "Movistar KOI")
+      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())[0]
+
     const videosByChannel = Object.keys(channels).reduce(
       (acc, channel) => {
         acc[channel] = videos
@@ -37,7 +42,7 @@ export default async function Home() {
         <StoriesBar streams={streams} />
         <div className="md:ml-[80px]">
           <main>
-            <HeroSection />
+            <HeroSection latestVideo={latestVideo} />
             <div className="space-y-8 pb-8">
               {liveStreams.length > 0 && (
                 <VideoCarousel title="Live Now" videosType="twitch" initialVideos={liveStreams} />
