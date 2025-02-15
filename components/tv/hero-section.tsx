@@ -1,17 +1,27 @@
 "use client"
 
 import gsap from "gsap"
-import { Info, Play } from "lucide-react"
-import { useEffect, useRef } from "react"
+import { Play } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
+import type { SanityVideo } from "@/types/sanity"
+import { useLocale, useTranslations } from 'next-intl'
 
-export function HeroSection({ latestVideo }: { latestVideo: any }) {
+
+interface HeroSectionProps {
+  latestVideo: SanityVideo
+}
+
+export function HeroSection({ latestVideo }: HeroSectionProps) {
+  const router = useRouter()
   const heroRef = useRef(null)
   const titleRef = useRef(null)
   const descriptionRef = useRef(null)
-
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const locale = useLocale();
   useEffect(() => {
     const tl = gsap.timeline()
 
@@ -35,49 +45,42 @@ export function HeroSection({ latestVideo }: { latestVideo: any }) {
       )
   }, [])
 
-  if (!latestVideo) {
-    return (
-      <div className="relative h-[50vh] md:h-[80vh] w-full">
-        <Skeleton className="absolute inset-0" />
-        <div className="relative container mx-4 md:mx-auto h-full flex items-center px-4">
-          <div className="max-w-2xl space-y-4 pt-0">
-            <Skeleton className="h-12 w-3/4" />
-            <Skeleton className="h-6 w-full" />
-            <div className="flex gap-4">
-              <Skeleton className="h-10 w-32" />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+  const handlePlay = () => {
+    router.push(`${locale}/tv/watch/${latestVideo.videoId}`)
   }
-
+  const t = useTranslations('video');
   return (
-    <div ref={heroRef} className="relative h-[80vh] w-full overflow-hidden">
+    <div ref={heroRef} className="relative h-[50vh] md:h-[80vh] w-full overflow-hidden">
       <div className="absolute inset-0">
-        <video autoPlay muted loop className="h-full w-full object-cover" poster="/placeholder.svg">
-          <source
-            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
-            type="video/mp4"
-          />
-        </video>
+        <iframe
+          src={`https://www.youtube.com/embed/${latestVideo.videoId}?autoplay=1&controls=0&mute=1&playsinline=1&loop=1&playlist=${latestVideo.videoId}&modestbranding=1`}
+          className="w-full h-full object-cover pointer-events-none"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          style={{
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%) scale(1.5)", // Scale up to cover the container
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-background to-background/60" />
       </div>
-      <div className="relative container mx-auto h-full flex items-center px-4">
-        <div className="max-w-2xl space-y-4 pt-16">
-          <h1 ref={titleRef} className="text-4xl sm:text-5xl md:text-6xl font-bold">
-            Tears of Steel
+      <div className="relative container mx-4 md:mx-auto h-full flex items-center px-4">
+        <div className="max-w-2xl space-y-4 pt-0">
+          <h1 ref={titleRef} className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">
+            {latestVideo.title}
           </h1>
-          <p ref={descriptionRef} className="text-lg text-muted-foreground">
-            In an apocalyptic future, a group of soldiers and scientists takes refuge in Amsterdam to try to understand
-            what was destroyed the world.
+          <p
+            ref={descriptionRef}
+            className="text-base md:text-lg text-muted-foreground line-clamp-3 md:line-clamp-none"
+          >
+            {t('watch.latest')}
           </p>
           <div className="flex gap-4">
-            <Button size="lg" className="font-semibold">
-              <Play className="mr-2 h-5 w-5" /> Play
-            </Button>
-            <Button size="lg" variant="secondary" className="font-semibold">
-              <Info className="mr-2 h-5 w-5" /> More Info
+            <Button size="lg" className="font-semibold" onClick={handlePlay}>
+              <Play className="mr-2 h-5 w-5" /> {t('watch.play')}
             </Button>
           </div>
         </div>
@@ -85,4 +88,3 @@ export function HeroSection({ latestVideo }: { latestVideo: any }) {
     </div>
   )
 }
-
