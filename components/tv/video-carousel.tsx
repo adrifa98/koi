@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useInView } from "react-intersection-observer"
 
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { TwitchStream } from "@/lib/types"
 import type { SanityVideo } from "@/types/sanity"
 import { VideoCard } from "./video-card"
@@ -173,7 +174,20 @@ export function VideoCarousel({ title, videosType, channelName, initialVideos }:
   )
 
   // No mostrar el carousel si no hay videos
-  if (!videos?.length) return null
+  if (!videos?.length) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-8 w-[200px]" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="aspect-video">
+              <Skeleton className="h-full w-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   // Para streams en vivo, no mostrar infinite scroll si no hay suficientes items
   const showInfiniteScroll = videosType === "twitch" ? videos.length >= 15 : true

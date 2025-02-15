@@ -10,17 +10,16 @@ import { memo, useCallback, useMemo, useState } from "react"
 import CopyLink from "@/components/tv/copy-link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer"
 import { CARD_HEIGHT, CARD_WIDTH, VIDEO_PROVIDERS } from "@/lib/constants"
 import type { TwitchStream } from "@/lib/types"
 import type { SanityVideo } from "@/types/sanity"
-import { useLocale, useTranslations } from 'next-intl'
-
-
+import { useLocale, useTranslations } from "next-intl"
 
 interface VideoCardProps {
-  video: SanityVideo | TwitchStream
+  video: SanityVideo | TwitchStream | null
   priority?: boolean
   type?: "youtube" | "twitch"
   isFirstCard?: boolean
@@ -36,25 +35,25 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
   })
 
   const isTwitch = type === "twitch"
-  const videoId = isTwitch ? (video as TwitchStream).user_login : (video as SanityVideo).videoId
+  const videoId = isTwitch ? (video as TwitchStream)?.user_login : (video as SanityVideo)?.videoId
 
   const urls = useMemo(() => {
     if (isTwitch) {
       const stream = video as TwitchStream
       return {
-        thumbnail: stream.thumbnail_url
-          .replace("{width}", CARD_WIDTH.toString())
-          .replace("{height}", CARD_HEIGHT.toString()),
-        preview: VIDEO_PROVIDERS.twitch.embed(stream.user_login),
-        share: VIDEO_PROVIDERS.twitch.share(stream.user_login),
+        thumbnail: stream?.thumbnail_url
+          ?.replace("{width}", CARD_WIDTH.toString())
+          ?.replace("{height}", CARD_HEIGHT.toString()),
+        preview: VIDEO_PROVIDERS.twitch.embed(stream?.user_login || ""),
+        share: VIDEO_PROVIDERS.twitch.share(stream?.user_login || ""),
       }
     }
 
     const vid = video as SanityVideo
     return {
-      thumbnail: VIDEO_PROVIDERS.youtube.thumbnail(vid.videoId),
-      preview: VIDEO_PROVIDERS.youtube.embed(vid.videoId),
-      share: VIDEO_PROVIDERS.youtube.share(vid.videoId),
+      thumbnail: VIDEO_PROVIDERS.youtube.thumbnail(vid?.videoId || ""),
+      preview: VIDEO_PROVIDERS.youtube.embed(vid?.videoId || ""),
+      share: VIDEO_PROVIDERS.youtube.share(vid?.videoId || ""),
     }
   }, [video, isTwitch])
 
@@ -64,9 +63,26 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
     setTimeout(() => setIsAdded(false), 2000)
   }, [])
 
-  const t = useTranslations('live');
-  const locale = useLocale();
-  
+  const t = useTranslations("live")
+  const locale = useLocale()
+
+  if (!video) {
+    return (
+      <div className="w-full">
+        <Card>
+          <CardContent className="p-0">
+            <div className="aspect-video relative">
+              <Skeleton className="absolute inset-0" />
+            </div>
+            <div className="p-4 space-y-4">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
   return (
     <TooltipProvider>
       <div
@@ -148,10 +164,10 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
                   {isTwitch && (
                     <>
                       <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded z-30">
-                      {t('status')}
+                        {t("status")}
                       </div>
                       <div className="absolute top-2 right-2 bg-black/60 text-white text-xs font-semibold px-2 py-1 rounded z-30">
-                        {(video as TwitchStream).viewer_count.toLocaleString()} {t('viewers')}
+                        {(video as TwitchStream).viewer_count.toLocaleString()} {t("viewers")}
                       </div>
                     </>
                   )}
@@ -213,9 +229,13 @@ function VideoCardComponent({ video, priority = false, type = "youtube", isFirst
                                   </Button>
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent>{isAdded ? t('watchlist.addedTooltip') : t('watchlist.add')}</TooltipContent>
+                              <TooltipContent>
+                                {isAdded ? t("watchlist.addedTooltip") : t("watchlist.add")}
+                              </TooltipContent>
                             </Tooltip>
-                            <CopyLink url={isTwitch ? `/${locale}/tv/live/${videoId}` : `/${locale}/tv/watch/${videoId}`} />
+                            <CopyLink
+                              url={isTwitch ? `/${locale}/tv/live/${videoId}` : `/${locale}/tv/watch/${videoId}`}
+                            />
                           </div>
                         )}
                       </div>

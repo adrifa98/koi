@@ -8,8 +8,9 @@ import { useCallback, useEffect, useRef, useState } from "react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { TwitchStream } from "@/lib/types"
-import { useLocale, useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from "next-intl"
 
 interface ChannelSidebarProps {
   streams: TwitchStream[]
@@ -27,14 +28,14 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
     estimateSize: () => 64,
     overscan: 5,
   })
-  const locale = useLocale();
+  const locale = useLocale()
   const handleStreamClick = useCallback(
     (stream: TwitchStream) => {
       if (stream.is_live) {
         router.push(`/${locale}/tv/live/${stream.user_login}`)
       }
     },
-    [router],
+    [router, locale], // Added locale to dependencies
   )
 
   useEffect(() => {
@@ -43,7 +44,33 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
     }
   }, [isHovered])
 
-  const t = useTranslations('sidebar');
+  const t = useTranslations("sidebar")
+
+  if (!streams?.length) {
+    return (
+      <motion.aside
+        initial={false}
+        animate={{ width: isExpanded || isHovered ? 290 : 60 }}
+        transition={{ duration: 0.2, ease: "linear" }}
+        className="h-screen fixed left-0 top-0 bg-card border-r z-40 flex-col transition-all hidden md:flex"
+      >
+        <div className="h-16 flex items-center justify-between px-4 border-b">
+          <Skeleton className="h-6 w-32" />
+        </div>
+        <div className="flex-1 p-4 space-y-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <div className="space-y-2 flex-1">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.aside>
+    )
+  }
 
   return (
     <motion.aside
@@ -55,7 +82,7 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="h-16 flex items-center justify-between px-4 border-b">
-        {(isExpanded || isHovered) && <h2 className="font-semibold">{t('followedChannels')}</h2>}
+        {(isExpanded || isHovered) && <h2 className="font-semibold">{t("followedChannels")}</h2>}
         <Button
           variant="ghost"
           size="sm"
@@ -106,7 +133,9 @@ export function ChannelSidebar({ streams }: ChannelSidebarProps) {
                 >
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <Avatar className={`h-10 w-10 ${stream.is_live ? "ring-1 ring-red-500 ring-offset-2 ring-offset-background" : ""}`}>
+                      <Avatar
+                        className={`h-10 w-10 ${stream.is_live ? "ring-1 ring-red-500 ring-offset-2 ring-offset-background" : ""}`}
+                      >
                         <AvatarImage src={stream.profile_image_url} className={!stream.is_live ? "grayscale" : ""} />
                         <AvatarFallback>{stream.user_name[0]}</AvatarFallback>
                       </Avatar>

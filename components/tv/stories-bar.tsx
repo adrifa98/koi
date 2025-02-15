@@ -2,25 +2,44 @@
 
 import { ScrollArea, ScrollBar } from "@/app/components/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { TwitchStream } from "@/lib/types"
-import { useLocale } from 'next-intl'
+import { useLocale } from "next-intl"
 import { useRouter } from "next/navigation"
 import { useCallback } from "react"
+
 interface StoriesBarProps {
   streams: TwitchStream[]
 }
 
 export function StoriesBar({ streams }: StoriesBarProps) {
   const router = useRouter()
-  const locale = useLocale();
+  const locale = useLocale()
   const handleStreamClick = useCallback(
     (stream: TwitchStream) => {
       if (stream.is_live) {
         router.push(`/${locale}/tv/live/${stream.user_login}`)
       }
     },
-    [router],
+    [router, locale], // Added locale to dependencies
   )
+
+  if (!streams?.length) {
+    return (
+      <div className="md:hidden w-full bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-b sticky top-0 z-40">
+        <ScrollArea className="w-full whitespace-nowrap py-4">
+          <div className="flex w-max space-x-4 px-4">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="flex flex-col items-center space-y-2">
+                <Skeleton className="h-14 w-14 rounded-full" />
+                <Skeleton className="h-3 w-14" />
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
+    )
+  }
 
   return (
     <div className="md:hidden w-full bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 border-b sticky top-0 z-40">
