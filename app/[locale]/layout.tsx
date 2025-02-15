@@ -1,4 +1,5 @@
 
+import { LenisProvider } from "@/app/components/lenis-provider";
 import { Navbar } from "@/app/components/Navbar";
 import "@/app/globals.css";
 import { CartProvider } from '@/components/cart/cart-context';
@@ -72,7 +73,7 @@ export default async function RootLayout({ children, params: {locale} }: { child
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        >
+        ><LenisProvider>
           <Navbar authStatus={authStatus} />
           <Suspense>
           <main>
@@ -82,7 +83,7 @@ export default async function RootLayout({ children, params: {locale} }: { child
             <WelcomeToast />
             <Toaster />
           </main>
-          </Suspense>
+          </Suspense></LenisProvider>
           </ThemeProvider>
           </Suspense>
         </CartProvider>
