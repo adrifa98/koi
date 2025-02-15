@@ -3,8 +3,18 @@
 import { gsap } from "gsap"
 import { useEffect, useRef } from "react"
 
-const WORLD_PATH =
-  "M5,25 C10,25 15,20 20,20 C25,20 30,25 35,25 C40,25 45,20 50,20 C55,20 60,25 65,25 C70,25 75,20 80,20 C85,20 90,25 95,25"
+interface City {
+  name: string
+  coordinates: [number, number]
+  region: string
+}
+
+const cities: City[] = [
+  { name: "Toronto", coordinates: [23, 35], region: "América" },
+  { name: "Barcelona", coordinates: [47, 35], region: "Europa" },
+  { name: "Madrid", coordinates: [45, 37], region: "Europa" },
+  { name: "Berlín", coordinates: [50, 32], region: "Europa" },
+]
 
 export function MapSection() {
   const mapRef = useRef<HTMLDivElement>(null)
@@ -12,128 +22,171 @@ export function MapSection() {
   useEffect(() => {
     if (!mapRef.current) return
 
-    // Animar las líneas de conexión
-    gsap.from(".location-line", {
-      strokeDashoffset: 1000,
-      duration: 2,
-      ease: "none",
-      stagger: 0.3,
-    })
-
-    // Animar los puntos de ubicación
-    gsap.from(".location-point", {
+    // Animar los puntos de las ciudades
+    gsap.from(".city-point", {
       scale: 0,
       opacity: 0,
-      duration: 0.5,
-      ease: "back.out(1.7)",
+      duration: 0.8,
       stagger: 0.2,
+      ease: "elastic.out(1, 0.5)",
+    })
+
+    // Animar las líneas de conexión
+    gsap.from(".city-line", {
+      strokeDashoffset: 100,
+      duration: 1.5,
+      stagger: 0.1,
+      ease: "none",
+    })
+
+    // Animar el pulso de los puntos
+    gsap.to(".city-pulse", {
+      scale: 1.5,
+      opacity: 0,
+      duration: 1.5,
+      repeat: -1,
+      ease: "none",
+      stagger: {
+        each: 0.5,
+        repeat: -1,
+      },
     })
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black py-20">
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: "radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 1) 0%, rgba(0, 0, 0, 1) 100%)",
-          backgroundSize: "100% 100%",
-        }}
-      />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-20 bg-black">
+      <div className="container mx-auto px-4">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-center mb-16 text-white font-mono">
+          <span className="opacity-50">[</span> Presencia global <span className="opacity-50">]</span>
+        </h2>
 
-      {/* Grid de fondo */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `
-          linear-gradient(to right, rgba(50, 50, 50, 0.05) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(50, 50, 50, 0.05) 1px, transparent 1px)
-        `,
-          backgroundSize: "50px 50px",
-        }}
-      />
-
-      <div className="container mx-auto px-4 relative z-10">
         <div ref={mapRef} className="relative w-full aspect-[2/1] max-w-6xl mx-auto">
-          <svg viewBox="0 0 100 50" className="w-full h-full">
-            {/* Líneas base del mundo */}
-            <path d={WORLD_PATH} className="stroke-white/10" fill="none" strokeWidth="0.15" />
+          {/* Mapa base */}
+          <svg
+            viewBox="0 0 100 50"
+            className="w-full h-full"
+            style={{
+              filter: "drop-shadow(0 0 10px rgba(147, 51, 234, 0.3))",
+            }}
+          >
+            {/* Grid de fondo */}
+            <defs>
+              <pattern id="grid" width="4" height="4" patternUnits="userSpaceOnUse" className="text-purple-600/10">
+                <path d="M 4 0 L 0 0 0 4" fill="none" stroke="currentColor" strokeWidth="0.2" />
+              </pattern>
+            </defs>
+            <rect width="100" height="50" fill="url(#grid)" />
 
-            {/* Líneas de ubicación */}
-            <g className="location-line stroke-cyan-400/50">
-              {/* Canadá */}
+            {/* Continentes con estilo tech */}
+            <g className="text-purple-900/20">
               <path
-                d="M20,20 L25,15 L30,15"
-                fill="none"
-                strokeWidth="0.15"
-                strokeDasharray="1000"
-                style={{ filter: "drop-shadow(0 0 2px #2dd4bf)" }}
+                d="M15 15 L35 15 L40 25 L30 35 L15 30 Z" // América del Norte
+                className="fill-current"
+                style={{ filter: "url(#glow)" }}
               />
-              {/* España */}
               <path
-                d="M45,25 L50,20 L55,20"
-                fill="none"
-                strokeWidth="0.15"
-                strokeDasharray="1000"
-                style={{ filter: "drop-shadow(0 0 2px #2dd4bf)" }}
+                d="M25 35 L30 45 L20 48 L18 38 Z" // América del Sur
+                className="fill-current"
+                style={{ filter: "url(#glow)" }}
               />
-              {/* Berlín */}
               <path
-                d="M52,22 L57,17 L62,17"
-                fill="none"
-                strokeWidth="0.15"
-                strokeDasharray="1000"
-                style={{ filter: "drop-shadow(0 0 2px #2dd4bf)" }}
+                d="M45 20 L55 20 L58 35 L43 38 L40 30 Z" // Europa
+                className="fill-current"
+                style={{ filter: "url(#glow)" }}
+              />
+              <path
+                d="M60 20 L80 25 L75 40 L58 38 Z" // Asia
+                className="fill-current"
+                style={{ filter: "url(#glow)" }}
+              />
+              <path
+                d="M45 40 L60 40 L58 48 L48 48 Z" // África
+                className="fill-current"
+                style={{ filter: "url(#glow)" }}
+              />
+              <path
+                d="M82 42 L85 45 L80 48 L78 45 Z" // Australia
+                className="fill-current"
+                style={{ filter: "url(#glow)" }}
               />
             </g>
 
-            {/* Puntos de ubicación */}
-            <g className="location-points">
-              {/* Canadá */}
-              <g transform="translate(30,15)">
-                <circle
-                  r="0.5"
-                  className="location-point fill-cyan-400"
-                  style={{ filter: "drop-shadow(0 0 2px #2dd4bf)" }}
-                />
-                <text x="1" y="0" className="text-[2px] fill-cyan-400/70 font-mono" dominantBaseline="middle">
-                  TORONTO
-                </text>
-              </g>
-              {/* España */}
-              <g transform="translate(55,20)">
-                <circle
-                  r="0.5"
-                  className="location-point fill-cyan-400"
-                  style={{ filter: "drop-shadow(0 0 2px #2dd4bf)" }}
-                />
-                <text x="1" y="0" className="text-[2px] fill-cyan-400/70 font-mono" dominantBaseline="middle">
-                  ESPAÑA
-                </text>
-              </g>
-              {/* Berlín */}
-              <g transform="translate(62,17)">
-                <circle
-                  r="0.5"
-                  className="location-point fill-cyan-400"
-                  style={{ filter: "drop-shadow(0 0 2px #2dd4bf)" }}
-                />
-                <text x="1" y="0" className="text-[2px] fill-cyan-400/70 font-mono" dominantBaseline="middle">
-                  BERLÍN
-                </text>
-              </g>
-            </g>
+            {/* Efecto de resplandor */}
+            <defs>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="1" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
           </svg>
+
+          {/* Líneas de conexión */}
+          <svg viewBox="0 0 100 50" className="absolute inset-0">
+            {cities.map((city, index) =>
+              cities
+                .slice(index + 1)
+                .map((otherCity, otherIndex) => (
+                  <line
+                    key={`${city.name}-${otherCity.name}`}
+                    x1={`${city.coordinates[0]}%`}
+                    y1={`${city.coordinates[1]}%`}
+                    x2={`${otherCity.coordinates[0]}%`}
+                    y2={`${otherCity.coordinates[1]}%`}
+                    className="city-line stroke-purple-500"
+                    strokeWidth="0.2"
+                    strokeDasharray="0.5 1"
+                    style={{ filter: "url(#glow)" }}
+                  />
+                )),
+            )}
+          </svg>
+
+          {/* Puntos de las ciudades */}
+          {cities.map((city) => (
+            <div
+              key={city.name}
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+              style={{
+                left: `${city.coordinates[0]}%`,
+                top: `${city.coordinates[1]}%`,
+              }}
+            >
+              {/* Punto principal */}
+              <div className="city-point w-2 h-2 rounded-full bg-purple-500 shadow-glow" />
+              {/* Efecto de pulso */}
+              <div className="city-pulse absolute inset-0 w-2 h-2 rounded-full bg-purple-500 opacity-75" />
+              {/* Nombre de la ciudad */}
+              <div className="mt-3 px-2 py-1 rounded border border-purple-500/20 bg-black/80">
+                <span className="text-xs font-mono text-purple-300 whitespace-nowrap">{city.name}</span>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Título con estética tech */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 mb-8">
-          <div className="px-4 py-2 bg-black/50 border border-cyan-400/20 backdrop-blur-sm">
-            <p className="text-cyan-400/70 text-sm font-mono">
-              <span className="opacity-50">&lt;</span> GLOBAL PRESENCE <span className="opacity-50">/&gt;</span>
-            </p>
-          </div>
+        {/* Leyenda de regiones */}
+        <div className="mt-12 flex flex-wrap justify-center gap-8">
+          {Array.from(new Set(cities.map((city) => city.region))).map((region) => (
+            <div
+              key={region}
+              className="flex items-center gap-2 px-3 py-1 rounded-sm border border-purple-500/20 bg-black/80"
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-glow" />
+              <span className="text-xs font-mono text-purple-300">{region}</span>
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* Estilos globales para el efecto de resplandor */}
+      <style jsx global>{`
+        .shadow-glow {
+          box-shadow: 0 0 10px theme('colors.purple.500'),
+                     0 0 20px theme('colors.purple.500');
+        }
+      `}</style>
     </section>
   )
 }
