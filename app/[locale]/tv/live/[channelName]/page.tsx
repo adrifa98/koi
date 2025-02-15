@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation"
-import { Suspense } from "react"
 
 import { ChannelSidebar } from "@/components/tv/channel-sidebar"
 import { LiveContent } from "@/components/tv/live-content"
 import { getTwitchStreams } from "@/lib/twitch"
 
 interface LivePageProps {
-  params: { channelName: string }
+  params: {
+    channelName: string
+    locale: string
+  }
 }
 
 export default async function LivePage({ params }: LivePageProps) {
@@ -20,15 +22,7 @@ export default async function LivePage({ params }: LivePageProps) {
   return (
     <div className="min-h-screen bg-background pt-2 md:pt-4">
       <ChannelSidebar streams={streams} />
-      <Suspense
-        fallback={
-          <div className="w-full aspect-video bg-card animate-pulse flex items-center justify-center">
-            <div className="text-muted-foreground">Loading...</div>
-          </div>
-        }
-      >
-        <LiveContent stream={stream} />
-      </Suspense>
+      <LiveContent stream={stream} />
     </div>
   )
 }

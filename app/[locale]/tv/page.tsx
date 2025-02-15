@@ -2,11 +2,9 @@ import { ChannelSidebar } from "@/components/tv/channel-sidebar"
 import { HeroSection } from "@/components/tv/hero-section"
 import { StoriesBar } from "@/components/tv/stories-bar"
 import { VideoCarousel } from "@/components/tv/video-carousel"
-import { Skeleton } from "@/components/ui/skeleton"
 import { getVideos } from "@/lib/sanity"
 import { getTwitchStreams } from "@/lib/twitch"
 import { getTranslations } from "next-intl/server"
-import { Suspense } from "react"
 
 export const revalidate = 60 // Revalidate every minuto
 
@@ -49,68 +47,23 @@ export default async function Home() {
         <StoriesBar streams={streams} />
         <div className="md:ml-[80px]">
           <main>
-            <Suspense
-              fallback={
-                <div className="space-y-4">
-                  <Skeleton className="h-8 w-[200px]" />
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                    {[...Array(5)].map((_, i) => (
-                      <div key={i} className="aspect-video">
-                        <Skeleton className="h-full w-full" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              }
-            >
-              <HeroSection latestVideo={latestVideo} />
-            </Suspense>
+            <HeroSection latestVideo={latestVideo} />
 
             <div className="space-y-8 pb-8 mt-40 md:mt-[150px]">
               {/* 1) Carrusel de novedades (Movistar KOI) */}
               {videosByChannel["Movistar KOI"]?.length > 0 && (
-                <Suspense
-                  fallback={
-                    <div className="space-y-4">
-                      <Skeleton className="h-8 w-[200px]" />
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                        {[...Array(5)].map((_, i) => (
-                          <div key={i} className="aspect-video">
-                            <Skeleton className="h-full w-full" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <VideoCarousel
-                    key="Movistar KOI"
-                    title={channels["Movistar KOI"]}
-                    videosType="youtube"
-                    channelName="Movistar KOI"
-                    initialVideos={videosByChannel["Movistar KOI"]}
-                  />
-                </Suspense>
+                <VideoCarousel
+                  key="Movistar KOI"
+                  title={channels["Movistar KOI"]}
+                  videosType="youtube"
+                  channelName="Movistar KOI"
+                  initialVideos={videosByChannel["Movistar KOI"]}
+                />
               )}
 
               {/* 2) Carrusel de streams en vivo */}
               {liveStreams.length > 0 && (
-                <Suspense
-                  fallback={
-                    <div className="space-y-4">
-                      <Skeleton className="h-8 w-[200px]" />
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                        {[...Array(5)].map((_, i) => (
-                          <div key={i} className="aspect-video">
-                            <Skeleton className="h-full w-full" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <VideoCarousel title={t("liveNow")} videosType="twitch" initialVideos={liveStreams} />
-                </Suspense>
+                <VideoCarousel title={t("liveNow")} videosType="twitch" initialVideos={liveStreams} />
               )}
 
               {/* 3) El resto de canales (excluyendo Movistar KOI para no repetir) */}
@@ -119,28 +72,13 @@ export default async function Home() {
                 .map(
                   ([channel, title]) =>
                     videosByChannel[channel]?.length > 0 && (
-                      <Suspense
-                        fallback={
-                          <div className="space-y-4">
-                            <Skeleton className="h-8 w-[200px]" />
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                              {[...Array(5)].map((_, i) => (
-                                <div key={i} className="aspect-video">
-                                  <Skeleton className="h-full w-full" />
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        }
-                      >
-                        <VideoCarousel
-                          key={channel}
-                          title={title}
-                          videosType="youtube"
-                          channelName={channel}
-                          initialVideos={videosByChannel[channel]}
-                        />
-                      </Suspense>
+                      <VideoCarousel
+                        key={channel}
+                        title={title}
+                        videosType="youtube"
+                        channelName={channel}
+                        initialVideos={videosByChannel[channel]}
+                      />
                     ),
                 )}
             </div>
