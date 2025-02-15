@@ -23,9 +23,9 @@ export function ValuesSection() {
       scrollTrigger: {
         trigger: section,
         start: "center center",
-        end: () => `+=${container.scrollWidth - window.innerWidth}`,
+        end: () => `+=${(container.scrollWidth - window.innerWidth) * 0.6}`, // Reduce scroll length by 40%
         pin: true,
-        scrub: 1,
+        scrub: 0.8, // Reduce scrub time for faster response
         invalidateOnRefresh: true,
       },
     })
@@ -66,7 +66,7 @@ export function ValuesSection() {
   ]
 
   return (
-    <section className="relative">
+    <section className="relative mt-20">
       {/* Título de la sección */}
       <div className="absolute top-0 left-0 w-full z-10 pointer-events-none">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">

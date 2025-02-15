@@ -11,7 +11,7 @@ interface ValueCardProps {
 export function ValueCard({ number, title, description, animation }: ValueCardProps) {
   return (
     <div className="flex-none w-[90vw] md:w-[85vw] p-6 md:p-12 lg:p-16">
-      <div className="relative min-h-[70vh] md:min-h-[80vh] flex flex-col justify-between border-t border-black/20 dark:border-white/20">
+      <div className="relative min-h-[70vh] md:min-h-[80vh] flex flex-col justify-between border-b">
         {/* Header section with number and icon */}
         <div className="relative pt-8 md:pt-12 lg:pt-16 flex justify-between items-start">
           <span className="text-7xl md:text-9xl lg:text-[12rem] font-extralight opacity-80 leading-none">{number}</span>
