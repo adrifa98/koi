@@ -1,4 +1,3 @@
-'use client';
 import KoiFish from '@/components/home/koifish';
 import Shirt from '@/components/home/shirt/shirt';
 import Image from 'next/image';
