@@ -170,7 +170,7 @@ export function FusionSection() {
             <div className="relative w-full h-full rounded-full overflow-hidden [transform-style:preserve-3d] [backface-visibility:hidden]">
               <div className="absolute inset-0 mix-blend-color" />
               <div className="absolute inset-0 bg-gradient-to-br mix-blend-soft-light" />
-              <Image src="/riders.png?height=300&width=300" alt="Left image" fill className="object-cover" priority />
+              <Image src="/about/riders.png?height=300&width=300" alt="Left image" fill className="object-cover" priority />
             </div>
           </div>
 
@@ -178,7 +178,7 @@ export function FusionSection() {
             <div className="relative w-full h-full rounded-full overflow-hidden [transform-style:preserve-3d] [backface-visibility:hidden]">
               <div className="absolute inset-0 mix-blend-color" />
               <div className="absolute inset-0 bg-gradient-to-br  mix-blend-soft-light" />
-              <Image src="/fkoi.png?height=300&width=300" alt="Center image" fill className="object-cover" priority />
+              <Image src="/about/fkoi.png?height=300&width=300" alt="Center image" fill className="object-cover" priority />
             </div>
           </div>
 
@@ -187,7 +187,7 @@ export function FusionSection() {
               <div className="absolute inset-0 mix-blend-color" />
               <div className="absolute inset-0 bg-gradient-to-br  mix-blend-soft-light" />
               <Image
-                src="/mad-lions.png?height=300&width=300"
+                src="/about/mad-lions.png?height=300&width=300"
                 alt="Right image"
                 fill
                 className="object-cover"
@@ -205,7 +205,7 @@ export function FusionSection() {
       >
         <div className="relative w-full h-full rounded-full overflow-hidden [transform-style:preserve-3d] [backface-visibility:hidden]">
           <div className="absolute inset-0 mix-blend-color" />
-          <Image src="/koi.png?height=300&width=300" alt="Final merged image" fill className="object-cover" priority />
+          <Image src="/about/koi.png?height=300&width=300" alt="Final merged image" fill className="object-cover" priority />
         </div>
       </div>
     </section>

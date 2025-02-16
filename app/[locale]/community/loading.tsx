@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10">
+    <div className="max-w-[1000px] min-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10">
       {/* Contenido Principal */}
       <div className="w-[65%] flex flex-col gap-y-5">
         {/* Skeleton para CreatePostCard */}
