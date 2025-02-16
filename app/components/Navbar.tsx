@@ -42,6 +42,7 @@ export function Navbar({ authStatus }: NavbarProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="container flex h-16 items-center">
+        {/* Botón Menú Mobile */}
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" className="mr-2 px-0 text-base lg:hidden">
@@ -49,11 +50,16 @@ export function Navbar({ authStatus }: NavbarProps) {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="pr-0">
-            <MobileNav />
+            <MobileNav authStatus={authStatus} />
           </SheetContent>
         </Sheet>
-        <Link href="/" className="mr-6 flex items-center space-x-2 font-bold">KOI</Link>
-        
+  
+        {/* Logo */}
+        <Link href="/" className="mr-6 flex items-center space-x-2 font-bold">
+          KOI
+        </Link>
+  
+        {/* Menú Principal (Solo Desktop) */}
         <NavigationMenu className="hidden lg:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -67,7 +73,9 @@ export function Navbar({ authStatus }: NavbarProps) {
                           <team.icon className="w-5 h-5" />
                           <div className="flex flex-col">
                             <span className="text-sm font-medium">{team.title}</span>
-                            {team.subtitle && <span className="text-xs text-muted-foreground">{team.subtitle}</span>}
+                            {team.subtitle && (
+                              <span className="text-xs text-muted-foreground">{team.subtitle}</span>
+                            )}
                           </div>
                         </Link>
                       </NavigationMenuLink>
@@ -92,7 +100,7 @@ export function Navbar({ authStatus }: NavbarProps) {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/club" className={navigationMenuTriggerStyle()}>
+              <Link href="/about" className={navigationMenuTriggerStyle()}>
                 Club
               </Link>
             </NavigationMenuItem>
@@ -101,61 +109,99 @@ export function Navbar({ authStatus }: NavbarProps) {
                 Blog
               </Link>
             </NavigationMenuItem>
-
           </NavigationMenuList>
         </NavigationMenu>
+  
+        {/* Iconos Derecha */}
         <div className="flex flex-1 items-center justify-end space-x-4">
-        <LanguageSelector />
-                 
-          {authStatus.isAuthenticated ? (
+          {/* SOLO DESKTOP: Idioma + Notificaciones + Perfil */}
+          <div className="hidden lg:flex items-center space-x-4">
+            {/* Selector de Idioma */}
+            <LanguageSelector />
+  
+            {/* Notificaciones */}
             <DropdownMenu>
-              <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5" />
-              </Button>
               <DropdownMenuTrigger asChild>
-                <div className="rounded-full border px-2 py-2 lg:pr-1 lg:pl-2 lg:py-1 flex items-center gap-x-1">
-                <MenuIcon className="w-6 h-6 lg:w-5 lg:h-5" />
                 <Button variant="ghost" size="icon">
-                  {authStatus.user?.picture ? (
-                    <Image src={authStatus.user.picture} alt="User Avatar" width={32} height={32} className="rounded-full" />
-                  ) : (
-                    <User className="h-5 w-5" />
-                  )}
+                  <Bell className="h-5 w-5" />
                 </Button>
-                </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem disabled>{authStatus.user?.name}</DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/profile">Perfil</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/settings">Ajustes</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <LogoutLink className="w-full">Logout</LogoutLink>
-                </DropdownMenuItem>
+                <DropdownMenuItem disabled>📣 No tienes notificaciones</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <div className="flex items-center gap-4">
-              <Button variant="secondary" asChild>
-                <RegisterLink>Registrarse</RegisterLink>
-              </Button>
-              <Button asChild>
-                <LoginLink>Iniciar Sesión</LoginLink>
-              </Button>
-            </div>
-          )}
-          <CartModal />
+  
+            {/* Perfil/Usuario */}
+            {authStatus.isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="rounded-full border px-2 py-1 flex items-center gap-x-2">
+                    <MenuIcon className="w-5 h-5" /> {/* ✅ 3 Rayas restauradas */}
+                    {authStatus.user?.picture ? (
+                      <Image
+                        src={authStatus.user.picture}
+                        alt="User Avatar"
+                        width={32}
+                        height={32}
+                        className="rounded-full border"
+                      />
+                    ) : (
+                      <User className="h-5 w-5" />
+                    )}
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem disabled className="font-semibold">{authStatus.user?.name}</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/profile">Perfil</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/settings">Ajustes</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <LogoutLink className="w-full">Cerrar Sesión</LogoutLink>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center gap-4">
+                <Button variant="secondary" asChild>
+                  <RegisterLink>Registrarse</RegisterLink>
+                </Button>
+                <Button asChild>
+                  <LoginLink>Iniciar Sesión</LoginLink>
+                </Button>
+              </div>
+            )}
+          </div>
+  
+          {/* SOLO MOBILE: Idioma + Notificaciones + Carrito */}
+          <div className="flex lg:hidden items-center space-x-3">
+            {/* Selector de Idioma */}
+            <LanguageSelector />
+  
+            {/* Notificaciones */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Bell className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem disabled>📣 No tienes notificaciones</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+  
+            {/* Carrito */}
+            <CartModal />
+          </div>
         </div>
       </div>
     </header>
   );
+  
 }
-
-
-function MobileNav() {
+function MobileNav({ authStatus }: { authStatus: NavbarProps["authStatus"] }) {
   return (
     <div className="flex flex-col space-y-4 p-4">
       <Link href="/" className="flex items-center space-x-2">
@@ -184,14 +230,37 @@ function MobileNav() {
         <Link href="/blog" className="block font-medium">
           Blog
         </Link>
-        <Link href="/" className="block font-medium">
+        <Link href="/about" className="block font-medium">
           Sobre Nosotros
         </Link>
-        <div className="flex flex-col space-y-2">
-          <Button variant="outline">Iniciar Sesión</Button>
-          <Button>Registrarse</Button>
-        </div>
+
+        {/* Separador Visual */}
+        <hr className="my-4 border-t" />
+
+        {/* Mostrar Login/Logout según estado */}
+        {authStatus.isAuthenticated ? (
+          <div className="flex flex-col space-y-3">
+            <Link href="/profile" className="block font-medium text-primary">
+              Perfil
+            </Link>
+            <Link href="/settings" className="block font-medium">
+              Ajustes
+            </Link>
+            <LogoutLink className="block font-medium text-red-500">
+              Cerrar Sesión
+            </LogoutLink>
+          </div>
+        ) : (
+          <div className="flex flex-col space-y-3">
+            <Button variant="outline" asChild>
+              <LoginLink>Iniciar Sesión</LoginLink>
+            </Button>
+            <Button asChild>
+              <RegisterLink>Registrarse</RegisterLink>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
-  )
+  );
 }

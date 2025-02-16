@@ -56,23 +56,7 @@ export function VideoSection() {
 
     observer.observe(containerRef.current)
 
-    // Parallax effect
-    gsap.fromTo(
-      videoRef.current,
-      {
-        y: -200,
-      },
-      {
-        y: 200,
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.5,
-        },
-      },
-    )
+    // Parallax effect removed
 
     return () => {
       observer.disconnect()
@@ -110,8 +94,8 @@ export function VideoSection() {
   }
 
   return (
-    <section className="relative flex items-center justify-center overflow-hidden mb-40 mt-12">
-      <div ref={containerRef} className="relative w-[95%] aspect-[21/9]  mx-auto">
+    <section className="relative md:flex items-center justify-center overflow-hidden mb-[-300px] md:mb-[-150px]">
+      <div ref={containerRef} className="relative w-[95%] aspect-[21/9] mx-auto mb-20 mt-40">
         {/* Video container with parallax */}
         <div className="relative w-full h-full overflow-hidden rounded-3xl">
           <video

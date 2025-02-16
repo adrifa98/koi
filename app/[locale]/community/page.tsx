@@ -10,6 +10,7 @@ import lolImage from "@/public/community/league-of-legends-sidebar.jpg";
 import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import { Suspense } from "react";
+import Loading from "./loading";
 
 const games = [
   { name: "League of Legends", slug: "league-of-legends" },
@@ -71,7 +72,9 @@ export default async function Home({
   const { count, data } = await getData(searchParams.page || "1", sortBy);
 
   return (
+    
     <div className="max-w-[1000px] mx-auto flex gap-x-10 mt-4 mb-10">
+      <Suspense fallback={<Loading />}>
       {/* Contenido Principal */}
       <div className="w-[65%] flex flex-col gap-y-5">
         <CreatePostCard />
@@ -106,6 +109,7 @@ export default async function Home({
         <TwitterTimeline/>    
         </Suspense>
       </div>
+      </Suspense>
     </div>
   );
 }

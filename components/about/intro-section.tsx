@@ -33,13 +33,13 @@ export function IntroSection() {
   }, [])
 
   return (
-    <section className="min-h-[50vh] flex items-center justify-center px-4">
+    <section className=" flex items-center justify-center px-4 pt-40 pb-20 mb-[-100px] md:mb-0">
       <div ref={textRef} className="max-w-6xl mx-auto text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-7xl font-light leading-tight md:leading-tight lg:leading-tight pt-48">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-light leading-tight sm:leading-tight md:leading-tight lg:leading-tight">
           {"Transformando el futuro de los esports a través de la innovación y el talento global."
             .split(" ")
             .map((word, index) => (
-              <span key={index} className="text-word inline-block mx-[0.2em]">
+              <span key={index} className="text-word inline-block mx-[0.1em] sm:mx-[0.2em]">
                 {word}
               </span>
             ))}

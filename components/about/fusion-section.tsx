@@ -153,7 +153,7 @@ export function FusionSection() {
       {/* Text container moved outside distortion wrapper */}
       <div ref={textRef} className="absolute left-1/2 -translate-x-1/2 top-[65%] w-full z-[5] pb-60">
         <div className="relative max-w-4xl mx-auto px-4">
-          <p className="text-3xl leading-relaxed text-black dark:text-white text-center pt-20">
+          <p className="text-xl sm:text-xl md:text-2xl lg:text-3xl leading-relaxed text-black dark:text-white text-center pt-20">
             {text.split(" ").map((word, index) => (
               <span key={index} className="text-word inline-block mx-[0.2em]">
                 {word}
