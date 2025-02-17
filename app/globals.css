@@ -188,3 +188,7 @@
 .dark {
   color-scheme: dark;
 }
+
+.carpa {
+  filter: hue-rotate(10deg);
+}

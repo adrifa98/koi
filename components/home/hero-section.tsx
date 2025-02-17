@@ -160,7 +160,7 @@ export function HeroSection() {
   }
 
   return (
-    <div className="background-header overflow-hidden -mt-8">
+    <div className="background-header overflow-hidden -mt-4">
       <header className="w-full h-screen">
         <div className="relative flex w-full h-full overflow-visible">
           {/* Contenido central */}
@@ -255,7 +255,7 @@ export function HeroSection() {
               isHovered ? "blur-sm" : ""
             }`}
           >
-            <div className="flex gap-4 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 scrollbar-hide">
+            <div className="hidden lg:flex gap-4 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 scrollbar-hide">
               {sponsors.map((sponsor, index) => (
                 <MagneticLogo
                   key={index}

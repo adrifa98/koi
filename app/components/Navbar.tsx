@@ -13,7 +13,15 @@ import {
 } from "@/app/components/NavigationMenu"
 import { Sheet, SheetContent, SheetTrigger } from "@/app/components/ReactDialog"
 import CartModal from '@/components/cart/modal'
-import { CodIcon, EafcIcon, FortniteIcon, LeagueIcon, PokemonIcon, ValorantIcon } from "@/components/layout/navbar/GameIcons"
+import {
+  CodIcon,
+  EafcIcon,
+  FortniteIcon,
+  KoiNavIcon,
+  LeagueIcon,
+  PokemonIcon,
+  ValorantIcon,
+} from "@/components/layout/navbar/GameIcons"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Link } from '@/i18n/routing'
@@ -56,7 +64,7 @@ export function Navbar({ authStatus }: NavbarProps) {
   
         {/* Logo */}
         <Link href="/" className="mr-6 flex items-center space-x-2 font-bold">
-          KOI
+          <KoiNavIcon className="h-6 w-6 text-muted-foreground" />
         </Link>
   
         {/* Menú Principal (Solo Desktop) */}
