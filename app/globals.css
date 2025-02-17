@@ -90,6 +90,11 @@
   }
 }
 
+::selection {
+  background-color: rgb(56, 45, 146);
+  color: white;
+}
+
 @layer utilities {
   ::-webkit-scrollbar {
     width: 12px;
@@ -161,6 +166,17 @@
   }
 }
 
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-fade-down {
   animation: fade-down 0.5s ease-out;
 }
@@ -169,3 +185,6 @@
   animation: fade-up 0.5s ease-out;
 }
 
+.dark {
+  color-scheme: dark;
+}

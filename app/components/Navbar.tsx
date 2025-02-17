@@ -173,6 +173,7 @@ export function Navbar({ authStatus }: NavbarProps) {
                 </Button>
               </div>
             )}
+            <CartModal />
           </div>
   
           {/* SOLO MOBILE: Idioma + Notificaciones + Carrito */}
