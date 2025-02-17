@@ -30,7 +30,7 @@ const features = [
 
 export function FeaturedGrid() {
   return (
-    <section className="w-full bg-background pt-0 -mt-20">
+    <section className="w-full bg-background py-12 lg:py-24">
       <div className="container px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, i) => (
@@ -115,7 +115,7 @@ export function FeaturedGrid() {
                   />
                   <div className="flex-1">
                     <p className="text-sm font-medium text-white">Breathing App</p>
-                    <p className="text-sm text-white/80">Get a good night's sleep.</p>
+                    <p className="text-sm text-white/80">Get a good night&apos;s sleep.</p>
                   </div>
                   <Button variant="secondary" size="sm">
                     Get App
