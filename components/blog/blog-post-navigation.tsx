@@ -12,23 +12,9 @@ export function BlogPostNavigation() {
   const locale = useLocale()
   const t = useTranslations("blog")
 
-  const handleBack = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-
-    if (!document.startViewTransition) {
-      router.push(`/${locale}/blog`)
-      return
-    }
-
-    const transition = document.startViewTransition(async () => {
-      router.push(`/${locale}/blog`)
-    })
-
-    try {
-      await transition.finished
-    } catch (error) {
-      router.push(`/${locale}/blog`)
-    }
+    router.push(`/${locale}/blog`)
   }
 
   return (

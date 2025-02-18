@@ -21,24 +21,9 @@ export function BlogCard({ post, featured = false, horizontal = false }: BlogCar
   const t = useTranslations("blog")
   const tPost = useTranslations("blog.post")
 
-  const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-
-    if (!document.startViewTransition) {
-      router.push(`/${locale}/blog/${post._id}`)
-      return
-    }
-
-    const transition = document.startViewTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 50))
-      router.push(`/${locale}/blog/${post._id}`)
-    })
-
-    try {
-      await transition.finished
-    } catch (error) {
-      router.push(`/${locale}/blog/${post._id}`)
-    }
+    router.push(`/${locale}/blog/${post._id}`)
   }
 
   const CategoryBadge = post.categories?.[0] && (
@@ -74,15 +59,11 @@ export function BlogCard({ post, featured = false, horizontal = false }: BlogCar
             alt={post.mainImage.alt || tPost("title", { title: post.title.en })}
             fill
             className="object-cover"
-            style={{ viewTransitionName: `post-image-${post._id}` }}
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
           {post.categories?.[0] && <div className="absolute left-4 top-4">{CategoryBadge}</div>}
-          <div
-            className="absolute bottom-0 left-0 right-0 p-6"
-            style={{ viewTransitionName: `post-content-${post._id}` }}
-          >
+          <div className="absolute bottom-0 left-0 right-0 p-6">
             <div className="space-y-2">
               <h3 className="text-xl font-semibold text-white md:text-2xl">
                 {tPost("title", { title: post.title.en })}
@@ -112,11 +93,10 @@ export function BlogCard({ post, featured = false, horizontal = false }: BlogCar
                   alt={post.mainImage.alt || tPost("title", { title: post.title.en })}
                   fill
                   className="object-cover"
-                  style={{ viewTransitionName: `post-image-${post._id}` }}
                   priority
                 />
               </div>
-              <div className="flex-1 space-y-2" style={{ viewTransitionName: `post-content-${post._id}` }}>
+              <div className="flex-1 space-y-2">
                 {post.categories?.[0] && CategoryBadge}
                 <h3 className="line-clamp-2 font-semibold">{tPost("title", { title: post.title.en })}</h3>
                 {DateAndTime}
@@ -130,12 +110,11 @@ export function BlogCard({ post, featured = false, horizontal = false }: BlogCar
                   alt={post.mainImage.alt || tPost("title", { title: post.title.en })}
                   fill
                   className="object-cover"
-                  style={{ viewTransitionName: `post-image-${post._id}` }}
                   priority
                 />
                 {post.categories?.[0] && <div className="absolute left-4 top-4">{CategoryBadge}</div>}
               </div>
-              <div className="space-y-1 p-4" style={{ viewTransitionName: `post-content-${post._id}` }}>
+              <div className="space-y-1 p-4">
                 <h3 className="font-semibold line-clamp-2">{tPost("title", { title: post.title.en })}</h3>
                 {DateAndTime}
               </div>
