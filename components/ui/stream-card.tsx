@@ -37,8 +37,8 @@ export function StreamCard({ stream, className = "" }: StreamCardProps) {
           <Image
             src={stream.profile_image_url || "/placeholder.svg"}
             alt={stream.user_name}
-            width={30}
-            height={30}
+            width={34}
+            height={34}
             className="rounded-full"
           />
           <div className="min-w-0">
