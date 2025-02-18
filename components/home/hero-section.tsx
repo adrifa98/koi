@@ -9,6 +9,7 @@ import { StreamCard } from "@/components/ui/stream-card"
 import type { Match } from "@/lib/sanity"
 import type { TwitchStream } from "@/lib/types"
 import { Instagram, InstagramIcon as TiktokIcon, Twitch, Twitter } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
@@ -35,6 +36,9 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps) {
+  const t = useTranslations()
+  const tHome = useTranslations("home")
+  const tMatch = useTranslations("match")
   const [matches, setMatches] = useState<Match[]>([])
   const [topStreams, setTopStreams] = useState<TwitchStream[]>([])
   const [isHovered, setIsHovered] = useState(false)
@@ -109,17 +113,16 @@ export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps)
               >
                 <Card className="w-[350px] bg-background/80 backdrop-blur">
                   <CardHeader>
-                    <CardDescription className="text-sm font-medium text-primary">MOVISTAR KOI PROD™</CardDescription>
-                    <CardTitle>JERSEY 2025</CardTitle>
+                    <CardDescription className="text-sm font-medium text-primary">
+                      {tHome("jersey.brand")}
+                    </CardDescription>
+                    <CardTitle>{tHome("jersey.title")}</CardTitle>
                   </CardHeader>
                   <CardContent className="pt-0 mb-0 pb-4">
-                    <p className="text-sm">
-                      La nueva camiseta oficial de Movistar KOI para la temporada 2024. Diseñada con tecnología de
-                      última generación y materiales premium para máximo rendimiento y comodidad.
-                    </p>
+                    <p className="text-sm">{tHome("jersey.description")}</p>
                     <div className="space-y-2 py-4">
-                      <p className="text-lg font-bold pb-4">89.99€</p>
-                      <Button className="w-full">Comprar ahora</Button>
+                      <p className="text-lg font-bold">{tHome("jersey.price")}</p>
+                      <Button className="w-full">{tHome("jersey.buyNow")}</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -142,7 +145,7 @@ export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps)
                   isHovered ? "blur-sm" : ""
                 }`}
               >
-                #SOMOSMOVISTARKOI
+                {tHome("hashtag")}
               </span>
             </div>
             <div className="w-px flex-1 bg-gradient-to-b from-primary/20 via-primary/20 to-transparent" />
@@ -158,7 +161,7 @@ export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps)
               {sponsors.map((sponsor, index) => (
                 <MagneticLogo
                   key={index}
-                  className="flex-shrink-0 w-14 h-14 lg:w-16 lg:h-16 bg-background/80 backdrop-blur border border-border/50 hover:bg-accent/50 transition-colors rounded-lg flex items-center justify-center"
+                  className="flex-shrink-0 w-14 h-14 lg:w-16 lg:h-16 rounded-lg bg-background/80 backdrop-blur border border-border/50 hover:bg-accent/50 transition-colors flex items-center justify-center"
                 >
                   <Image
                     src={sponsor || "/placeholder.svg"}

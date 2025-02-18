@@ -1,9 +1,9 @@
 "use client"
 
 import { Center, Environment, useGLTF } from "@react-three/drei"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
+import { Canvas as ThreeCanvas, useFrame, useThree } from "@react-three/fiber"
 import { easing } from "maath"
-import React, { useEffect, useRef, useState } from "react"
+import React, { Suspense, useEffect, useRef, useState } from "react"
 import type * as THREE from "three"
 import type { Group } from "three"
 
@@ -67,6 +67,25 @@ const Shirt = React.memo(() => {
 })
 Shirt.displayName = "Shirt"
 
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null // Silently fail instead of showing an error
+    }
+
+    return this.props.children
+  }
+}
+
 const ShirtCanvas = ({ onHover }: { onHover: (isHovered: boolean) => void }) => {
   const [mounted, setMounted] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -77,12 +96,11 @@ const ShirtCanvas = ({ onHover }: { onHover: (isHovered: boolean) => void }) => 
   }, [])
 
   useEffect(() => {
-    if (!mounted || !containerRef.current || typeof window === "undefined") return
-
-    const handleMouseEnter = () => onHover(true)
-    const handleMouseLeave = () => onHover(false)
+    if (!mounted || !containerRef.current) return
 
     const element = containerRef.current
+    const handleMouseEnter = () => onHover(true)
+    const handleMouseLeave = () => onHover(false)
 
     element.addEventListener("mouseenter", handleMouseEnter)
     element.addEventListener("mouseleave", handleMouseLeave)
@@ -100,18 +118,26 @@ const ShirtCanvas = ({ onHover }: { onHover: (isHovered: boolean) => void }) => 
       ref={containerRef}
       className="absolute left-1/2 -translate-x-1/2 w-[400px] lg:w-[500px] h-screen cursor-pointer flex items-center justify-center"
     >
-      <div className="w-full aspect-square">
-        <Canvas camera={{ position: [0, 0.3, 12], fov: 18 }} gl={{ preserveDrawingBuffer: true, antialias: true }}>
-          <Environment preset="city" />
-          <ambientLight intensity={0.5} />
-          <directionalLight color="#83b5ff" intensity={1} position={[5, 3, 5]} />
-          <CameraRig isHovered={false}>
-            <Center>
-              <Shirt />
-            </Center>
-          </CameraRig>
-        </Canvas>
-      </div>
+      <ErrorBoundary>
+        <div className="w-full aspect-square">
+          <Suspense fallback={null}>
+            <ThreeCanvas
+              camera={{ position: [0, 0.3, 12], fov: 18 }}
+              gl={{ preserveDrawingBuffer: true, antialias: true }}
+              style={{ position: "relative" }}
+            >
+              <Environment preset="city" />
+              <ambientLight intensity={0.5} />
+              <directionalLight color="#83b5ff" intensity={1} position={[5, 3, 5]} />
+              <CameraRig isHovered={false}>
+                <Center>
+                  <Shirt />
+                </Center>
+              </CameraRig>
+            </ThreeCanvas>
+          </Suspense>
+        </div>
+      </ErrorBoundary>
     </div>
   )
 }

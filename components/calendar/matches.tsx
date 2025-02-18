@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -87,6 +88,7 @@ function shouldShowCountdown(matchDate: Date): boolean {
 }
 
 export function Matches({ matches: initialMatches, selectedCategories, dateRange }: MatchesProps) {
+  const t = useTranslations("match")
   const [matches, setMatches] = useState<Match[]>(initialMatches)
   const [isLoading, setIsLoading] = useState(false)
   const [hasMoreBefore, setHasMoreBefore] = useState(true)
@@ -237,7 +239,7 @@ export function Matches({ matches: initialMatches, selectedCategories, dateRange
   if (filteredMatches.length === 0) {
     return (
       <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-dashed">
-        <p className="text-muted-foreground">No matches found for the selected filters</p>
+        <p className="text-muted-foreground">{t("noMatches")}</p>
       </div>
     )
   }
@@ -298,14 +300,18 @@ export function Matches({ matches: initialMatches, selectedCategories, dateRange
             <div className="flex items-center justify-center">
               {isLive ? (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-red-500">{matchStatus.display}</span>
+                  <span className="text-sm font-medium text-red-500">{t("status.live")}</span>
                   <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
                 </div>
               ) : (
                 <span
                   className={cn("text-sm font-medium", matchStatus.status === "FINISHED" && "text-muted-foreground")}
                 >
-                  {matchStatus.display}
+                  {matchStatus.status === "FINISHED"
+                    ? match.team1.score !== undefined
+                      ? t("status.score", { score1: match.team1.score, score2: match.team2.score })
+                      : t("status.finished")
+                    : t("status.vs")}
                 </span>
               )}
             </div>

@@ -9,10 +9,6 @@
     "today": "Today",
     "yesterday": "Yesterday"
   },
-  "HomePage": {
-    "title": "hello",
-    "about": "egosnhgoi"
-  },
 
 
   
@@ -146,5 +142,63 @@
         "loading": "We're having trouble loading this content",
         "application": "We're having trouble with the application"
       }
+    },
+    "blog": {
+      "search": "Search articles...",
+      "allPosts": "All Posts",
+      "readTime": "{minutes} min read",
+      "backToBlog": "Back to blog",
+      "postNotFound": "Post not found",
+      "publishedAt": "Published on {date}",
+      "navigation": {
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "post": {
+        "title": "{title}",
+        "subtitle": "{subtitle}",
+        "content": "{content}",
+        "category": "{category}"
+      }
+    },
+    "match": {
+      "status": {
+        "live": "LIVE",
+        "vs": "VS",
+        "finished": "FINISHED",
+        "score": "{score1}-{score2}"
+      },
+      "format": {
+        "bo1": "BO1",
+        "bo3": "BO3",
+        "bo5": "BO5"
+      },
+      "noMatches": "No matches found for the selected filters"
+    },
+    "common": {
+      "loading": "Loading...",
+      "noResults": "No results found",
+      "pickDate": "Pick a date",
+      "dateRange": "Date Range"
+    },
+    "shop": {
+      "jersey": {
+        "title": "JERSEY 2025",
+        "brand": "MOVISTAR KOI PROD™",
+        "description": "The new official Movistar KOI jersey for the 2024 season. Designed with cutting-edge technology and premium materials for maximum performance and comfort.",
+        "price": "89.99€",
+        "buyNow": "Buy now"
+      }
+    },
+    "home": {
+      "hashtag": "#WEAREMOVISTARKOI",
+      "jersey": {
+        "brand": "MOVISTAR KOI PROD™",
+        "title": "JERSEY 2025",
+        "description": "The new official Movistar KOI jersey for the 2024 season. Designed with cutting-edge technology and premium materials for maximum performance and comfort.",
+        "price": "89.99€",
+        "buyNow": "Buy now"
+      }
     }
-}
+  }
+  

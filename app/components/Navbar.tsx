@@ -108,6 +108,11 @@ export function Navbar({ authStatus }: NavbarProps) {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
+              <Link href="/calendar" className={navigationMenuTriggerStyle()}>
+                Calendario
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
               <Link href="/about" className={navigationMenuTriggerStyle()}>
                 Club
               </Link>
@@ -217,7 +222,7 @@ function MobileNav({ authStatus }: { authStatus: NavbarProps["authStatus"] }) {
         <span className="font-bold">KOI</span>
       </Link>
       <div className="space-y-3">
-        <div className="flex flex-col space-y-3">
+      <div className="flex flex-col space-y-3">
           <div className="font-medium">Equipos</div>
           {teams.map((team) => (
             <Link
@@ -236,8 +241,11 @@ function MobileNav({ authStatus }: { authStatus: NavbarProps["authStatus"] }) {
         <Link href="/community" className="block font-medium">
           Comunidad
         </Link>
+        <Link href="/calendar" className="block font-medium">
+          Calendario
+        </Link>
         <Link href="/blog" className="block font-medium">
-          Blog
+          Club
         </Link>
         <Link href="/about" className="block font-medium">
           Sobre Nosotros

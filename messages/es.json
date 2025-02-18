@@ -9,10 +9,6 @@
     "today": "Hoy",
     "yesterday": "Ayer"
   },
-  "HomePage": {
-    "title": "hola",
-    "about": "egosnhgoi"
-  },
   "CreatePost": {
     "post": "Publicación",
     "imageAndVideo": "Imagen y Video",
@@ -134,5 +130,64 @@
       "loading": "Estamos teniendo problemas cargando este contenido",
       "application": "Estamos teniendo problemas con la aplicación"
     }
+  },
+
+
+"blog": {
+  "search": "Buscar artículos...",
+  "allPosts": "Todas las publicaciones",
+  "readTime": "{minutes} min de lectura",
+  "backToBlog": "Volver al blog",
+  "postNotFound": "Publicación no encontrada",
+  "publishedAt": "Publicado el {date}",
+  "navigation": {
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "post": {
+    "title": "{title}",
+    "subtitle": "{subtitle}",
+    "content": "{content}",
+    "category": "{category}"
   }
+},
+"match": {
+  "status": {
+    "live": "EN DIRECTO",
+    "vs": "VS",
+    "finished": "FINALIZADO",
+    "score": "{score1}-{score2}"
+  },
+  "format": {
+    "bo1": "BO1",
+    "bo3": "BO3",
+    "bo5": "BO5"
+  },
+  "noMatches": "No se encontraron partidos para los filtros seleccionados"
+},
+"common": {
+  "loading": "Cargando...",
+  "noResults": "No se encontraron resultados",
+  "pickDate": "Seleccionar fecha",
+  "dateRange": "Rango de fechas"
+},
+"shop": {
+  "jersey": {
+    "title": "CAMISETA 2025",
+    "brand": "MOVISTAR KOI PROD™",
+    "description": "La nueva camiseta oficial de Movistar KOI para la temporada 2024. Diseñada con tecnología de última generación y materiales premium para máximo rendimiento y comodidad.",
+    "price": "89.99€",
+    "buyNow": "Comprar ahora"
+  }
+},
+"home": {
+  "hashtag": "#SOMOSMOVISTARKOI",
+  "jersey": {
+    "brand": "MOVISTAR KOI PROD™",
+    "title": "CAMISETA 2025",
+    "description": "La nueva camiseta oficial de Movistar KOI para la temporada 2024. Diseñada con tecnología de última generación y materiales premium para máximo rendimiento y comodidad.",
+    "price": "89.99€",
+    "buyNow": "Comprar ahora"
+  }
+}
 }

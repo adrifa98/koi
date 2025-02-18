@@ -36,6 +36,7 @@ export const metadata = {
     default: SITE_NAME!,
     template: `%s | ${SITE_NAME}`
   },
+  
   robots: {
     follow: true,
     index: true

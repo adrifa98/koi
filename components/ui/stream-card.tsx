@@ -28,7 +28,7 @@ export function StreamCard({ stream, className = "" }: StreamCardProps) {
   return (
     <Card onClick={() => handleStreamClick(stream)}
       className={cn(
-        "w-[280px] bg-background/80 backdrop-blur border border-border/50 hover:bg-accent/50 transition-colors min-h-18",
+        "w-[280px] bg-background/80 backdrop-blur border border-border/50 hover:bg-accent/50 transition-colors min-h-18 cursor-pointer",
         className, 
       )}
     >
@@ -37,8 +37,8 @@ export function StreamCard({ stream, className = "" }: StreamCardProps) {
           <Image
             src={stream.profile_image_url || "/placeholder.svg"}
             alt={stream.user_name}
-            width={24}
-            height={24}
+            width={30}
+            height={30}
             className="rounded-full"
           />
           <div className="min-w-0">
@@ -58,4 +58,3 @@ export function StreamCard({ stream, className = "" }: StreamCardProps) {
     </Card>
   )
 }
-
