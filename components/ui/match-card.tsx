@@ -114,7 +114,7 @@ export default function MatchCard({ match, className = "" }: MatchCardProps) {
   const CardContent = (
     <div
       className={cn(
-        "w-[280px] bg-background/80 backdrop-blur rounded-lg border border-border/50 hover:bg-accent/50 transition-colors",
+        "w-[280px] bg-background/80 backdrop-blur rounded-lg border border-border/50 hover:bg-accent/50 transition-colors min-h-18",
         className,
       )}
     >

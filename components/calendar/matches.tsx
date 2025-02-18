@@ -1,7 +1,6 @@
 "use client"
 
 import { Countdown } from "@/components/calendar/countdown"
-import { Link } from '@/i18n/routing'
 import { fetchMoreMatches } from "@/lib/actions"
 import type { Match } from "@/lib/sanity"
 import { cn } from "@/lib/utils"
@@ -9,6 +8,7 @@ import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Loader2 } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { DateRange } from "react-day-picker"
 

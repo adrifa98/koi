@@ -1,11 +1,14 @@
-"use client"
-
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import * as React from "react"
-import { DayPicker } from "react-day-picker"
-
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { ChevronLeft, ChevronRight, LucideProps } from "lucide-react"
+import * as React from "react"
+import { DayPicker, DayPickerProps } from "react-day-picker"
+
+type ExtendedDayPickerProps = DayPickerProps & {
+  components?: {
+    Button?: React.ComponentType<{ className?: string; dir?: "prev" | "next" }>;
+  };
+};
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -14,7 +17,7 @@ function Calendar({
   classNames,
   showOutsideDays = true,
   ...props
-}: CalendarProps) {
+}: ExtendedDayPickerProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -60,17 +63,24 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-4 w-4", className)} {...props} />
-        ),
+        Button: ({ className, dir, ...props }) =>
+          dir === "prev" ? (
+            <ChevronLeft
+              className={cn("h-4 w-4", className)}
+              {...(props as LucideProps)} // Filtramos solo props válidas
+            />
+          ) : (
+            <ChevronRight
+              className={cn("h-4 w-4", className)}
+              {...(props as LucideProps)} // Filtramos solo props válidas
+            />
+          ),
       }}
       {...props}
     />
   )
 }
+
 Calendar.displayName = "Calendar"
 
 export { Calendar }

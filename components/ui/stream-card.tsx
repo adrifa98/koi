@@ -15,22 +15,21 @@ interface StreamCardProps {
 }
 
 export function StreamCard({ stream, className = "" }: StreamCardProps) {
-  const router = useRouter()
-  const locale = useLocale()
-  const handleStreamClick = useCallback(
+    const router = useRouter()
+    const locale = useLocale()
+    const handleStreamClick = useCallback(
     (stream: TwitchStream) => {
-      if (stream.is_live) {
+        if (stream.is_live) {
         router.push(`/${locale}/tv/live/${stream.user_login}`)
-      }
+        }
     },
-    [router, locale],
-  )
+    [router, locale], // Added locale to dependencies
+    )
   return (
-    <Card
-      onClick={() => handleStreamClick(stream)}
+    <Card onClick={() => handleStreamClick(stream)}
       className={cn(
-        "w-[280px] bg-background/80 backdrop-blur rounded-lg border border-border/50 hover:bg-accent/50 transition-colors min-h-18 cursor-pointer",
-        className,
+        "w-[280px] bg-background/80 backdrop-blur border border-border/50 hover:bg-accent/50 transition-colors min-h-18",
+        className, 
       )}
     >
       <CardContent className="p-3 flex items-center justify-between min-h-[70px]">
@@ -38,8 +37,8 @@ export function StreamCard({ stream, className = "" }: StreamCardProps) {
           <Image
             src={stream.profile_image_url || "/placeholder.svg"}
             alt={stream.user_name}
-            width={34}
-            height={34}
+            width={24}
+            height={24}
             className="rounded-full"
           />
           <div className="min-w-0">
