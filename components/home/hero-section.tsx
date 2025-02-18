@@ -1,12 +1,16 @@
 "use client"
+
 import Canvas from "@/components/home/canvas"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { MagneticLogo } from "@/components/ui/magnetic-logo"
-import { MatchCard } from "@/components/ui/match-card"
+import MatchCard from "@/components/ui/match-card"
+import { StreamCard } from "@/components/ui/stream-card"
+import type { Match } from "@/lib/sanity"
+import type { TwitchStream } from "@/lib/types"
 import { Instagram, InstagramIcon as TiktokIcon, Twitch, Twitter } from "lucide-react"
 import Image from "next/image"
-import { Suspense, useState } from "react"
+import { useEffect, useState } from "react"
 
 const sponsors = [
   "/patros/movistar.png",
@@ -25,139 +29,36 @@ const socialLinks = [
   { icon: TiktokIcon, href: "#" },
 ]
 
-const matches = [
-  {
-    team1: "FNC",
-    team2: "RUSHB",
-    time: "10:00",
-    date: "17 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "KOI",
-    team2: "G2",
-    time: "13:00",
-    date: "17 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "VIT",
-    team2: "MAD",
-    time: "16:00",
-    date: "17 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "BDS",
-    team2: "AST",
-    time: "19:00",
-    date: "17 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "SK",
-    team2: "XL",
-    time: "20:00",
-    date: "17 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "HR",
-    team2: "NVE",
-    time: "21:00",
-    date: "17 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "TH",
-    team2: "GIA",
-    time: "22:00",
-    date: "17 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "RGE",
-    team2: "KC",
-    time: "23:00",
-    date: "17 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "MSF",
-    team2: "LDLC",
-    time: "00:00",
-    date: "18 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-  {
-    team1: "BK",
-    team2: "TQ",
-    time: "01:00",
-    date: "18 Feb 2025",
-    team1Logo: "/placeholder.svg?height=24&width=24",
-    team2Logo: "/placeholder.svg?height=24&width=24",
-    platforms: [
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-      { icon: "/placeholder.svg?height=20&width=20", href: "#" },
-    ],
-  },
-]
+interface HeroSectionProps {
+  initialMatches: Match[]
+  twitchStreams: TwitchStream[]
+}
 
-export function HeroSection() {
+export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps) {
+  const [matches, setMatches] = useState<Match[]>([])
+  const [topStreams, setTopStreams] = useState<TwitchStream[]>([])
   const [isHovered, setIsHovered] = useState(false)
   const [hoveredMatch, setHoveredMatch] = useState<number | null>(null)
-  const [isDark, setIsDark] = useState(true)
+  const [hoveredStreams, setHoveredStreams] = useState(false)
 
-  const getDropdownMatches = (index: number) => {
-    const start = index === 0 ? 2 : 6
-    const end = index === 0 ? 6 : 10
-    return matches.slice(start, end)
-  }
+  useEffect(() => {
+    console.log("Initial matches:", initialMatches)
+    setMatches(initialMatches)
+  }, [initialMatches])
+
+  useEffect(() => {
+    if (hoveredMatch === 0) {
+      console.log("Dropdown matches:", matches.slice(1, 4))
+    }
+  }, [hoveredMatch, matches])
+
+  useEffect(() => {
+    const liveStreams = twitchStreams
+      .filter((stream) => stream.is_live)
+      .sort((a, b) => b.viewer_count - a.viewer_count)
+      .slice(0, 8) // Get top 8 streams for main + dropdown
+    setTopStreams(liveStreams)
+  }, [twitchStreams])
 
   return (
     <div className="background-header overflow-hidden -mt-4">
@@ -194,9 +95,7 @@ export function HeroSection() {
             </div>
 
             <div className="relative flex justify-center items-center w-full h-full">
-              <Suspense>
-                <Canvas onHover={(hovered) => window.innerWidth > 1024 && setIsHovered(hovered)} />
-              </Suspense>
+              <Canvas onHover={(hovered) => window.innerWidth > 1024 && setIsHovered(hovered)} />
 
               {/* Product Card - LEFT SIDE */}
               <div
@@ -259,7 +158,7 @@ export function HeroSection() {
               {sponsors.map((sponsor, index) => (
                 <MagneticLogo
                   key={index}
-                  className="flex-shrink-0 w-14 h-14 lg:w-16 lg:h-16 bg-white/5 rounded-lg backdrop-blur-sm flex items-center justify-center hover:bg-white/10 transition-colors"
+                  className="flex-shrink-0 w-14 h-14 lg:w-16 lg:h-16 bg-background/80 backdrop-blur border border-border/50 hover:bg-accent/50 transition-colors rounded-lg flex items-center justify-center"
                 >
                   <Image
                     src={sponsor || "/placeholder.svg"}
@@ -273,38 +172,68 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Match Cards - DERECHA */}
+          {/* Match Cards and Stream Cards - DERECHA */}
           <div className="absolute right-0 lg:right-32 bottom-32 lg:bottom-auto lg:top-1/2 w-full lg:w-auto px-4 lg:px-0 lg:-translate-y-1/2 z-[60]">
-            <div className="flex flex-col lg:flex-row gap-2 lg:gap-4">
-              {matches.slice(0, 2).map((match, index) => (
+            <div className="flex flex-col lg:flex-row gap-4">
+              {/* Match Cards */}
+              {matches.length > 0 && (
                 <div
-                  key={index}
                   className="relative"
-                  onMouseEnter={() => setHoveredMatch(index)}
+                  onMouseEnter={() => setHoveredMatch(0)}
                   onMouseLeave={() => setHoveredMatch(null)}
                 >
-                  <div className={`transition-all duration-500 ${isHovered ? "blur-sm" : ""}`}>
-                    <MatchCard match={match} />
+                  <div>
+                    <MatchCard match={matches[0]} />
                   </div>
 
-                  {hoveredMatch === index && (
+                  {hoveredMatch === 0 && matches.length > 1 && (
                     <div className="absolute top-full left-0 space-y-2 pt-2 z-[80]">
-                      {getDropdownMatches(index).map((dropMatch, dropIndex) => (
+                      {matches.slice(1, 4).map((match, index) => (
                         <div
-                          key={dropIndex}
+                          key={match._id}
                           className="opacity-0 -translate-y-5"
                           style={{
-                            animation: `fadeInDown 0.5s ease-out forwards`,
-                            animationDelay: `${dropIndex * 100}ms`,
+                            animation: `dropDown 0.5s ease-out forwards`,
+                            animationDelay: `${index * 100}ms`,
                           }}
                         >
-                          <MatchCard match={dropMatch} />
+                          <MatchCard match={match} />
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
-              ))}
+              )}
+
+              {/* Stream Cards */}
+              {topStreams.length > 0 && (
+                <div
+                  className="relative"
+                  onMouseEnter={() => setHoveredStreams(true)}
+                  onMouseLeave={() => setHoveredStreams(false)}
+                >
+                  <div>
+                    <StreamCard stream={topStreams[0]} />
+                  </div>
+
+                  {hoveredStreams && topStreams.length > 1 && (
+                    <div className="absolute top-full left-0 space-y-2 pt-2 z-[80]">
+                      {topStreams.slice(1, 4).map((stream, index) => (
+                        <div
+                          key={stream.user_id}
+                          className="opacity-0 -translate-y-5"
+                          style={{
+                            animation: `dropDown 0.5s ease-out forwards`,
+                            animationDelay: `${index * 100}ms`,
+                          }}
+                        >
+                          <StreamCard stream={stream} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -331,3 +260,4 @@ export function HeroSection() {
     </div>
   )
 }
+

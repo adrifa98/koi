@@ -1,8 +1,9 @@
-// pages/community/page.tsx
 import prisma from "@/app/lib/db";
 import { FeaturedGrid } from "@/components/home/featured-grid";
 import { FishSection } from "@/components/home/fish-section";
 import { HeroSection } from "@/components/home/hero-section";
+import { getLatestMatches } from "@/lib/actions";
+import { getTwitchStreams } from "@/lib/twitch";
 
 export const runtime = 'nodejs';
 
@@ -38,10 +39,12 @@ async function getLatestDiscussions() {
 
 export default async function HomePage() {
   const discussions = await getLatestDiscussions();
+  const matches = await getLatestMatches()
+  const streams = await getTwitchStreams()
 
   return (
     <>
-      <HeroSection />
+      <HeroSection initialMatches={matches} twitchStreams={streams} />
       <FeaturedGrid />
       {/* Pasamos las discusiones como prop */}
       <FishSection discussions={discussions} />

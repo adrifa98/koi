@@ -32,6 +32,10 @@ const nextConfig = {
         hostname: "static-cdn.jtvnw.net", 
       },
       {
+        protocol: "https",
+        hostname: "cdn.sanity.io", 
+      },
+      {
         protocol: 'https',
         hostname: 'static.vecteezy.com', // Dominio del que se cargan las imágenes
         pathname: '/system/resources/thumbnails/**',

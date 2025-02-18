@@ -192,3 +192,29 @@
 .carpa {
   filter: hue-rotate(10deg);
 }
+
+@keyframes dropDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.navigation-progress {
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
