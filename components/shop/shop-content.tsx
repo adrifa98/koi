@@ -15,17 +15,26 @@ interface ShopContentProps {
 }
 
 export function ShopContent({ products, categoryProducts }: ShopContentProps) {
+  // Seleccionar los primeros 5 productos para Featured Products
+  const featuredProducts = products.slice(0, 5)
+
   return (
     <div className="min-h-screen bg-background">
       <FeaturedGrid />
-      <FeaturedProducts products={products} />
+      {featuredProducts.length > 0 && <FeaturedProducts products={featuredProducts} />}
 
       {/* Category Products */}
       <div className="space-y-20 py-20">
-        <CategoryProducts title="Accesorios" products={categoryProducts.accesorios} />
-        <CategoryProducts title="Equipación" products={categoryProducts.equipacion} />
-        <CategoryProducts title="Lifestyle" products={categoryProducts.lifestyle} />
-        <CategoryProducts title="Outlet" products={categoryProducts.outlet} />
+        {categoryProducts.accesorios.length > 0 && (
+          <CategoryProducts title="Accesorios" products={categoryProducts.accesorios} />
+        )}
+        {categoryProducts.equipacion.length > 0 && (
+          <CategoryProducts title="Equipación" products={categoryProducts.equipacion} />
+        )}
+        {categoryProducts.lifestyle.length > 0 && (
+          <CategoryProducts title="Lifestyle" products={categoryProducts.lifestyle} />
+        )}
+        {categoryProducts.outlet.length > 0 && <CategoryProducts title="Outlet" products={categoryProducts.outlet} />}
       </div>
 
       <TeamSection />
