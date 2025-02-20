@@ -372,5 +372,13 @@
       "clear": "Clear filters",
       "apply": "Apply filters"
     }
+  },
+  "first_visit": {
+    "title": "UNOFFICIAL WEBSITE",
+    "description": "Developed for educational purposes only.",
+    "password_placeholder": "Password",
+    "access": "Access",
+    "error": "Incorrect password"
   }
 }
+

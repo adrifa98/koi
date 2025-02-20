@@ -370,7 +370,12 @@
       "clear": "Limpiar filtros",
       "apply": "Aplicar filtros"
     }
+  },
+  "first_visit": {
+    "title": "WEB NO OFICIAL",
+    "description": "Desarrollada solo para motivos didácticos.",
+    "password_placeholder": "Contraseña",
+    "access": "Acceder",
+    "error": "Contraseña incorrecta"
   }
 }
-
-

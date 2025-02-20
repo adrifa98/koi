@@ -5,12 +5,14 @@ import type React from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 
 export function FirstVisitModal() {
   const [isOpen, setIsOpen] = useState(false)
   const [password, setPassword] = useState("")
   const [error, setError] = useState(false)
+  const t = useTranslations("first_visit")
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisited")
@@ -22,7 +24,6 @@ export function FirstVisitModal() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (password === "1234") {
-      // Contraseña simple para demostración
       localStorage.setItem("hasVisited", "true")
       setIsOpen(false)
     } else {
@@ -30,10 +31,8 @@ export function FirstVisitModal() {
     }
   }
 
-  // Prevenir que el usuario cierre el modal
   const handleOpenChange = (open: boolean) => {
     if (open === false) {
-      // No permitir cerrar el modal
       return
     }
     setIsOpen(open)
@@ -43,13 +42,13 @@ export function FirstVisitModal() {
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
-          <DialogTitle>WEB NO OFICIAL</DialogTitle>
-          <DialogDescription>Desarrollada solo para motivos didácticos.</DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="password"
-            placeholder="Contraseña"
+            placeholder={t("password_placeholder")}
             value={password}
             onChange={(e) => {
               setPassword(e.target.value)
@@ -57,9 +56,9 @@ export function FirstVisitModal() {
             }}
             className={error ? "border-red-500" : ""}
           />
-          {error && <p className="text-sm text-red-500">Contraseña incorrecta</p>}
+          {error && <p className="text-sm text-red-500">{t("error")}</p>}
           <Button type="submit" className="w-full">
-            Acceder
+            {t("access")}
           </Button>
         </form>
       </DialogContent>
