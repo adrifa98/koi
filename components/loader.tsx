@@ -47,7 +47,7 @@ export function Loader() {
   return (
     <div className="fixed left-0 right-0 top-0 z-[100] h-0.5">
       <div
-        className="h-full w-full bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-400"
+        className="h-full w-full bg-gradient-to-r from-blue-600 from-40% via-blue-500 via-80% to-indigo-500"
         style={{
           transform: `scaleX(${progress / 100})`,
           transformOrigin: "left",
