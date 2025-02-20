@@ -46,7 +46,7 @@ export function HeroSection({ latestVideo }: HeroSectionProps) {
   }, [])
 
   const handlePlay = () => {
-    router.push(`${locale}/tv/watch/${latestVideo.videoId}`)
+    router.push("/tv/watch/${latestVideo.videoId}")
   }
   const t = useTranslations('video');
   return (
