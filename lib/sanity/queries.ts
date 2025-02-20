@@ -148,12 +148,34 @@ export async function getMatches(): Promise<Match[]> {
 
 // Funciones de categories
 export async function getCategories(): Promise<Category[]> {
-  const query =
-    '*[_type == "category"] | order(_createdAt asc) {_id,name,slug,current,description,en,es,image{asset->{url},alt}}'
-
   try {
-    const result = await client.fetch(query, {}, { next: { revalidate: 60 } })
-    return result
+    const result = await client.fetch(
+      `*[_type == "category"] | order(_createdAt asc) {
+        _id,
+        name,
+        slug,
+        current,
+        description,
+        en,
+        es,
+        image{
+          asset->{
+            url
+          },
+          alt
+        }
+      }`,
+      {},
+      { next: { revalidate: 60 } },
+    )
+
+    // Log para debugging
+    console.log("Fetched categories:", result)
+
+    // Filtrar categorías inválidas o sin slug
+    const validCategories = result.filter((category: Category) => category && category.slug && category.slug.current)
+
+    return validCategories
   } catch (error) {
     console.error("Error fetching categories:", error)
     return []
