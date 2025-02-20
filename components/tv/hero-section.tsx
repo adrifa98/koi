@@ -1,13 +1,13 @@
 "use client"
 
-import gsap from "gsap"
-import { Play } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+import { useRouter } from '@/i18n/routing';
+import gsap from "gsap";
+import { Play } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-import { Button } from "@/components/ui/button"
-import type { SanityVideo } from "@/types/sanity"
-import { useLocale, useTranslations } from 'next-intl'
+import { Button } from "@/components/ui/button";
+import type { SanityVideo } from "@/types/sanity";
+import { useLocale, useTranslations } from 'next-intl';
 
 
 interface HeroSectionProps {
