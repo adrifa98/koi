@@ -17,7 +17,9 @@ interface PlayerCardProps {
 
 export function PlayerCard({ player, category }: PlayerCardProps) {
   const t = useTranslations("teams")
-  const imageUrl = urlForImage(player.image).url()
+  // Manejar el caso donde urlForImage devuelve undefined
+  const imageBuilder = urlForImage(player.image)
+  const imageUrl = imageBuilder ? imageBuilder.url() : "/placeholder.svg"
   const [isFollowing, setIsFollowing] = useState(false)
 
   const handleFollowClick = () => {
