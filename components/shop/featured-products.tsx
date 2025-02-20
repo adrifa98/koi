@@ -22,7 +22,7 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {firstProduct && (
           <div className="aspect-[16/9] relative overflow-hidden rounded-lg bg-gray-100">
-            <Link className="relative block h-full w-full" href={`/${locale}/product/${firstProduct.handle}`}>
+            <Link className="relative block h-full w-full" href={`/product/${firstProduct.handle}`}>
               {firstProduct.featuredImage?.url ? (
                 <Image
                   src={firstProduct.featuredImage.url || "/placeholder.svg"}
@@ -54,7 +54,7 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
         )}
         {secondProduct && (
           <div className="aspect-[16/9] relative overflow-hidden rounded-lg bg-gray-100">
-            <Link className="relative block h-full w-full" href={`/${locale}/product/${secondProduct.handle}`}>
+            <Link className="relative block h-full w-full" href={`/product/${secondProduct.handle}`}>
               {secondProduct.featuredImage?.url ? (
                 <Image
                   src={secondProduct.featuredImage.url || "/placeholder.svg"}
@@ -89,7 +89,7 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {otherProducts.map((product) => (
             <div key={product.handle} className="aspect-[16/9] relative overflow-hidden rounded-lg bg-gray-100">
-              <Link className="relative block h-full w-full" href={`/${locale}/product/${product.handle}`}>
+              <Link className="relative block h-full w-full" href={`/product/${product.handle}`}>
                 {product.featuredImage?.url ? (
                   <Image
                     src={product.featuredImage.url || "/placeholder.svg"}
