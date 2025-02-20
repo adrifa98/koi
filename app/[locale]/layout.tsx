@@ -2,6 +2,7 @@
 import { LenisProvider } from "@/app/components/lenis-provider";
 import "@/app/globals.css";
 import { CartProvider } from '@/components/cart/cart-context';
+import { FirstVisitModal } from "@/components/first-visit-modal";
 import Footer from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar/navbar";
 import { Loader } from "@/components/loader";
@@ -22,7 +23,6 @@ import { notFound } from 'next/navigation';
 import { ReactNode, Suspense } from 'react';
 import { ThemeProvider } from "../components/theme-provider";
 import { Providers } from "./providers";
- 
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -90,6 +90,7 @@ export default async function RootLayout({ children, params: {locale} }: { child
             <Suspense>
             {children}
             </Suspense>
+            <FirstVisitModal />
             <WelcomeToast />
             <Toaster />
           </main>
