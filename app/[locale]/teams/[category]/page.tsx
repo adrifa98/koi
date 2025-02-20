@@ -18,7 +18,6 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // Convertir slug amigable al slug de Sanity si es necesario
   const sanityCategorySlug = categoryMapping[params.category] || params.category
 
   return {
@@ -27,40 +26,61 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-// Generar rutas estáticas para todas las categorías posibles
 export async function generateStaticParams() {
-  const categories = await getCategories()
+  try {
+    const categories = await getCategories()
 
-  // Crear un array con todos los slugs posibles (incluyendo los amigables)
-  const allSlugs = categories.reduce((acc: { category: string }[], category) => {
-    // Añadir el slug original
-    acc.push({ category: category.slug.current })
-
-    // Añadir el slug amigable si existe
-    const friendlySlug = Object.entries(categoryMapping).find(([_, value]) => value === category.slug.current)?.[0]
-    if (friendlySlug) {
-      acc.push({ category: friendlySlug })
+    if (!categories || categories.length === 0) {
+      console.error("No categories found during static generation")
+      return []
     }
 
-    return acc
-  }, [])
+    // Crear un array con todos los slugs posibles (incluyendo los amigables)
+    const allSlugs = categories.reduce((acc: { category: string; locale: string }[], category) => {
+      if (!category.slug?.current) {
+        console.warn(`Category without slug found:`, category)
+        return acc
+      }
 
-  console.log("Generated static paths:", allSlugs)
-  return allSlugs
+      // Añadir el slug original para ambos idiomas
+      acc.push({ category: category.slug.current, locale: "es" }, { category: category.slug.current, locale: "en" })
+
+      // Añadir el slug amigable si existe
+      const friendlySlug = Object.entries(categoryMapping).find(([_, value]) => value === category.slug.current)?.[0]
+
+      if (friendlySlug) {
+        acc.push({ category: friendlySlug, locale: "es" }, { category: friendlySlug, locale: "en" })
+      }
+
+      return acc
+    }, [])
+
+    console.log("Generated static paths:", allSlugs)
+    return allSlugs
+  } catch (error) {
+    console.error("Error generating static params:", error)
+    return []
+  }
 }
 
 export default async function TeamPage({ params }: Props) {
-  // Convertir slug amigable al slug de Sanity si es necesario
-  const sanityCategorySlug = categoryMapping[params.category] || params.category
+  try {
+    // Convertir slug amigable al slug de Sanity si es necesario
+    const sanityCategorySlug = categoryMapping[params.category] || params.category
 
-  console.log("Fetching players for category:", sanityCategorySlug)
-  const players = await getPlayersByCategory(sanityCategorySlug)
-  console.log("Players found:", players?.length || 0)
+    console.log("Fetching players for category:", sanityCategorySlug)
+    const players = await getPlayersByCategory(sanityCategorySlug)
+    console.log("Players found:", players?.length || 0)
 
-  if (!players || players.length === 0) {
-    notFound()
+    if (!players || players.length === 0) {
+      console.log("No players found, returning 404")
+      notFound()
+    }
+
+    return <PlayersGrid players={players} category={sanityCategorySlug} />
+  } catch (error) {
+    console.error("Error in TeamPage:", error)
+    throw error // Esto mostrará la página de error por defecto
   }
-
-  return <PlayersGrid players={players} category={sanityCategorySlug} />
 }
 

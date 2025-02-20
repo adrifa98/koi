@@ -8,8 +8,10 @@ export type { Category, Match }; // Exportar los tipos
 
 // Funciones de players
 export async function getPlayersByCategory(categorySlug: string): Promise<Player[]> {
-  console.log("=== Fetching Players ===")
-  console.log("Category slug:", categorySlug)
+  if (!categorySlug) {
+    console.error("Category slug is required")
+    return []
+  }
 
   try {
     const query = `*[_type == "player" && $categorySlug in categories[]->slug.current] {
@@ -23,7 +25,7 @@ export async function getPlayersByCategory(categorySlug: string): Promise<Player
       youtube,
       twitch,
       instagram,
-      image,
+      "image": image.asset->,
       "categories": categories[]->{
         _id,
         name,
@@ -38,26 +40,20 @@ export async function getPlayersByCategory(categorySlug: string): Promise<Player
       }
     }`
 
-    console.log("Executing query:", query)
-    console.log("With params:", { categorySlug })
-
     const players = await client.fetch<Player[]>(query, { categorySlug })
 
-    console.log("=== Query Results ===")
-    console.log("Total players found:", players.length)
-    players.forEach((player) => {
-      console.log(`Player "${player.username}":`, {
-        id: player._id,
-        categories: player.categories.map((cat) => ({
-          slug: cat.slug.current,
-          subCategory: cat.subCategory,
-          name: cat.name,
-        })),
-      })
-    })
+    if (!Array.isArray(players)) {
+      console.error("Invalid response from Sanity:", players)
+      return []
+    }
 
-    // Ordenar jugadores primero por subcategoría
-    const sortedPlayers = players.sort((a: Player, b: Player) => {
+    // Filtrar jugadores inválidos
+    const validPlayers = players.filter(
+      (player) => player && player._id && player.username && player.categories?.length > 0,
+    )
+
+    // Ordenar jugadores
+    const sortedPlayers = validPlayers.sort((a, b) => {
       const aCategory = a.categories.find((cat) => cat.slug.current === categorySlug)
       const bCategory = b.categories.find((cat) => cat.slug.current === categorySlug)
 
@@ -69,8 +65,7 @@ export async function getPlayersByCategory(categorySlug: string): Promise<Player
 
     return sortedPlayers
   } catch (error) {
-    console.error("=== Error Fetching Players ===")
-    console.error("Error details:", error)
+    console.error("Error fetching players:", error)
     return []
   }
 }
@@ -149,31 +144,40 @@ export async function getMatches(): Promise<Match[]> {
 // Funciones de categories
 export async function getCategories(): Promise<Category[]> {
   try {
+    const query = `*[_type == "category"] | order(_createdAt asc) {
+      _id,
+      name,
+      slug,
+      current,
+      description,
+      en,
+      es,
+      "image": {
+        "asset": {
+          "url": image.asset->url
+        },
+        "alt": image.alt
+      }
+    }`
+
     const result = await client.fetch(
-      `*[_type == "category"] | order(_createdAt asc) {
-        _id,
-        name,
-        slug,
-        current,
-        description,
-        en,
-        es,
-        image{
-          asset->{
-            url
-          },
-          alt
-        }
-      }`,
+      query,
       {},
-      { next: { revalidate: 60 } },
+      {
+        next: { revalidate: 60 },
+        cache: "force-cache",
+      },
     )
 
-    // Log para debugging
-    console.log("Fetched categories:", result)
+    if (!Array.isArray(result)) {
+      console.error("Invalid response from Sanity:", result)
+      return []
+    }
 
-    // Filtrar categorías inválidas o sin slug
-    const validCategories = result.filter((category: Category) => category && category.slug && category.slug.current)
+    // Filtrar categorías inválidas
+    const validCategories = result.filter(
+      (category: Category) => category && category._id && category.name && category.slug?.current,
+    )
 
     return validCategories
   } catch (error) {
