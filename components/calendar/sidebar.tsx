@@ -1,7 +1,7 @@
 "use client"
 
 import { DatePicker } from "@/components/ui/date-picker"
-import type { Category } from "@/lib/sanity"
+import type { Category } from "@/lib/sanity/queries"
 import { cn } from "@/lib/utils"
 import gsap from "gsap"
 import Image from "next/image"

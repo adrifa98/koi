@@ -2,7 +2,7 @@
 
 import { Countdown } from "@/components/calendar/countdown"
 import { Link } from '@/i18n/routing'
-import type { Match } from "@/lib/sanity"
+import type { Match } from "@/lib/sanity/queries"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"

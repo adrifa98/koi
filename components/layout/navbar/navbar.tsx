@@ -37,7 +37,7 @@ interface NavbarProps {
 }
 
 const teams = [
-  { title: "League of Legends", subtitle: "LEC, Superliga", href: "/teams/lol", icon: LeagueIcon },
+  { title: "League of Legends", subtitle: "LEC, Superliga", href: "/teams/league-of-legends", icon: LeagueIcon },
   { title: "Valorant", subtitle: "VCT EMEA, Rising", href: "/teams/valorant", icon: ValorantIcon },
   { title: "Pokémon", href: "/teams/pokemon", icon: PokemonIcon },
   { title: "Call of Duty", subtitle: "Toronto Ultra", href: "/teams/cod", icon: CodIcon },
@@ -50,7 +50,7 @@ export function Navbar({ authStatus }: NavbarProps) {
   const tNav = useTranslations("navbar")
   const locale = useLocale();
   const teams = [
-    { title: "League of Legends", subtitle: "LEC, Superliga", href: "/teams/lol", icon: LeagueIcon },
+    { title: "League of Legends", subtitle: "LEC, Superliga", href: "/teams/league-of-legends", icon: LeagueIcon },
     { title: "Valorant", subtitle: "VCT EMEA, Rising", href: "/teams/valorant", icon: ValorantIcon },
     { title: "Pokémon", href: "/teams/pokemon", icon: PokemonIcon },
     { title: "Call of Duty", subtitle: "Toronto Ultra", href: "/teams/cod", icon: CodIcon },

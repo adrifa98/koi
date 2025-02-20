@@ -2,7 +2,7 @@ import { ChannelSidebar } from "@/components/tv/channel-sidebar"
 import { HeroSection } from "@/components/tv/hero-section"
 import { StoriesBar } from "@/components/tv/stories-bar"
 import { VideoCarousel } from "@/components/tv/video-carousel"
-import { getVideos } from "@/lib/sanity"
+import { getVideos } from "@/lib/sanity/queries"
 import { getTwitchStreams } from "@/lib/twitch"
 import { getTranslations } from "next-intl/server"
 

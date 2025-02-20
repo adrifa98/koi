@@ -1,7 +1,7 @@
 "use client"
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import type { Category } from "@/lib/sanity"
+import type { Category } from "@/lib/sanity/queries"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { useEffect, useState } from "react"

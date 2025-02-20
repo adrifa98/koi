@@ -2,7 +2,7 @@
 
 import { Matches } from "@/components/calendar/matches"
 import { Sidebar } from "@/components/calendar/sidebar"
-import type { Category, Match } from "@/lib/sanity"
+import type { Category, Match } from "@/lib/sanity/queries"
 import { useTheme } from "next-themes"
 import { useState } from "react"
 import type { DateRange } from "react-day-picker"

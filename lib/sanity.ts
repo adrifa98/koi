@@ -1,11 +1,29 @@
 "use server"
 import type { SanityVideo } from "@/types/sanity"
+import imageUrlBuilder from "@sanity/image-url"
+import { createClient } from "next-sanity"
+
 
 const SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET
 
 if (!SANITY_PROJECT_ID || !SANITY_DATASET) {
   throw new Error("Missing Sanity environment variables")
+}
+
+
+export const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
+  apiVersion: "2024-02-12",
+  useCdn: false,
+})
+
+
+const builder = imageUrlBuilder(client)
+
+export function urlForImage(source: any) {
+  return builder.image(source).url()
 }
 
 export interface Category {
@@ -69,7 +87,6 @@ export interface Match {
   }
   matchDate: string
 }
-
 
 export async function getMatches(): Promise<Match[]> {
   const now = new Date()
@@ -170,8 +187,6 @@ export async function getCategories(): Promise<Category[]> {
     return []
   }
 }
-
-
 
 export async function getVideos(): Promise<SanityVideo[]> {
   const url = `https://${SANITY_PROJECT_ID}.api.sanity.io/v2024-02-12/data/query/${SANITY_DATASET}?query=*[_type == "video"]{_id,title,videoId,channelName,publishedAt,duration}`

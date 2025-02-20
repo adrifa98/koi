@@ -1,4 +1,4 @@
-import { getVideos } from "@/lib/sanity"
+import { getVideos } from "@/lib/sanity/queries"
 import { getTwitchStreams } from "@/lib/twitch"
 import type { TwitchStream } from "@/lib/types"
 import type { ApiResponse } from "@/types/api"

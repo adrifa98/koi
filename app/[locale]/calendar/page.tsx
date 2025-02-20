@@ -1,5 +1,5 @@
 import { CalendarClient } from "@/components/calendar/calendar-client"
-import { getCategories, getMatches } from "@/lib/sanity"
+import { getCategories, getMatches } from "@/lib/sanity/queries"
 
 export default async function Home() {
   const [matches, categories] = await Promise.all([getMatches(), getCategories()])

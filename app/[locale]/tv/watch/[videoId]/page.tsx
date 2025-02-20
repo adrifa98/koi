@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { getVideo, getVideos } from "@/lib/sanity"
+import { getVideo, getVideos } from "@/lib/sanity/queries"
 import { getTwitchStreams } from "@/lib/twitch"
 import { formatDate } from "@/lib/utils"
 import { getTranslations } from 'next-intl/server'

@@ -379,6 +379,57 @@
     "password_placeholder": "Password",
     "access": "Access",
     "error": "Incorrect password"
+  },
+  "teams": {
+    "header": {
+      "imageAlt": "Team Arena Background"
+    },
+    "categories": {
+      "league-of-legends": {
+        "name": "League of Legends",
+        "region": "LEC - Superliga"
+      },
+      "valorant": {
+        "name": "Valorant",
+        "region": "VCT EMEA - Rising LVP"
+      },
+      "pokemon": {
+        "name": "Pokémon",
+        "region": "VGC"
+      },
+      "toronto-ultra": {
+        "name": "Toronto Ultra",
+        "region": "Call of Duty League"
+      },
+      "eafc": {
+        "name": "EA FC",
+        "region": "Global"
+      },
+      "fortnite": {
+        "name": "Fortnite",
+        "region": "FNCS"
+      }
+    },
+    "player": {
+      "follow": "Follow",
+      "unfollow": "Following",
+      "noPlayers": "No players found for this category",
+      "teams": {
+        "lec": "LEC",
+        "superliga": "Superliga LOL EMEA",
+        "vct": "VCT EMEA",
+        "rising": "Rising Valorant"
+      },
+      "social": {
+        "twitter": "Follow on Twitter",
+        "youtube": "Subscribe on YouTube",
+        "twitch": "Follow on Twitch",
+        "instagram": "Follow on Instagram"
+      }
+    },
+    "team": {
+      "description": "Meet our professional {game} team, competing at the highest level in international tournaments."
+    }
   }
 }
 

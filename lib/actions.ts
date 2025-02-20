@@ -1,6 +1,6 @@
 "use server"
 
-import type { Match } from "@/lib/sanity"
+import type { Match } from "@/lib/sanity/queries"
 
 const SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET

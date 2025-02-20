@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { MagneticLogo } from "@/components/ui/magnetic-logo"
 import MatchCard from "@/components/ui/match-card"
 import { StreamCard } from "@/components/ui/stream-card"
-import type { Match } from "@/lib/sanity"
+import type { Match } from "@/lib/sanity/queries"
 import type { TwitchStream } from "@/lib/types"
 import { Instagram, InstagramIcon as TiktokIcon, Twitch, Twitter } from "lucide-react"
 import { useTranslations } from "next-intl"
