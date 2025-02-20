@@ -25,7 +25,9 @@ export async function getPlayersByCategory(categorySlug: string): Promise<Player
       youtube,
       twitch,
       instagram,
-      "image": image.asset->,
+      "image": {
+        "url": image.asset->url
+      },
       "categories": categories[]->{
         _id,
         name,

@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { urlForImage } from "@/lib/sanity/client"
 import { cn } from "@/lib/utils"
 import type { Player } from "@/types/player"
 import { Instagram, Twitch, Twitter, Youtube } from "lucide-react"
@@ -17,9 +16,8 @@ interface PlayerCardProps {
 
 export function PlayerCard({ player, category }: PlayerCardProps) {
   const t = useTranslations("teams")
-  // Manejar el caso donde urlForImage devuelve undefined
-  const imageBuilder = urlForImage(player.image)
-  const imageUrl = imageBuilder ? imageBuilder.url() : "/placeholder.svg"
+  // Acceder directamente a la URL de la imagen desde la estructura de Sanity
+  const imageUrl = player.image?.url || "/placeholder.svg"
   const [isFollowing, setIsFollowing] = useState(false)
 
   const handleFollowClick = () => {

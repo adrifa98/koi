@@ -1,9 +1,26 @@
 export interface Player {
+  _id: string
+  username: string
+  firstName: string
+  lastName: string
+  description: {
+    en: string
+    es: string
+  }
+  slug: {
+    current: string
+    _type: string
+  }
+  twitter?: string
+  youtube?: string
+  twitch?: string
+  instagram?: string
+  image: {
+    url: string // Actualizado para reflejar la estructura correcta
+  }
+  categories: {
     _id: string
-    username: string
-    firstName: string
-    lastName: string
-    description: {
+    name: {
       en: string
       es: string
     }
@@ -11,37 +28,13 @@ export interface Player {
       current: string
       _type: string
     }
-    twitter?: string
-    youtube?: string
-    twitch?: string
-    instagram?: string
     image: {
       asset: {
-        _ref: string
-        _type: string
+        url: string
       }
-      _type: string
     }
-    categories: {
-      _id: string
-      name: {
-        en: string
-        es: string
-      }
-      slug: {
-        current: string
-        _type: string
-      }
-      image: {
-        asset: {
-          _ref: string
-          _type: string
-        }
-        _type: string
-      }
-      channel?: string
-      subCategory?: string
-    }[]
-  }
-  
-  
+    channel?: string
+    subCategory?: string
+  }[]
+}
+
