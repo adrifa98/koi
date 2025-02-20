@@ -4,8 +4,7 @@ import "@/app/globals.css";
 import { CartProvider } from '@/components/cart/cart-context';
 import Footer from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar/navbar";
-import { Loader } from "@/components/loader";
-import { LoadingProvider } from "@/components/loading-provider";
+import Preloader from "@/components/loader";
 import { NavigationProgress } from "@/components/transition-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { WelcomeToast } from "@/components/welcome-toast";
@@ -70,11 +69,9 @@ export default async function RootLayout({ children, params: {locale} }: { child
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.className}>
-      <LoadingProvider>
       <Providers>
       <NavigationProvider>
       <NavigationProgress/>
-      
         <NextIntlClientProvider messages={messages}>
         <CartProvider cartPromise={cart}>
           <Suspense>
@@ -84,8 +81,8 @@ export default async function RootLayout({ children, params: {locale} }: { child
           enableSystem
           disableTransitionOnChange
         ><LenisProvider>
+          <Preloader />
           <Navbar authStatus={authStatus} />
-          <Loader />
           <Suspense>
           <main>
             <Suspense>
@@ -103,7 +100,6 @@ export default async function RootLayout({ children, params: {locale} }: { child
         </NextIntlClientProvider>
         </NavigationProvider>
         </Providers>
-        </LoadingProvider>
       </body>
     </html>
   );

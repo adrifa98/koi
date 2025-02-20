@@ -1,16 +1,23 @@
-"use client"
+"use client";
 
-import { useLoading } from "./loading-provider"
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export function Loader() {
-  const { isLoading } = useLoading()
+export default function Preloader() {
+  const pathname = usePathname();
+  const [loading, setLoading] = useState(false);
 
-  if (!isLoading) return null
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 500); // Simula tiempo de carga
+    return () => clearTimeout(timer);
+  }, [pathname]);
+
+  if (!loading) return null;
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-50 h-1 bg-muted">
-      <div className="h-full animate-progress bg-primary" />
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
+      <p className="text-white text-2xl">Cargando...</p>
     </div>
-  )
+  );
 }
-
