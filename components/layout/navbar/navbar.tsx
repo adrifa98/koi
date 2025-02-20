@@ -27,9 +27,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Link } from "@/i18n/routing"
 import { LoginLink, LogoutLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components"
 import { Bell, Menu, MenuIcon, User } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import Image from "next/image"
-
 interface NavbarProps {
   authStatus: {
     isAuthenticated: boolean
@@ -49,7 +48,7 @@ const teams = [
 export function Navbar({ authStatus }: NavbarProps) {
   const t = useTranslations()
   const tNav = useTranslations("navbar")
-
+  const locale = useLocale();
   const teams = [
     { title: "League of Legends", subtitle: "LEC, Superliga", href: "/teams/lol", icon: LeagueIcon },
     { title: "Valorant", subtitle: "VCT EMEA, Rising", href: "/teams/valorant", icon: ValorantIcon },
@@ -194,10 +193,10 @@ export function Navbar({ authStatus }: NavbarProps) {
             ) : (
               <div className="flex items-center gap-4">
                 <Button variant="secondary" asChild>
-                  <RegisterLink>{tNav("auth.register")}</RegisterLink>
+                  <RegisterLink authUrlParams={{ lang: locale}}>{tNav("auth.register")}</RegisterLink>
                 </Button>
                 <Button asChild>
-                  <LoginLink>{tNav("auth.login")}</LoginLink>
+                <LoginLink authUrlParams={{ lang: locale}}>{tNav("auth.login")}</LoginLink>
                 </Button>
               </div>
             )}
@@ -231,6 +230,7 @@ export function Navbar({ authStatus }: NavbarProps) {
 }
 function MobileNav({ authStatus }: { authStatus: NavbarProps["authStatus"] }) {
   const tNav = useTranslations("navbar")
+  const locale = useLocale();
 
   return (
     <div className="flex flex-col space-y-4 p-4">
@@ -282,10 +282,10 @@ function MobileNav({ authStatus }: { authStatus: NavbarProps["authStatus"] }) {
         ) : (
           <div className="flex flex-col space-y-3">
             <Button variant="outline" asChild>
-              <LoginLink>{tNav("auth.login")}</LoginLink>
+            <LoginLink authUrlParams={{ lang: locale}}>{tNav("auth.login")}</LoginLink>
             </Button>
             <Button asChild>
-              <RegisterLink>{tNav("auth.register")}</RegisterLink>
+              <RegisterLink authUrlParams={{ lang: locale}}>{tNav("auth.register")}</RegisterLink>
             </Button>
           </div>
         )}
