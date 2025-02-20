@@ -44,7 +44,7 @@ export function FirstVisitModal() {
       <DialogContent className="sm:max-w-md" onPointerDownOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>WEB NO OFICIAL</DialogTitle>
-          <DialogDescription>Desarrollada solo para motivos didácticos. Por favor, introduce la contraseña para acceder al contenido</DialogDescription>
+          <DialogDescription>Desarrollada solo para motivos didácticos.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
