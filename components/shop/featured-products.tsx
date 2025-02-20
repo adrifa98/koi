@@ -19,7 +19,6 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
 
   return (
     <section className="container mx-auto grid gap-4 pb-20 pt-4">
-      <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {firstProduct && (
           <div className="aspect-[16/9] relative overflow-hidden rounded-lg bg-gray-100">
@@ -35,7 +34,6 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                  <span className="text-gray-500">No image available</span>
                 </div>
               )}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
@@ -68,7 +66,6 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                  <span className="text-gray-500">No image available</span>
                 </div>
               )}
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
@@ -104,7 +101,6 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                    <span className="text-gray-500">No image available</span>
                   </div>
                 )}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
