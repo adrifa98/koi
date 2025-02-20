@@ -21,7 +21,7 @@ const teamConfig: {
     teams: ["LEC", "Superliga"],
   },
   valorant: {
-    teams: ["VCT EMEA", "Rising"],
+    teams: ["VCT", "Rising"],
   },
 }
 
