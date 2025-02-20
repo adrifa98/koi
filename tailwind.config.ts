@@ -20,6 +20,14 @@ export default withUt({
     },
     extend: {
       colors: {
+        sidebar: {
+          DEFAULT: 'hsl(var(--background))',
+          foreground: 'hsl(var(--foreground))',
+          primary: 'hsl(var(--primary))',
+          'primary-foreground': 'hsl(var(--primary-foreground))',
+          accent: 'hsl(var(--accent))',
+          'accent-foreground': 'hsl(var(--accent-foreground))',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

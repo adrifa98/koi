@@ -1,19 +1,29 @@
-'use client';
+"use client"
 
-export default function Error({ reset }: { reset: () => void }) {
+import { Button } from "@/components/ui/button"
+import { useEffect } from "react"
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  useEffect(() => {
+    // Log the error to an error reporting service
+    console.error(error)
+  }, [error])
+
   return (
-    <div className="mx-auto my-4 flex max-w-xl flex-col rounded-lg border border-neutral-200 bg-white p-8 md:p-12 dark:border-neutral-800 dark:bg-black">
-      <h2 className="text-xl font-bold">Oh no!</h2>
-      <p className="my-2">
-        There was an issue with our storefront. This could be a temporary issue, please try your
-        action again.
-      </p>
-      <button
-        className="mx-auto mt-4 flex w-full items-center justify-center rounded-full bg-blue-600 p-4 tracking-wide text-white hover:opacity-90"
-        onClick={() => reset()}
-      >
-        Try Again
-      </button>
-    </div>
-  );
+    <main className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center">
+      <div className="container flex flex-col items-center justify-center gap-4 text-center">
+        <h2 className="text-2xl font-bold">Something went wrong!</h2>
+        <Button onClick={() => reset()} variant="outline">
+          Try again
+        </Button>
+      </div>
+    </main>
+  )
 }
+

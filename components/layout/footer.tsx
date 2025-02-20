@@ -1,71 +1,180 @@
-import { Link } from '@/i18n/routing';
+"use client"
 
-import FooterMenu from '@/components/layout/footer-menu';
-import LogoSquare from '@/components/logo-square';
-import { getMenu } from '@/lib/shopify';
-import { Suspense } from 'react';
+import { KoiNavIcon } from "@/components/layout/navbar/GameIcons"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
+import { DiscIcon as Discord, Instagram, Twitch, Twitter, Youtube } from "lucide-react"
+import { useTranslations } from "next-intl"
+import Image from "next/image"
+import Link from "next/link"
 
-const { COMPANY_NAME, SITE_NAME } = process.env;
+const sponsors = [
+  "/patros/movistar.png",
+  "/patros/cupra.png",
+  "/patros/razer.png",
+  "/patros/mahou.png",
+  "/patros/omen.png",
+  "/patros/ecoembes.png",
+  "/patros/medicos.png",
+]
 
-export default async function Footer() {
-  const currentYear = new Date().getFullYear();
-  const copyrightDate = 2023 + (currentYear > 2023 ? `-${currentYear}` : '');
-  const skeleton = 'w-full h-6 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700';
-  const menu = await getMenu('next-js-frontend-footer-menu');
-  const copyrightName = COMPANY_NAME || SITE_NAME || '';
+const socialLinks = [
+  { name: "Instagram", href: "#", icon: Instagram },
+  { name: "Youtube", href: "#", icon: Youtube },
+  { name: "Twitter", href: "#", icon: Twitter },
+  { name: "Twitch", href: "#", icon: Twitch },
+  { name: "Discord", href: "#", icon: Discord },
+]
+
+export default function Footer() {
+  const t = useTranslations("footer")
+
+  const footerLinks = {
+    account: [
+      { name: t("account.personalInfo"), href: "/account" },
+      { name: t("account.orders"), href: "/orders" },
+      { name: t("account.invoices"), href: "/invoices" },
+      { name: t("account.addresses"), href: "/addresses" },
+      { name: t("account.vouchers"), href: "/vouchers" },
+      { name: t("account.cookieSettings"), href: "/cookie-settings" },
+    ],
+    services: [
+      { name: t("services.aboutUs"), href: "/about" },
+      { name: t("services.contact"), href: "/contact" },
+      { name: t("services.faq"), href: "/faq" },
+      { name: t("services.shipping"), href: "/shipping" },
+      { name: t("services.sizeGuide"), href: "/size-guide" },
+      { name: t("services.returns"), href: "/returns" },
+    ],
+    privacy: [
+      { name: t("privacy.legal"), href: "/legal" },
+      { name: t("privacy.cookies"), href: "/cookies" },
+      { name: t("privacy.lopd"), href: "/privacy" },
+      { name: t("privacy.terms"), href: "/terms" },
+    ],
+  }
 
   return (
-    <footer className="text-sm text-neutral-500 dark:text-neutral-400">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 border-t border-neutral-200 px-6 py-12 text-sm md:flex-row md:gap-12 md:px-4 min-[1320px]:px-0 dark:border-neutral-700">
-        <div>
-          <Link className="flex items-center gap-2 text-black md:pt-1 dark:text-white" href="/">
-            <LogoSquare size="sm" />
-            <span className="uppercase">{SITE_NAME}</span>
-          </Link>
-        </div>
-        <Suspense
-          fallback={
-            <div className="flex h-[188px] w-[200px] flex-col gap-2">
-              <div className={skeleton} />
-              <div className={skeleton} />
-              <div className={skeleton} />
-              <div className={skeleton} />
-              <div className={skeleton} />
-              <div className={skeleton} />
+    <footer className="w-full border-t bg-background">
+      {/* Sponsors Marquee */}
+      <div className="relative w-full overflow-hidden py-6 pb-12">
+        <div className="flex absolute whitespace-nowrap animate-marquee">
+          {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((sponsor, i) => (
+            <div key={i} className="mx-6 relative h-6 w-12 flex-shrink-0 grayscale transition-all hover:grayscale-0">
+              <Image src={sponsor || "/placeholder.svg"} alt={`Sponsor ${i + 1}`} fill className="object-contain" />
             </div>
-          }
-        >
-          <FooterMenu menu={menu} />
-        </Suspense>
-        <div className="md:ml-auto">
-          <a
-            className="flex h-8 w-max flex-none items-center justify-center rounded-md border border-neutral-200 bg-white text-xs text-black dark:border-neutral-700 dark:bg-black dark:text-white"
-            aria-label="Deploy on Vercel"
-            href="https://vercel.com/templates/next.js/nextjs-commerce"
-          >
-            <span className="px-3">▲</span>
-            <hr className="h-full border-r border-neutral-200 dark:border-neutral-700" />
-            <span className="px-3">Deploy</span>
-          </a>
+          ))}
+        </div>
+        <div className="flex absolute whitespace-nowrap animate-marquee2">
+          {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((sponsor, i) => (
+            <div
+              key={`clone-${i}`}
+              className="mx-6 relative h-6 w-12 flex-shrink-0 grayscale transition-all hover:grayscale-0"
+            >
+              <Image src={sponsor || "/placeholder.svg"} alt={`Sponsor ${i + 1}`} fill className="object-contain" />
+            </div>
+          ))}
         </div>
       </div>
-      <div className="border-t border-neutral-200 py-6 text-sm dark:border-neutral-700">
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-1 px-4 md:flex-row md:gap-0 md:px-4 min-[1320px]:px-0">
-          <p>
-            &copy; {copyrightDate} {copyrightName}
-            {copyrightName.length && !copyrightName.endsWith('.') ? '.' : ''} All rights reserved.
+
+      <Separator />
+
+      {/* Footer Links */}
+      <div className="container py-8">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-[1fr_1fr_1fr_300px]">
+          {/* Account */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold uppercase tracking-wider">{t("account.title")}</h4>
+            <ul className="space-y-2">
+              {footerLinks.account.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Services */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold uppercase tracking-wider">{t("services.title")}</h4>
+            <ul className="space-y-2">
+              {footerLinks.services.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Privacy */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-semibold uppercase tracking-wider">{t("privacy.title")}</h4>
+            <ul className="space-y-2">
+              {footerLinks.privacy.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-semibold uppercase tracking-wider">{t("newsletter.title")}</h4>
+            <p className="text-sm text-muted-foreground">{t("newsletter.description")}</p>
+            <div className="flex flex-col gap-2">
+              <Input type="email" placeholder={t("newsletter.placeholder")} className="w-full" />
+              <Button className="w-full">{t("newsletter.subscribe")}</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Copyright */}
+      <div className="border-t">
+        <div className="container flex items-center justify-between py-4">
+          <p className="text-sm text-muted-foreground hidden md:flex">
+            {t("copyright", { year: new Date().getFullYear() })}
           </p>
-          <hr className="mx-4 hidden h-4 w-[1px] border-l border-neutral-400 md:inline-block" />
-          <p>
-            <a href="https://github.com/vercel/commerce">View the source</a>
-          </p>
-          <p className="md:ml-auto">
-            <a href="https://vercel.com" className="text-black dark:text-white">
-              Created by ▲ Vercel
-            </a>
-          </p>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4">
+              {socialLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-lg border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+                  )}
+                >
+                  <link.icon className="h-4 w-4" />
+                  <span className="sr-only">{link.name}</span>
+                </Link>
+              ))}
+            </div>
+            <KoiNavIcon className="h-8 w-8 text-muted-foreground hidden md:flex" />
+          </div>
         </div>
       </div>
     </footer>
-  );
+  )
 }
+

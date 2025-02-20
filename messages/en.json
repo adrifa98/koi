@@ -9,9 +9,6 @@
     "today": "Today",
     "yesterday": "Yesterday"
   },
-
-
-  
   "CreatePost": {
     "post": "Post",
     "imageAndVideo": "Image & Video",
@@ -60,145 +57,320 @@
     "errorTitle": "Error!",
     "errorCommentTooLong": "The comment cannot exceed 144 characters."
   },
-
-
-
-
-
-
-
-
-    "navigation": {
-      "home": "Home",
-      "search": "Search",
-      "notifications": "Notifications"
+  "navigation": {
+    "home": "Home",
+    "search": "Search",
+    "notifications": "Notifications"
+  },
+  "sidebar": {
+    "followedChannels": "Followed Channels",
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar"
+  },
+  "live": {
+    "status": "LIVE",
+    "viewers": "{count, plural, =1 {# viewer} other {# viewers}}",
+    "follow": "Follow",
+    "following": "Following",
+    "watchOnTwitch": "Watch on Twitch",
+    "shareChannel": "Share channel",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied to clipboard",
+    "unfollow": "Unfollow Channel",
+    "followChannel": "Follow Channel",
+    "watchlist": {
+      "watchlist": "WatchList",
+      "add": "Add to watchlist",
+      "added": "Added",
+      "addTooltip": "Add to watchlist",
+      "addedTooltip": "Added to watchlist"
+    }
+  },
+  "video": {
+    "idioma": "en",
+    "watchlist": {
+      "watchlist": "WatchList",
+      "add": "Add to watchlist",
+      "added": "Added",
+      "addTooltip": "Add to watchlist",
+      "addedTooltip": "Added to watchlist"
     },
-    "sidebar": {
-      "followedChannels": "Followed Channels",
-      "expand": "Expand sidebar",
-      "collapse": "Collapse sidebar"
-    },
-    "live": {
-      "status": "LIVE",
-      "viewers": "{count, plural, =1 {# viewer} other {# viewers}}",
-      "follow": "Follow",
-      "following": "Following",
-      "watchOnTwitch": "Watch on Twitch",
-      "shareChannel": "Share channel",
+    "share": {
+      "button": "Share",
+      "inCommunity": "Share in community",
       "copyLink": "Copy link",
-      "linkCopied": "Link copied to clipboard",
-      "unfollow": "Unfollow Channel",
-      "followChannel": "Follow Channel",
-      "watchlist": {
-        "watchlist": "WatchList",
-        "add": "Add to watchlist",
-        "added": "Added",
-        "addTooltip": "Add to watchlist",
-        "addedTooltip": "Added to watchlist"
-      }
+      "linkCopied": "Link copied to clipboard"
     },
-    "video": {
-      "idioma": "en",
-      "watchlist": {
-        "watchlist": "WatchList",
-        "add": "Add to watchlist",
-        "added": "Added",
-        "addTooltip": "Add to watchlist",
-        "addedTooltip": "Added to watchlist"
-      },
-      "share": {
-        "button": "Share",
-        "inCommunity": "Share in community",
-        "copyLink": "Copy link",
-        "linkCopied": "Link copied to clipboard"
-      },
-      "watch": {
-        "onYoutube": "Watch on YouTube",
-        "play": "Play",
-        "moreInfo": "More Info",
-        "latest": "Watch the latest content from Movistar KOI",
-        "more": "More from "
-      }
-      
+    "watch": {
+      "onYoutube": "Watch on YouTube",
+      "play": "Play",
+      "moreInfo": "More Info",
+      "latest": "Watch the latest content from Movistar KOI",
+      "more": "More from "
+    }
+  },
+  "sections": {
+    "news": "News",
+    "liveNow": "Live Now",
+    "lol": "League of Legends",
+    "valorant": "Valorant",
+    "torontoUltra": "Toronto Ultra",
+    "vods": "VODs"
+  },
+  "errors": {
+    "notFound": {
+      "title": "404",
+      "message": "Video not found",
+      "backHome": "Back to Home"
     },
-    "sections": {
-      "news": "News",
-      "liveNow": "Live Now",
-      "lol": "League of Legends",
-      "valorant": "Valorant",
-      "torontoUltra": "Toronto Ultra",
-      "vods": "VODs"
+    "generic": {
+      "title": "Something went wrong!",
+      "message": "We're having trouble",
+      "tryAgain": "Try again",
+      "loading": "We're having trouble loading this content",
+      "application": "We're having trouble with the application"
+    }
+  },
+  "blog": {
+    "search": "Search articles...",
+    "allPosts": "All Posts",
+    "readTime": "{minutes} min read",
+    "backToBlog": "Back to blog",
+    "postNotFound": "Post not found",
+    "publishedAt": "Published on {date}",
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next"
     },
-    "errors": {
-      "notFound": {
-        "title": "404",
-        "message": "Video not found",
-        "backHome": "Back to Home"
-      },
-      "generic": {
-        "title": "Something went wrong!",
-        "message": "We're having trouble",
-        "tryAgain": "Try again",
-        "loading": "We're having trouble loading this content",
-        "application": "We're having trouble with the application"
-      }
+    "post": {
+      "title": "{title}",
+      "subtitle": "{subtitle}",
+      "content": "{content}",
+      "category": "{category}"
+    }
+  },
+  "match": {
+    "status": {
+      "live": "LIVE",
+      "vs": "VS",
+      "finished": "FINISHED",
+      "score": "{score1}-{score2}"
     },
-    "blog": {
-      "search": "Search articles...",
-      "allPosts": "All Posts",
-      "readTime": "{minutes} min read",
-      "backToBlog": "Back to blog",
-      "postNotFound": "Post not found",
-      "publishedAt": "Published on {date}",
-      "navigation": {
-        "previous": "Previous",
-        "next": "Next"
-      },
-      "post": {
-        "title": "{title}",
-        "subtitle": "{subtitle}",
-        "content": "{content}",
-        "category": "{category}"
-      }
+    "format": {
+      "bo1": "BO1",
+      "bo3": "BO3",
+      "bo5": "BO5"
     },
-    "match": {
-      "status": {
-        "live": "LIVE",
-        "vs": "VS",
-        "finished": "FINISHED",
-        "score": "{score1}-{score2}"
-      },
-      "format": {
-        "bo1": "BO1",
-        "bo3": "BO3",
-        "bo5": "BO5"
-      },
-      "noMatches": "No matches found for the selected filters"
+    "noMatches": "No matches found for the selected filters"
+  },
+  "common": {
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "pickDate": "Pick a date",
+    "dateRange": "Date Range"
+  },
+  "home": {
+    "hashtag": "#WEAREMOVISTARKOI",
+    "jersey": {
+      "brand": "MOVISTAR KOI PROD™",
+      "title": "JERSEY 2025",
+      "description": "The new official Movistar KOI jersey for the 2024 season. Designed with cutting-edge technology and premium materials for maximum performance and comfort.",
+      "price": "89.99€",
+      "buyNow": "Buy now"
+    }
+  },
+  "latestPosts": {
+    "title": "LATEST NEWS",
+    "viewMore": "View more articles"
+  },
+  "featured": {
+    "whatToWatch": {
+      "title": "WHAT TO WATCH",
+      "description": "Stream the Acme event",
+      "learnMore": "Learn more"
     },
-    "common": {
-      "loading": "Loading...",
-      "noResults": "No results found",
-      "pickDate": "Pick a date",
-      "dateRange": "Date Range"
+    "plantTree": {
+      "title": "PLANT A TREE",
+      "description": "Contribute to the planet",
+      "learnMore": "Learn more"
     },
-    "shop": {
-      "jersey": {
-        "title": "JERSEY 2025",
-        "brand": "MOVISTAR KOI PROD™",
-        "description": "The new official Movistar KOI jersey for the 2024 season. Designed with cutting-edge technology and premium materials for maximum performance and comfort.",
-        "price": "89.99€",
-        "buyNow": "Buy now"
-      }
+    "supercharged": {
+      "title": "SUPERCHARGED",
+      "description": "Creates beauty like a beast",
+      "learnMore": "Learn more"
     },
-    "home": {
-      "hashtag": "#WEAREMOVISTARKOI",
-      "jersey": {
-        "brand": "MOVISTAR KOI PROD™",
-        "title": "JERSEY 2025",
-        "description": "The new official Movistar KOI jersey for the 2024 season. Designed with cutting-edge technology and premium materials for maximum performance and comfort.",
-        "price": "89.99€",
-        "buyNow": "Buy now"
-      }
+    "camera": {
+      "new": "NEW",
+      "title": "Acme camera",
+      "description": "Available soon. Get notified.",
+      "notify": "Notify Me"
+    },
+    "sleepApp": {
+      "title": "YOUR DAY YOUR WAY",
+      "subtitle": "Your checklist for better sleep",
+      "appName": "Breathing App",
+      "description": "Get a good night's sleep.",
+      "getApp": "Get App"
+    }
+  },
+  "community": {
+    "title": "COMMUNITY",
+    "latestPosts": "Latest posts",
+    "noDiscussions": "No discussions available",
+    "viewMore": "View more"
+  },
+  "koiTv": {
+    "title": "KOI TV",
+    "description": "KOI TV is the home of Movistar KOI's digital content, offering a window into everything that happens inside and outside of competition. Here you'll find the latest videos, live streams and best moments from games like League of Legends, Valorant and Call of Duty, along with interviews and reactions from your favorite creators.",
+    "viewButton": "Watch KOI TV"
+  },
+  "footer": {
+    "account": {
+      "title": "Account",
+      "personalInfo": "Personal Information",
+      "orders": "Orders",
+      "invoices": "Subscription Invoices",
+      "addresses": "Addresses",
+      "vouchers": "Vouchers",
+      "cookieSettings": "Your cookie settings"
+    },
+    "services": {
+      "title": "Services",
+      "aboutUs": "About Us",
+      "contact": "Contact Us",
+      "faq": "FAQ",
+      "shipping": "Shipping",
+      "sizeGuide": "Size Guide",
+      "returns": "Returns Policy"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "legal": "Legal Notice",
+      "cookies": "Cookie Policy",
+      "lopd": "LOPD Policy",
+      "terms": "Terms and Conditions"
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "description": "Stay up to date with the latest news and exclusive offers",
+      "placeholder": "your@email.com",
+      "subscribe": "Subscribe"
+    },
+    "copyright": "© {year} Movistar KOI. All rights reserved."
+  },
+  "navbar": {
+    "teams": "Teams",
+    "shop": "Shop",
+    "koiTv": "KOI TV",
+    "community": "Community",
+    "calendar": "Calendar",
+    "club": "Club",
+    "blog": "Blog",
+    "notifications": {
+      "none": "📣 No notifications"
+    },
+    "auth": {
+      "register": "Sign Up",
+      "login": "Sign In",
+      "logout": "Sign Out",
+      "profile": "Profile",
+      "settings": "Settings"
+    }
+  },
+  "cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty.",
+    "addToCart": "Add To Cart",
+    "adding": "Adding...",
+    "outOfStock": "Out Of Stock",
+    "selectOption": "Please select an option",
+    "added": "Item added to cart!",
+    "error": "Error adding item to cart",
+    "remove": "Remove cart item",
+    "removed": "Item removed from cart!",
+    "quantity": {
+      "increase": "Increase item quantity",
+      "decrease": "Reduce item quantity",
+      "updated": "Quantity updated!"
+    },
+    "summary": {
+      "taxes": "Taxes",
+      "shipping": "Shipping",
+      "shippingNote": "Calculated at checkout",
+      "total": "Total"
+    },
+    "checkout": "Proceed to Checkout",
+    "open": "Open cart",
+    "close": "Close cart"
+  },
+  "shop": {
+    "levelUp": {
+      "title": "LEVEL UP YOUR GAME"
+    },
+    "freshApparel": {
+      "title": "FRESH APPAREL"
+    },
+    "team": {
+      "title": "GAME LIKE A PRO",
+      "description": "Rep your favorite team with our official merchandise collection",
+      "shopNow": "Shop Now"
+    },
+    "newsletter": {
+      "title": "JOIN THE CLUB",
+      "description": "Sign up to our newsletter to stay up to date with our latest products",
+      "placeholder": "Enter your email",
+      "subscribe": "Subscribe"
+    },
+    "jersey": {
+      "title": "JERSEY 2025",
+      "brand": "MOVISTAR KOI PROD™",
+      "description": "The new official Movistar KOI jersey for the 2024 season. Designed with cutting-edge technology and premium materials for maximum performance and comfort.",
+      "price": "69.99€",
+      "buyNow": "Buy now"
+    },
+    "categories": {
+      "accesorios": "Accessories",
+      "equipacion": "Equipment",
+      "lifestyle": "Lifestyle",
+      "outlet": "Outlet",
+      "viewAll": "View all"
+    },
+    "product": {
+      "addToCart": "Add to Cart",
+      "outOfStock": "Out of Stock",
+      "selectOption": "Select an option",
+      "price": "Price",
+      "quantity": "Quantity",
+      "description": "Description",
+      "relatedProducts": "Related Products"
+    }
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search products...",
+    "noResults": "No results found",
+    "collections": {
+      "title": "Collections",
+      "all": "All Collections"
+    },
+    "sort": {
+      "title": "Sort by",
+      "default": "Relevance",
+      "trending": "Trending",
+      "latest": "Latest arrivals",
+      "price_asc": "Price: Low to high",
+      "price_desc": "Price: High to low"
+    },
+    "results": {
+      "showing": "Showing {count} {count, plural, one {result} other {results}} for \"{query}\"",
+      "noResults": "No products found for \"{query}\""
+    },
+    "filters": {
+      "title": "Filters",
+      "price": "Price",
+      "category": "Category",
+      "clear": "Clear filters",
+      "apply": "Apply filters"
     }
   }
-  
+}

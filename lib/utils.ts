@@ -5,6 +5,15 @@ import { twMerge } from "tailwind-merge";
 
 import { ReadonlyURLSearchParams } from 'next/navigation';
 
+export function formatPrice(price: number): string {
+  return new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "EUR",
+  }).format(price)
+}
+
+
+
 export const createUrl = (pathname: string, params: URLSearchParams | ReadonlyURLSearchParams) => {
   const paramsString = params.toString();
   const queryString = `${paramsString.length ? '?' : ''}${paramsString}`;

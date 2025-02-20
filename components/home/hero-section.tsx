@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import Canvas from "@/components/home/canvas"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -99,17 +101,58 @@ export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps)
             </div>
 
             <div className="relative flex justify-center items-center w-full h-full">
-              <Canvas onHover={(hovered) => window.innerWidth > 1024 && setIsHovered(hovered)} />
+              <Canvas
+                onHover={(hovered) => {
+                  if (window.innerWidth > 1024) {
+                    if (hovered) {
+                      setIsHovered(true)
+                    } else {
+                      // Check if we're hovering over the card
+                      const card = document.querySelector(".product-card")
+                      if (card) {
+                        const rect = card.getBoundingClientRect()
+                        const mouseEvent = window.event as MouseEvent
+                        const isOverCard =
+                          mouseEvent.clientX >= rect.left &&
+                          mouseEvent.clientX <= rect.right &&
+                          mouseEvent.clientY >= rect.top &&
+                          mouseEvent.clientY <= rect.bottom
+
+                        if (!isOverCard) {
+                          setIsHovered(false)
+                        }
+                      } else {
+                        setIsHovered(false)
+                      }
+                    }
+                  }
+                }}
+              />
 
               {/* Product Card - LEFT SIDE */}
               <div
-                className={`absolute left-1/2 -translate-x-[32rem] top-1/2 -translate-y-1/2 z-[70] transition-all duration-500 hidden lg:block ${
+                className={`absolute left-1/2 -translate-x-[32rem] top-1/2 -translate-y-1/2 z-[70] transition-all duration-500 hidden lg:block product-card ${
                   isHovered ? "opacity-100 -translate-x-[32rem]" : "opacity-0 -translate-x-[34rem]"
                 }`}
-                onMouseEnter={() => {
-                  setIsHovered(true)
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={(e: React.MouseEvent) => {
+                  // Check if we're not hovering over the shirt
+                  const canvas = document.querySelector("canvas")
+                  if (canvas) {
+                    const rect = canvas.getBoundingClientRect()
+                    const isOverCanvas =
+                      e.clientX >= rect.left &&
+                      e.clientX <= rect.right &&
+                      e.clientY >= rect.top &&
+                      e.clientY <= rect.bottom
+
+                    if (!isOverCanvas) {
+                      setIsHovered(false)
+                    }
+                  } else {
+                    setIsHovered(false)
+                  }
                 }}
-                onMouseLeave={() => setIsHovered(false)}
               >
                 <Card className="w-[350px] bg-background/80 backdrop-blur">
                   <CardHeader>
@@ -176,7 +219,7 @@ export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps)
           </div>
 
           {/* Match Cards and Stream Cards - DERECHA */}
-          <div className="absolute right-0 lg:right-32 bottom-32 lg:bottom-auto lg:top-1/2 w-full lg:w-auto px-4 lg:px-0 lg:-translate-y-1/2 z-[60]">
+          <div className="absolute right-0 lg:right-32 bottom-32 lg:bottom-auto lg:top-1/2 w-full lg:w-auto px-4 lg:px-0 lg:-translate-y-1/2 z-[40]">
             <div className="flex flex-col lg:flex-row gap-4">
               {/* Match Cards */}
               {matches.length > 0 && (
@@ -185,12 +228,12 @@ export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps)
                   onMouseEnter={() => setHoveredMatch(0)}
                   onMouseLeave={() => setHoveredMatch(null)}
                 >
-                  <div>
+                  <div className={`${isHovered ? "blur-sm" : ""}`}>
                     <MatchCard match={matches[0]} />
                   </div>
 
                   {hoveredMatch === 0 && matches.length > 1 && (
-                    <div className="absolute top-full left-0 space-y-2 pt-2 z-[80]">
+                    <div className="absolute top-full left-0 space-y-2 pt-2 z-[45]">
                       {matches.slice(1, 4).map((match, index) => (
                         <div
                           key={match._id}
@@ -215,12 +258,12 @@ export function HeroSection({ initialMatches, twitchStreams }: HeroSectionProps)
                   onMouseEnter={() => setHoveredStreams(true)}
                   onMouseLeave={() => setHoveredStreams(false)}
                 >
-                  <div>
+                  <div className={`${isHovered ? "blur-sm" : ""}`}>
                     <StreamCard stream={topStreams[0]} />
                   </div>
 
                   {hoveredStreams && topStreams.length > 1 && (
-                    <div className="absolute top-full left-0 space-y-2 pt-2 z-[80]">
+                    <div className="absolute top-full left-0 space-y-2 pt-2 z-[45]">
                       {topStreams.slice(1, 4).map((stream, index) => (
                         <div
                           key={stream.user_id}

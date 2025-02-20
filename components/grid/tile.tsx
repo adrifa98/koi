@@ -1,6 +1,7 @@
-import clsx from 'clsx';
-import Image from 'next/image';
-import Label from '../label';
+import clsx from "clsx"
+import Image from "next/image"
+import type React from "react"
+import Label from "../label"
 
 export function GridTileImage({
   isInteractive = true,
@@ -8,42 +9,38 @@ export function GridTileImage({
   label,
   ...props
 }: {
-  isInteractive?: boolean;
-  active?: boolean;
+  isInteractive?: boolean
+  active?: boolean
   label?: {
-    title: string;
-    amount: string;
-    currencyCode: string;
-    position?: 'bottom' | 'center';
-  };
+    title: string
+    amount: string
+    currencyCode: string
+    position?: "bottom" | "center"
+  }
 } & React.ComponentProps<typeof Image>) {
   return (
     <div
       className={clsx(
-        'group flex h-full w-full items-center justify-center overflow-hidden rounded-lg border bg-white hover:border-blue-600 dark:bg-black',
+        "group flex h-full w-full items-center justify-center overflow-hidden rounded-lg border bg-card transition-colors",
         {
-          relative: label,
-          'border-2 border-blue-600': active,
-          'border-neutral-200 dark:border-neutral-800': !active
-        }
+          "border-blue-600": active,
+          "border-border": !active,
+        },
       )}
     >
       {props.src ? (
+        // eslint-disable-next-line jsx-a11y/alt-text -- `alt` is inherited from `props`, which is being enforced with TypeScript
         <Image
-          className={clsx('relative h-full w-full object-contain', {
-            'transition duration-300 ease-in-out group-hover:scale-105': isInteractive
+          className={clsx("relative h-full w-full object-cover", {
+            "transition duration-300 ease-in-out group-hover:scale-105": isInteractive,
           })}
           {...props}
         />
       ) : null}
       {label ? (
-        <Label
-          title={label.title}
-          amount={label.amount}
-          currencyCode={label.currencyCode}
-          position={label.position}
-        />
+        <Label title={label.title} amount={label.amount} currencyCode={label.currencyCode} position={label.position} />
       ) : null}
     </div>
-  );
+  )
 }
+

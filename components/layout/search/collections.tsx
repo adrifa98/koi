@@ -1,37 +1,44 @@
-import clsx from 'clsx';
-import { Suspense } from 'react';
+"use client"
 
-import { getCollections } from '@/lib/shopify';
-import FilterList from './filter';
+import { Link } from "@/i18n/routing"
+import type { Collection } from "@/lib/shopify/types"
+import { createUrl } from "@/lib/utils"
+import { usePathname, useSearchParams } from "next/navigation"
 
-async function CollectionList() {
-  const collections = await getCollections();
-  return <FilterList list={collections} title="Collections" />;
+interface CollectionsProps {
+  collections: Collection[]
+  defaultTitle: string
 }
 
-const skeleton = 'mb-3 h-4 w-5/6 animate-pulse rounded';
-const activeAndTitles = 'bg-neutral-800 dark:bg-neutral-300';
-const items = 'bg-neutral-400 dark:bg-neutral-700';
+export default function Collections({ collections, defaultTitle }: CollectionsProps) {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const currentPath = pathname.split("/").pop()
 
-export default function Collections() {
   return (
-    <Suspense
-      fallback={
-        <div className="col-span-2 hidden h-[400px] w-full flex-none py-4 lg:block">
-          <div className={clsx(skeleton, activeAndTitles)} />
-          <div className={clsx(skeleton, activeAndTitles)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-          <div className={clsx(skeleton, items)} />
-        </div>
-      }
-    >
-      <CollectionList />
-    </Suspense>
-  );
+    <nav>
+      <h3 className="hidden text-xs text-neutral-500 dark:text-neutral-400 md:block">Collections</h3>
+      <ul className="hidden md:block">
+        <li className="mt-2 flex text-black dark:text-white">
+          <Link
+            href={createUrl("/search", searchParams)}
+            className={`w-full text-sm ${pathname === "/search" ? "underline underline-offset-4" : ""}`}
+          >
+            {defaultTitle}
+          </Link>
+        </li>
+        {collections.map((collection) => (
+          <li key={collection.handle} className="mt-2 flex text-black dark:text-white">
+            <Link
+              href={createUrl(`/search/${collection.handle}`, searchParams)}
+              className={`w-full text-sm ${currentPath === collection.handle ? "underline underline-offset-4" : ""}`}
+            >
+              {collection.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
 }
+

@@ -1,22 +1,31 @@
-"use client";
+"use client"
 
-import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
-import clsx from "clsx";
-import { updateItemQuantity } from "@/components/cart/actions";
-import type { CartItem } from "@/lib/shopify/types";
-import { useState, useTransition } from "react";
+import { updateItemQuantity } from "@/components/cart/actions"
+import type { CartItem } from "@/lib/shopify/types"
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline"
+import clsx from "clsx"
+import { useTranslations } from "next-intl"
+import { useState, useTransition } from "react"
 
-function SubmitButton({ type, isPending }: { type: "plus" | "minus"; isPending: boolean }) {
+function SubmitButton({
+  type,
+  isPending,
+  t,
+}: {
+  type: "plus" | "minus"
+  isPending: boolean
+  t: (key: string) => string
+}) {
   return (
     <button
       type="submit"
-      aria-label={type === "plus" ? "Increase item quantity" : "Reduce item quantity"}
+      aria-label={t(`quantity.${type === "plus" ? "increase" : "decrease"}`)}
       className={clsx(
         "ease flex h-full min-w-[36px] max-w-[36px] flex-none items-center justify-center rounded-full p-2 transition-all duration-200 hover:border-neutral-800 hover:opacity-80",
         {
           "ml-auto": type === "minus",
-          "opacity-50 cursor-not-allowed": isPending, // Deshabilitar mientras se actualiza
-        }
+          "opacity-50 cursor-not-allowed": isPending,
+        },
       )}
       disabled={isPending}
     >
@@ -26,7 +35,7 @@ function SubmitButton({ type, isPending }: { type: "plus" | "minus"; isPending: 
         <MinusIcon className="h-4 w-4 dark:text-neutral-500" />
       )}
     </button>
-  );
+  )
 }
 
 export function EditItemQuantityButton({
@@ -34,42 +43,44 @@ export function EditItemQuantityButton({
   type,
   optimisticUpdate,
 }: {
-  item: CartItem;
-  type: "plus" | "minus";
-  optimisticUpdate: any;
+  item: CartItem
+  type: "plus" | "minus"
+  optimisticUpdate: any
 }) {
-  const [message, setMessage] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [message, setMessage] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
+  const t = useTranslations("cart")
 
   const payload = {
     merchandiseId: item.merchandise.id,
     quantity: type === "plus" ? item.quantity + 1 : item.quantity - 1,
-  };
+  }
 
   const handleUpdateQuantity = async () => {
     startTransition(async () => {
-      optimisticUpdate(payload.merchandiseId, type);
-      const result = await updateItemQuantity("", payload); // Se pasa "" como `prevState`
+      optimisticUpdate(payload.merchandiseId, type)
+      const result = await updateItemQuantity("", payload)
 
       if (result) {
-        setMessage(result); // Si hay error, lo mostramos
+        setMessage(result)
       } else {
-        setMessage("Quantity updated!");
+        setMessage(t("quantity.updated"))
       }
-    });
-  };
+    })
+  }
 
   return (
     <form
       onSubmit={(e) => {
-        e.preventDefault();
-        handleUpdateQuantity();
+        e.preventDefault()
+        handleUpdateQuantity()
       }}
     >
-      <SubmitButton type={type} isPending={isPending} />
+      <SubmitButton type={type} isPending={isPending} t={t} />
       <p aria-live="polite" className="sr-only" role="status">
         {message}
       </p>
     </form>
-  );
+  )
 }
+

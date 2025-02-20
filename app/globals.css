@@ -25,33 +25,39 @@
     --ring: 220 85% 60%;
     --radius: 0.5rem;
 
+    /* Sidebar */
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Layout */
     --sidebar-width: 72px;
     --initial-margin: 60px;
-    --container-padding: 76px; /* 60px izquierda + 16px derecha */
+    --container-padding: 76px; 
     --gap: 8px;
-
-    /* Por defecto: 5 cards */
+    
     --dynamic-card-width: calc((100vw - var(--sidebar-width) - var(--container-padding) - (4 * var(--gap))) / 5);
 
     @media (max-width: 1536px) {
-      /* 4 cards */
       --dynamic-card-width: calc((100vw - var(--sidebar-width) - var(--container-padding) - (3 * var(--gap))) / 4);
     }
 
     @media (max-width: 1280px) {
-      /* 3 cards */
       --dynamic-card-width: calc((100vw - var(--sidebar-width) - var(--container-padding) - (2 * var(--gap))) / 3);
     }
 
     @media (max-width: 1024px) {
-      /* 2 cards */
-      --container-padding: 32px; /* Reduced padding for mobile */
+      --container-padding: 32px;
       --dynamic-card-width: calc((100vw - var(--container-padding) - var(--gap)) / 2);
     }
 
     @media (max-width: 640px) {
-      /* 1 card */
-      --container-padding: 32px; /* Reduced padding for mobile */
+      --container-padding: 32px;
       --dynamic-card-width: calc(100vw - var(--container-padding));
     }
   }
@@ -77,6 +83,8 @@
     --input: 220 15% 85%;
     --ring: 220 85% 60%;
   }
+
+
 
   * {
     @apply border-border;
@@ -213,4 +221,30 @@
   }
 }
 
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee2 {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee2 {
+  animation: marquee2 40s linear infinite;
+}
 

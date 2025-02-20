@@ -1,35 +1,57 @@
 export type SortFilterItem = {
-  title: string;
-  slug: string | null;
-  sortKey: 'RELEVANCE' | 'BEST_SELLING' | 'CREATED_AT' | 'PRICE';
-  reverse: boolean;
-};
+  title: string
+  slug: string
+  sortKey: "RELEVANCE" | "BEST_SELLING" | "CREATED_AT" | "PRICE"
+  reverse: boolean
+}
 
 export const defaultSort: SortFilterItem = {
-  title: 'Relevance',
-  slug: null,
-  sortKey: 'RELEVANCE',
-  reverse: false
-};
+  title: "default",
+  slug: "default",
+  sortKey: "RELEVANCE",
+  reverse: false,
+}
 
 export const sorting: SortFilterItem[] = [
   defaultSort,
-  { title: 'Trending', slug: 'trending-desc', sortKey: 'BEST_SELLING', reverse: false }, // asc
-  { title: 'Latest arrivals', slug: 'latest-desc', sortKey: 'CREATED_AT', reverse: true },
-  { title: 'Price: Low to high', slug: 'price-asc', sortKey: 'PRICE', reverse: false }, // asc
-  { title: 'Price: High to low', slug: 'price-desc', sortKey: 'PRICE', reverse: true }
-];
+  {
+    title: "trending",
+    slug: "trending",
+    sortKey: "BEST_SELLING",
+    reverse: false,
+  },
+  {
+    title: "latest",
+    slug: "latest",
+    sortKey: "CREATED_AT",
+    reverse: true,
+  },
+  {
+    title: "price_asc",
+    slug: "price_asc",
+    sortKey: "PRICE",
+    reverse: false,
+  },
+  {
+    title: "price_desc",
+    slug: "price_desc",
+    sortKey: "PRICE",
+    reverse: true,
+  },
+]
+
+
+
 
 export const TAGS = {
-  collections: 'collections',
-  products: 'products',
-  cart: 'cart'
-};
+  collections: "collections",
+  products: "products",
+  cart: "cart",
+}
 
-export const HIDDEN_PRODUCT_TAG = 'nextjs-frontend-hidden';
-export const DEFAULT_OPTION = 'Default Title';
-export const SHOPIFY_GRAPHQL_API_ENDPOINT = '/api/2023-01/graphql.json';
-
+export const HIDDEN_PRODUCT_TAG = "nextjs-frontend-hidden"
+export const DEFAULT_OPTION = "Default Title"
+export const SHOPIFY_GRAPHQL_API_ENDPOINT = "/api/2023-01/graphql.json"
 
 export const HOVER_DELAY = 300
 export const PREVIEW_DURATION = 5000
@@ -47,7 +69,9 @@ export const VIDEO_PROVIDERS = {
     thumbnail: (channelName: string) =>
       `https://static-cdn.jtvnw.net/previews-ttv/live_user_${channelName}-640x360.jpg`,
     embed: (channelName: string) =>
-      `https://player.twitch.tv/?channel=${channelName}&parent=${process.env.NEXT_PUBLIC_VERCEL_URL || "localhost"}&muted=true&autoplay=true`,
+      `https://player.twitch.tv/?channel=${channelName}&parent=${
+        process.env.NEXT_PUBLIC_VERCEL_URL || "localhost"
+      }&muted=true&autoplay=true`,
     embedFull: (channelName: string) =>
       `https://player.twitch.tv/?channel=${channelName}&parent=${process.env.NEXT_PUBLIC_VERCEL_URL || "localhost"}`,
     share: (channelName: string) => `https://twitch.tv/${channelName}`,

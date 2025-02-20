@@ -1,24 +1,44 @@
-import Footer from '@/components/layout/footer';
-import Collections from '@/components/layout/search/collections';
-import FilterList from '@/components/layout/search/filter';
-import { sorting } from '@/lib/constants';
-import ChildrenWrapper from './children-wrapper';
+import { SearchSkeleton } from "@/components/layout/search/loading"
+import { SearchForm } from "@/components/layout/search/search-form"
+import { SearchSidebar } from "@/components/layout/search/search-sidebar"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { getCollections } from "@/lib/shopify"
+import { getTranslations } from "next-intl/server"
+import type { ReactNode } from "react"
+import { Suspense } from "react"
 
-export default function SearchLayout({ children }: { children: React.ReactNode }) {
+export default async function SearchLayout({ children }: { children: ReactNode }) {
+  const collections = await getCollections()
+  const t = await getTranslations("search")
+
   return (
-    <>
-      <div className="mx-auto flex max-w-screen-2xl flex-col gap-8 px-4 pb-4 text-black md:flex-row dark:text-white">
-        <div className="order-first w-full flex-none md:max-w-[125px]">
-          <Collections />
+    <Suspense fallback={<SearchSkeleton />}>
+      <SidebarProvider>
+        <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
+          <Sidebar>
+            <SidebarHeader className="border-b border-border/50 p-4">
+              <SearchForm />
+            </SidebarHeader>
+            <SidebarContent className="p-4">
+              <SearchSidebar collections={collections} sortTitle={t("sort.title")} />
+            </SidebarContent>
+          </Sidebar>
+          <SidebarInset>
+            <header className="flex h-16 items-center gap-4 border-b px-6">
+              <SidebarTrigger />
+            </header>
+            <div className="p-6">{children}</div>
+          </SidebarInset>
         </div>
-        <div className="order-last min-h-screen w-full md:order-none">
-          <ChildrenWrapper>{children}</ChildrenWrapper>
-        </div>
-        <div className="order-none flex-none md:order-last md:w-[125px]">
-          <FilterList list={sorting} title="Sort by" />
-        </div>
-      </div>
-      <Footer />
-    </>
-  );
+      </SidebarProvider>
+    </Suspense>
+  )
 }
+

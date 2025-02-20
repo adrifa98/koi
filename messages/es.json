@@ -3,7 +3,7 @@
     "recent": "Reciente",
     "popular": "Popular"
   },
-    "time": {
+  "time": {
     "minutes_ago": "hace {count} minutos",
     "hours_ago": "hace {count} horas",
     "today": "Hoy",
@@ -57,9 +57,7 @@
     "errorTitle": "¡Error!",
     "errorCommentTooLong": "El comentario no puede superar los 144 caracteres."
   },
-
-
-"navigation": {
+  "navigation": {
     "home": "Inicio",
     "search": "Buscar",
     "notifications": "Notificaciones"
@@ -131,63 +129,248 @@
       "application": "Estamos teniendo problemas con la aplicación"
     }
   },
-
-
-"blog": {
-  "search": "Buscar artículos...",
-  "allPosts": "Todas las publicaciones",
-  "readTime": "{minutes} min de lectura",
-  "backToBlog": "Volver al blog",
-  "postNotFound": "Publicación no encontrada",
-  "publishedAt": "Publicado el {date}",
-  "navigation": {
-    "previous": "Anterior",
-    "next": "Siguiente"
+  "blog": {
+    "search": "Buscar artículos...",
+    "allPosts": "Todas las publicaciones",
+    "readTime": "{minutes} min de lectura",
+    "backToBlog": "Volver al blog",
+    "postNotFound": "Publicación no encontrada",
+    "publishedAt": "Publicado el {date}",
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "post": {
+      "title": "{title}",
+      "subtitle": "{subtitle}",
+      "content": "{content}",
+      "category": "{category}"
+    }
   },
-  "post": {
-    "title": "{title}",
-    "subtitle": "{subtitle}",
-    "content": "{content}",
-    "category": "{category}"
-  }
-},
-"match": {
-  "status": {
-    "live": "EN DIRECTO",
-    "vs": "VS",
-    "finished": "FINALIZADO",
-    "score": "{score1}-{score2}"
+  "match": {
+    "status": {
+      "live": "EN DIRECTO",
+      "vs": "VS",
+      "finished": "FINALIZADO",
+      "score": "{score1}-{score2}"
+    },
+    "format": {
+      "bo1": "BO1",
+      "bo3": "BO3",
+      "bo5": "BO5"
+    },
+    "noMatches": "No se encontraron partidos para los filtros seleccionados"
   },
-  "format": {
-    "bo1": "BO1",
-    "bo3": "BO3",
-    "bo5": "BO5"
+  "common": {
+    "loading": "Cargando...",
+    "noResults": "No se encontraron resultados",
+    "pickDate": "Seleccionar fecha",
+    "dateRange": "Rango de fechas"
   },
-  "noMatches": "No se encontraron partidos para los filtros seleccionados"
-},
-"common": {
-  "loading": "Cargando...",
-  "noResults": "No se encontraron resultados",
-  "pickDate": "Seleccionar fecha",
-  "dateRange": "Rango de fechas"
-},
-"shop": {
-  "jersey": {
-    "title": "CAMISETA 2025",
-    "brand": "MOVISTAR KOI PROD™",
-    "description": "La nueva camiseta oficial de Movistar KOI para la temporada 2024. Diseñada con tecnología de última generación y materiales premium para máximo rendimiento y comodidad.",
-    "price": "89.99€",
-    "buyNow": "Comprar ahora"
-  }
-},
-"home": {
-  "hashtag": "#SOMOSMOVISTARKOI",
-  "jersey": {
-    "brand": "MOVISTAR KOI PROD™",
-    "title": "CAMISETA 2025",
-    "description": "La nueva camiseta oficial de Movistar KOI para la temporada 2024. Diseñada con tecnología de última generación y materiales premium para máximo rendimiento y comodidad.",
-    "price": "89.99€",
-    "buyNow": "Comprar ahora"
+  "home": {
+    "hashtag": "#SOMOSMOVISTARKOI",
+    "jersey": {
+      "brand": "MOVISTAR KOI PROD™",
+      "title": "CAMISETA 2025",
+      "description": "La nueva camiseta oficial de Movistar KOI para la temporada 2024. Diseñada con tecnología de última generación y materiales premium para máximo rendimiento y comodidad.",
+      "price": "89.99€",
+      "buyNow": "Comprar ahora"
+    }
+  },
+  "latestPosts": {
+    "title": "ÚLTIMAS NOTICIAS",
+    "viewMore": "Ver más artículos"
+  },
+  "featured": {
+    "whatToWatch": {
+      "title": "QUÉ VER",
+      "description": "Transmite el evento Acme",
+      "learnMore": "Saber más"
+    },
+    "plantTree": {
+      "title": "PLANTA UN ÁRBOL",
+      "description": "Contribuye al planeta",
+      "learnMore": "Saber más"
+    },
+    "supercharged": {
+      "title": "POTENCIADO",
+      "description": "Crea belleza como una bestia",
+      "learnMore": "Saber más"
+    },
+    "camera": {
+      "new": "NUEVO",
+      "title": "Cámara Acme",
+      "description": "Disponible pronto. Recibe una notificación.",
+      "notify": "Notificarme"
+    },
+    "sleepApp": {
+      "title": "TU DÍA A TU MANERA",
+      "subtitle": "Tu lista para dormir mejor",
+      "appName": "App de Respiración",
+      "description": "Consigue un buen descanso nocturno.",
+      "getApp": "Obtener App"
+    }
+  },
+  "community": {
+    "title": "COMUNIDAD",
+    "latestPosts": "Últimas publicaciones",
+    "noDiscussions": "No hay discusiones disponibles",
+    "viewMore": "Ver más"
+  },
+  "koiTv": {
+    "title": "KOI TV",
+    "description": "KOI TV es la casa del contenido digital de Movistar KOI, ofreciendo una ventana a todo lo que sucede dentro y fuera de la competición. Aquí encontrarás los vídeos más recientes, directos y mejores momentos de juegos como League of Legends, Valorant y Call of Duty, junto a entrevistas y reacciones de tus creadores favoritos.",
+    "viewButton": "Ver KOI TV"
+  },
+  "footer": {
+    "account": {
+      "title": "Cuenta",
+      "personalInfo": "Información personal",
+      "orders": "Pedidos",
+      "invoices": "Facturas por abono",
+      "addresses": "Direcciones",
+      "vouchers": "Vales",
+      "cookieSettings": "Tus ajustes de cookies"
+    },
+    "services": {
+      "title": "Servicios",
+      "aboutUs": "Sobre nosotros",
+      "contact": "Contáctanos",
+      "faq": "Preguntas frecuentes",
+      "shipping": "Envíos",
+      "sizeGuide": "Guía de tallas",
+      "returns": "Política de devoluciones"
+    },
+    "privacy": {
+      "title": "Privacidad",
+      "legal": "Aviso Legal",
+      "cookies": "Política de Cookies",
+      "lopd": "Política LOPD",
+      "terms": "Términos y Condiciones de compra"
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "description": "Mantente al día con las últimas noticias y ofertas exclusivas",
+      "placeholder": "tu@email.com",
+      "subscribe": "Suscribirse"
+    },
+    "copyright": "© {year} Movistar KOI. Todos los derechos reservados."
+  },
+  "navbar": {
+    "teams": "Equipos",
+    "shop": "Tienda",
+    "koiTv": "KOI TV",
+    "community": "Comunidad",
+    "calendar": "Calendario",
+    "club": "Club",
+    "blog": "Blog",
+    "notifications": {
+      "none": "📣 No tienes notificaciones"
+    },
+    "auth": {
+      "register": "Registrarse",
+      "login": "Iniciar Sesión",
+      "logout": "Cerrar Sesión",
+      "profile": "Perfil",
+      "settings": "Ajustes"
+    }
+  },
+  "cart": {
+    "title": "Mi Carrito",
+    "empty": "Tu carrito está vacío.",
+    "addToCart": "Añadir al Carrito",
+    "adding": "Añadiendo...",
+    "outOfStock": "Agotado",
+    "selectOption": "Por favor selecciona una opción",
+    "added": "¡Producto añadido al carrito!",
+    "error": "Error al añadir al carrito",
+    "remove": "Eliminar producto del carrito",
+    "removed": "¡Producto eliminado del carrito!",
+    "quantity": {
+      "increase": "Aumentar cantidad",
+      "decrease": "Reducir cantidad",
+      "updated": "¡Cantidad actualizada!"
+    },
+    "summary": {
+      "taxes": "Impuestos",
+      "shipping": "Envío",
+      "shippingNote": "Calculado al finalizar la compra",
+      "total": "Total"
+    },
+    "checkout": "Proceder al Pago",
+    "open": "Abrir carrito",
+    "close": "Cerrar carrito"
+  },
+  "shop": {
+    "levelUp": {
+      "title": "MEJORA TU JUEGO"
+    },
+    "freshApparel": {
+      "title": "NUEVA ROPA"
+    },
+    "team": {
+      "title": "JUEGA COMO UN PRO",
+      "description": "Representa a tu equipo favorito con nuestra colección oficial",
+      "shopNow": "Comprar Ahora"
+    },
+    "newsletter": {
+      "title": "ÚNETE AL CLUB",
+      "description": "Suscríbete a nuestro boletín para estar al día con nuestros últimos productos",
+      "placeholder": "Introduce tu email",
+      "subscribe": "Suscribirse"
+    },
+    "jersey": {
+      "title": "CAMISETA 2025",
+      "brand": "MOVISTAR KOI PROD™",
+      "description": "La nueva camiseta oficial de Movistar KOI para la temporada 2024. Diseñada con tecnología de última generación y materiales premium para máximo rendimiento y comodidad.",
+      "price": "69.99€",
+      "buyNow": "Comprar ahora"
+    },
+    "categories": {
+      "accesorios": "Accesorios",
+      "equipacion": "Equipación",
+      "lifestyle": "Lifestyle",
+      "outlet": "Outlet",
+      "viewAll": "Ver todo"
+    },
+    "product": {
+      "addToCart": "Añadir al carrito",
+      "outOfStock": "Agotado",
+      "selectOption": "Selecciona una opción",
+      "price": "Precio",
+      "quantity": "Cantidad",
+      "description": "Descripción",
+      "relatedProducts": "Productos relacionados"
+    }
+  },  
+  "search": {
+    "title": "Buscar",
+    "placeholder": "Buscar productos...",
+    "noResults": "No se encontraron resultados",
+    "collections": {
+      "title": "Colecciones",
+      "all": "Todas las colecciones"
+    },
+    "sort": {
+      "title": "Ordenar por",
+      "default": "Relevancia",
+      "trending": "Tendencias",
+      "latest": "Últimas llegadas",
+      "price_asc": "Precio: Menor a mayor",
+      "price_desc": "Precio: Mayor a menor"
+    },
+    "results": {
+      "showing": "Mostrando {count} {count, plural, one {resultado} other {resultados}} para \"{query}\"",
+      "noResults": "No se encontraron productos para \"{query}\""
+    },
+    "filters": {
+      "title": "Filtros",
+      "price": "Precio",
+      "category": "Categoría",
+      "clear": "Limpiar filtros",
+      "apply": "Aplicar filtros"
+    }
   }
 }
-}
+
+

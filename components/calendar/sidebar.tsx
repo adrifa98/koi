@@ -1,6 +1,6 @@
 "use client"
 
-import { DatePicker } from "@/components/calendar/date-picker"
+import { DatePicker } from "@/components/ui/date-picker"
 import type { Category } from "@/lib/sanity"
 import { cn } from "@/lib/utils"
 import gsap from "gsap"
@@ -22,10 +22,8 @@ export function Sidebar({ categories, selectedCategories, onToggleCategory, date
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".category-card", {
-        x: 20,
-        opacity: 1,
+        opacity: 0,
         duration: 0.5,
-        stagger: 0.1,
         ease: "power2.out",
       })
     }, containerRef)
@@ -47,7 +45,7 @@ export function Sidebar({ categories, selectedCategories, onToggleCategory, date
               key={category._id}
               onClick={() => onToggleCategory(category.slug.current)}
               className={cn(
-                "category-card group relative flex w-full items-center gap-2 rounded-lg p-2 transition-all hover:bg-accent",
+                "category-card relative flex w-full items-center gap-2 rounded-lg p-2 transition-opacity hover:bg-accent",
                 selectedCategories.includes(category.slug.current) && "bg-accent",
               )}
             >

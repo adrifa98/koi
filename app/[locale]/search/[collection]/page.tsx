@@ -1,45 +1,54 @@
-import { getCollection, getCollectionProducts } from '@/lib/shopify';
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import ProductGrid from "@/components/shop/product-grid"
+import { defaultSort, sorting } from "@/lib/constants"
+import { getCollection, getCollectionProducts } from "@/lib/shopify"
+import type { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
+import { notFound } from "next/navigation"
 
-import Grid from '@/components/grid';
-import ProductGridItems from '@/components/layout/product-grid-items';
-import { defaultSort, sorting } from '@/lib/constants';
+interface Props {
+  params: {
+    collection: string
+  }
+  searchParams?: { [key: string]: string | string[] | undefined }
+}
 
-export async function generateMetadata(props: {
-  params: Promise<{ collection: string }>;
-}): Promise<Metadata> {
-  const params = await props.params;
-  const collection = await getCollection(params.collection);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const collection = await getCollection(params.collection)
 
-  if (!collection) return notFound();
+  if (!collection) return notFound()
 
   return {
-    title: collection.seo?.title || collection.title,
-    description:
-      collection.seo?.description || collection.description || `${collection.title} products`
-  };
+    title: collection.title,
+    description: collection.description,
+  }
 }
 
-export default async function CategoryPage(props: {
-  params: Promise<{ collection: string }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParams = await props.searchParams;
-  const params = await props.params;
-  const { sort } = searchParams as { [key: string]: string };
-  const { sortKey, reverse } = sorting.find((item) => item.slug === sort) || defaultSort;
-  const products = await getCollectionProducts({ collection: params.collection, sortKey, reverse });
+export default async function CategoryPage({ params, searchParams }: Props) {
+  const { collection } = params
+  const { sort } = searchParams as { [key: string]: string }
+  const sortItem = sorting.find((item) => item.slug === sort) || defaultSort
+
+  const t = await getTranslations("search")
+
+  const [collectionData, products] = await Promise.all([
+    getCollection(collection),
+    getCollectionProducts({
+      collection,
+      sortKey: sortItem.sortKey,
+      reverse: sortItem.reverse,
+    }),
+  ])
+
+  if (!collectionData || !products) return notFound()
 
   return (
-    <section>
-      {products.length === 0 ? (
-        <p className="py-3 text-lg">{`No products found in this collection`}</p>
-      ) : (
-        <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          <ProductGridItems products={products} />
-        </Grid>
-      )}
-    </section>
-  );
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold">{collectionData.title}</h1>
+        {collectionData.description && <p className="text-sm text-muted-foreground">{collectionData.description}</p>}
+      </div>
+      <ProductGrid products={products} className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" />
+    </div>
+  )
 }
+

@@ -1,8 +1,9 @@
 
 import { LenisProvider } from "@/app/components/lenis-provider";
-import { Navbar } from "@/app/components/Navbar";
 import "@/app/globals.css";
 import { CartProvider } from '@/components/cart/cart-context';
+import Footer from "@/components/layout/footer";
+import { Navbar } from "@/components/layout/navbar/navbar";
 import { NavigationProgress } from "@/components/transition-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { WelcomeToast } from "@/components/welcome-toast";
@@ -88,7 +89,9 @@ export default async function RootLayout({ children, params: {locale} }: { child
             <WelcomeToast />
             <Toaster />
           </main>
-          </Suspense></LenisProvider>
+          </Suspense>
+          <Footer/>
+          </LenisProvider>
           </ThemeProvider>
           </Suspense>
         </CartProvider>

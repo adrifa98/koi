@@ -11,20 +11,24 @@ interface BlogGridProps {
 }
 
 export function BlogGrid({ posts, currentPage, totalPages, onPageChange }: BlogGridProps) {
-  const t = useTranslations()
-  const horizontalPosts = posts.slice(0, Math.floor(posts.length / 3))
-  const verticalPosts = posts.slice(Math.floor(posts.length / 3))
+  const t = useTranslations("blog")
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 sm:hidden">
+        {posts.map((post) => (
+          <BlogCard key={post._id} post={post} />
+        ))}
+      </div>
+
+      <div className="hidden sm:grid gap-6 lg:grid-cols-3">
         <div className="relative col-span-2 grid gap-4 sm:grid-cols-2">
-          {verticalPosts.map((post) => (
+          {posts.slice(0, Math.ceil((posts.length * 2) / 3)).map((post) => (
             <BlogCard key={post._id} post={post} />
           ))}
         </div>
         <div className="relative space-y-4">
-          {horizontalPosts.map((post) => (
+          {posts.slice(Math.ceil((posts.length * 2) / 3)).map((post) => (
             <BlogCard key={post._id} post={post} horizontal />
           ))}
         </div>
@@ -38,7 +42,7 @@ export function BlogGrid({ posts, currentPage, totalPages, onPageChange }: BlogG
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
-            {t("blog.navigation.previous")}
+            {t("navigation.previous")}
           </Button>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <Button
@@ -56,7 +60,7 @@ export function BlogGrid({ posts, currentPage, totalPages, onPageChange }: BlogG
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
-            {t("blog.navigation.next")}
+            {t("navigation.next")}
           </Button>
         </div>
       )}
