@@ -1,48 +1,44 @@
 "use client"
 
+import { usePathname } from "@/i18n/routing"
 import type React from "react"
-
-import { usePathname } from "next/navigation"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type LoadingContextType = {
   isLoading: boolean
-  currentRoute: string
+  startLoading: () => void
 }
 
 const LoadingContext = createContext<LoadingContextType>({
   isLoading: false,
-  currentRoute: "",
+  startLoading: () => {},
 })
 
 export function LoadingProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const [isLoading, setIsLoading] = useState(false)
-  const [currentRoute, setCurrentRoute] = useState(pathname)
 
+  const startLoading = () => {
+    console.log("Starting loading...") // Debug log
+    setIsLoading(true)
+  }
+
+  // Reset loading state when pathname changes
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout
-
-    const startLoading = () => {
-      setIsLoading(true)
-      setCurrentRoute(pathname)
-    }
-
-    const stopLoading = () => {
-      timeoutId = setTimeout(() => {
-        setIsLoading(false)
-      }, 1000) // Mantenemos el loader un poco más para asegurar una transición suave
-    }
-
-    startLoading()
-    stopLoading()
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId)
-    }
+    console.log("Path changed, ending loading...") // Debug log
+    setIsLoading(false)
   }, [pathname])
 
-  return <LoadingContext.Provider value={{ isLoading, currentRoute }}>{children}</LoadingContext.Provider>
+  return (
+    <LoadingContext.Provider
+      value={{
+        isLoading,
+        startLoading,
+      }}
+    >
+      {children}
+    </LoadingContext.Provider>
+  )
 }
 
 export const useLoading = () => useContext(LoadingContext)

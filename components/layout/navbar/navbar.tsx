@@ -21,6 +21,7 @@ import {
   PokemonIcon,
   ValorantIcon,
 } from "@/components/layout/navbar/GameIcons"
+import { LoadingLink } from "@/components/loading-link"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Link } from "@/i18n/routing"
@@ -88,13 +89,16 @@ export function Navbar({ authStatus }: NavbarProps) {
                   {teams.map((team) => (
                     <li key={team.href}>
                       <NavigationMenuLink asChild>
-                        <Link href={team.href} className="flex items-center gap-3 p-3 rounded-md hover:bg-accent">
+                        <LoadingLink
+                          href={team.href}
+                          className="flex items-center gap-3 p-3 rounded-md hover:bg-accent"
+                        >
                           <team.icon className="w-5 h-5" />
                           <div className="flex flex-col">
                             <span className="text-sm font-medium">{team.title}</span>
                             {team.subtitle && <span className="text-xs text-muted-foreground">{team.subtitle}</span>}
                           </div>
-                        </Link>
+                        </LoadingLink>
                       </NavigationMenuLink>
                     </li>
                   ))}
@@ -102,34 +106,34 @@ export function Navbar({ authStatus }: NavbarProps) {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/shop" className={navigationMenuTriggerStyle()}>
+              <LoadingLink href="/shop" className={navigationMenuTriggerStyle()}>
                 {tNav("shop")}
-              </Link>
+              </LoadingLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/tv" className={navigationMenuTriggerStyle()}>
+              <LoadingLink href="/tv" className={navigationMenuTriggerStyle()}>
                 {tNav("koiTv")}
-              </Link>
+              </LoadingLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/community" className={navigationMenuTriggerStyle()}>
+              <LoadingLink href="/community" className={navigationMenuTriggerStyle()}>
                 {tNav("community")}
-              </Link>
+              </LoadingLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/calendar" className={navigationMenuTriggerStyle()}>
+              <LoadingLink href="/calendar" className={navigationMenuTriggerStyle()}>
                 {tNav("calendar")}
-              </Link>
+              </LoadingLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/club" className={navigationMenuTriggerStyle()}>
+              <LoadingLink href="/club" className={navigationMenuTriggerStyle()}>
                 {tNav("club")}
-              </Link>
+              </LoadingLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/blog" className={navigationMenuTriggerStyle()}>
+              <LoadingLink href="/blog" className={navigationMenuTriggerStyle()}>
                 {tNav("blog")}
-              </Link>
+              </LoadingLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
@@ -177,7 +181,7 @@ export function Navbar({ authStatus }: NavbarProps) {
                     {authStatus.user?.name}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href="/profile">{tNav("auth.profile")}</Link>
+                    <LoadingLink href="/profile">{tNav("auth.profile")}</LoadingLink>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <Link href="/settings">{tNav("auth.settings")}</Link>
@@ -237,14 +241,14 @@ function MobileNav({ authStatus }: { authStatus: NavbarProps["authStatus"] }) {
         <div className="flex flex-col space-y-3">
           <div className="font-medium">{tNav("teams")}</div>
           {teams.map((team) => (
-            <Link
+            <LoadingLink
               key={team.href}
               href={team.href}
               className="flex items-center gap-2 text-muted-foreground hover:text-primary"
             >
               <team.icon />
               <span>{team.title}</span>
-            </Link>
+            </LoadingLink>
           ))}
         </div>
         <Link href="/tv" className="block font-medium">
