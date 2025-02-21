@@ -80,7 +80,7 @@ export default async function RootLayout({ children, params: {locale} }: { child
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         ><LenisProvider>
           <Loader />
