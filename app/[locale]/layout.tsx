@@ -79,7 +79,7 @@ export default async function RootLayout({ children, params: {locale} }: { child
           <Suspense>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         ><LenisProvider>
