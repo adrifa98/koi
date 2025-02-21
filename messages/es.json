@@ -152,7 +152,8 @@
       "live": "EN DIRECTO",
       "vs": "VS",
       "finished": "FINALIZADO",
-      "score": "{score1}-{score2}"
+      "score": "{score1}-{score2}",
+      "noMatches": "No se encontraron partidos"
     },
     "format": {
       "bo1": "BO1",
@@ -199,15 +200,15 @@
     },
     "camera": {
       "new": "NUEVO",
-      "title": "Cámara Acme",
-      "description": "Disponible pronto. Recibe una notificación.",
+      "title": "Únete a las Karpas",
+      "description": "Desbloquea el carnet de socio con KOI PLUS",
       "notify": "Notificarme"
     },
     "sleepApp": {
-      "title": "TU DÍA A TU MANERA",
-      "subtitle": "Tu lista para dormir mejor",
-      "appName": "App de Respiración",
-      "description": "Consigue un buen descanso nocturno.",
+      "title": "APP",
+      "subtitle": "Descarga nuestra nueva APP",
+      "appName": "Movistar KOI",
+      "description": "Disponible en Android e iOS",
       "getApp": "Obtener App"
     }
   },
@@ -428,6 +429,48 @@
     "team": {
       "description": "Conoce a nuestro equipo profesional de {game}, compitiendo al más alto nivel en torneos internacionales."
     }
+  },
+  "calendar": {
+    "dateRange": "Rango de Fechas",
+    "categories": "Categorías",
+    "noMatches": "No se encontraron partidos para los filtros seleccionados"
+  },
+  "club": {
+    "intro": {
+      "description": "Narrando el periplo de la karpa, que contra toda adversidad montañosa, se eleva en forma de dragón como una metáfora de triunfo y resiliencia."
+    },
+    "fusion": {
+      "description": "La unión de KOI, Movistar Riders y MAD Lions el 4 de enero de 2024, dio lugar a Movistar KOI. Esta alianza ofrece un enfoque equilibrado entre estrategia competitiva e impacto mediático, posicionando a Movistar KOI como uno de los mayores contendientes en el ámbito global de los esports."
+    },
+    "values": {
+      "title": "Nuestros valores",
+      "passion": {
+        "title": "Pasión",
+        "description": "Nuestra pasión por los esports impulsa la innovación y excelencia en cada aspecto de nuestra organización"
+      },
+      "excellence": {
+        "title": "Competitividad",
+        "description": "Buscamos la excelencia en cada competición, impulsando el desarrollo del talento y la mejora continua"
+      },
+      "innovation": {
+        "title": "Responsabilidad social",
+        "description": "Comprometidos con el impacto positivo en la comunidad, promoviendo valores y desarrollo sostenible"
+      },
+      "community": {
+        "title": "Sostenibilidad",
+        "description": "Construimos un futuro sostenible para los esports, equilibrando el crecimiento con la responsabilidad ambiental"
+      }
+    },
+    "location": {
+      "title": "Comunidad Internacional",
+      "description": "Con sedes en Madrid, Berlín y Toronto, conectamos talentos y comunidades globales, impulsando un ecosistema vibrante en los esports. España y Latinoamérica forman el corazón de nuestra afición, mientras que Canadá y nuestros seguidores internacionales completan una comunidad global apasionada y única."
+    },
+    "team": {
+      "title": "Nuestro Equipo"
+    }
   }
 }
+
+
+
 

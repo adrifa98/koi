@@ -154,7 +154,8 @@
       "live": "LIVE",
       "vs": "VS",
       "finished": "FINISHED",
-      "score": "{score1}-{score2}"
+      "score": "{score1}-{score2}",
+      "noMatches": "No matches found"
     },
     "format": {
       "bo1": "BO1",
@@ -201,15 +202,15 @@
     },
     "camera": {
       "new": "NEW",
-      "title": "Acme camera",
-      "description": "Available soon. Get notified.",
-      "notify": "Notify Me"
+      "title": "Join the Karpas",
+      "description": "Unlock the membership card with KOI PLUS",
+      "notify": "Notify me"
     },
     "sleepApp": {
-      "title": "YOUR DAY YOUR WAY",
-      "subtitle": "Your checklist for better sleep",
-      "appName": "Breathing App",
-      "description": "Get a good night's sleep.",
+      "title": "APP",
+      "subtitle": "Download our new APP",
+      "appName": "Movistar KOI",
+      "description": "Available on Android and iOS",
       "getApp": "Get App"
     }
   },
@@ -429,6 +430,53 @@
     },
     "team": {
       "description": "Meet our professional {game} team, competing at the highest level in international tournaments."
+    }
+  },
+  "calendar": {
+    "dateRange": "Date Range",
+    "categories": "Categories",
+    "noMatches": "No matches found for the selected filters"
+  },
+    "filters": {
+      "date": "Select date",
+      "status": {
+        "live": "Live",
+        "upcoming": "Upcoming",
+        "finished": "Finished"
+      }
+    },
+  "club": {
+    "intro": {
+      "description": "Narrating the journey of the koi, which against all mountainous adversity, rises in the form of a dragon as a metaphor for triumph and resilience."
+    },
+    "fusion": {
+      "description": "The merger of KOI, Movistar Riders, and MAD Lions on January 4, 2024, gave rise to Movistar KOI. This alliance offers a balanced approach between competitive strategy and media impact, positioning Movistar KOI as one of the major contenders in the global esports landscape."
+    },
+    "values": {
+      "title": "Our Values",
+      "passion": {
+        "title": "Passion",
+        "description": "Our passion for esports drives innovation and excellence in every aspect of our organization"
+      },
+      "excellence": {
+        "title": "Competitiveness",
+        "description": "We seek excellence in every competition, driving talent development and continuous improvement"
+      },
+      "innovation": {
+        "title": "Social Responsibility",
+        "description": "Committed to positive community impact, promoting values and sustainable development"
+      },
+      "community": {
+        "title": "Sustainability",
+        "description": "Building a sustainable future for esports, balancing growth with environmental responsibility"
+      }
+    },
+    "location": {
+      "title": "International Community",
+      "description": "With offices in Madrid, Berlin, and Toronto, we connect global talents and communities, driving a vibrant esports ecosystem. Spain and Latin America form the heart of our fanbase, while Canada and our international followers complete a unique and passionate global community."
+    },
+    "team": {
+      "title": "Our Team"
     }
   }
 }

@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import * as React from "react"
 
@@ -46,12 +47,13 @@ const teamMembers: TeamMember[] = [
 ]
 
 export function TeamSection() {
+  const t = useTranslations("club")
   const plugin = React.useRef(Autoplay({ delay: 4000, stopOnInteraction: true }))
 
   return (
     <section className="py-20 mb-28">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-light text-center mb-12">Nuestro Equipo</h2>
+        <h2 className="text-4xl md:text-5xl font-light text-center mb-12">{t("team.title")}</h2>
         <div className="max-w-7xl mx-auto">
           <Carousel
             plugins={[plugin.current]}

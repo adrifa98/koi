@@ -3,12 +3,14 @@
 import { DistortionEffect } from "@/components/about/distortion-effect"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { useEffect, useRef } from "react"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function FusionSection() {
+  const t = useTranslations("club")
   const sectionRef = useRef<HTMLDivElement>(null)
   const imagesRef = useRef<HTMLDivElement>(null)
   const finalImageRef = useRef<HTMLDivElement>(null)
@@ -141,24 +143,22 @@ export function FusionSection() {
     }
   }, [])
 
-  const text =
-    "La unión de KOI, Movistar Riders y MAD Lions el 4 de enero de 2024, dio lugar a Movistar KOI. Esta alianza ofrece un enfoque equilibrado entre estrategia competitiva e impacto mediático, posicionando a Movistar KOI como uno de los mayores contendientes en el ámbito global de los esports."
-
   return (
     <section ref={sectionRef} className="min-h-screen relative flex items-center justify-center overflow-hidden">
       <div className="distortion-wrapper absolute inset-0 w-full h-screen z-10">
         <DistortionEffect className="w-full h-full" />
       </div>
 
-      {/* Text container moved outside distortion wrapper */}
       <div ref={textRef} className="absolute left-1/2 -translate-x-1/2 top-[65%] w-full z-[5] pb-60">
         <div className="relative max-w-4xl mx-auto px-4">
           <p className="text-xl sm:text-xl md:text-2xl lg:text-3xl leading-relaxed text-black dark:text-white text-center pt-20">
-            {text.split(" ").map((word, index) => (
-              <span key={index} className="text-word inline-block mx-[0.2em]">
-                {word}
-              </span>
-            ))}
+            {t("fusion.description")
+              .split(" ")
+              .map((word, index) => (
+                <span key={index} className="text-word inline-block mx-[0.2em]">
+                  {word}
+                </span>
+              ))}
           </p>
         </div>
       </div>
@@ -170,7 +170,13 @@ export function FusionSection() {
             <div className="relative w-full h-full rounded-full overflow-hidden [transform-style:preserve-3d] [backface-visibility:hidden]">
               <div className="absolute inset-0 mix-blend-color" />
               <div className="absolute inset-0 bg-gradient-to-br mix-blend-soft-light" />
-              <Image src="/about/riders.png?height=300&width=300" alt="Left image" fill className="object-cover" priority />
+              <Image
+                src="/about/riders.png?height=300&width=300"
+                alt="Left image"
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
 
@@ -178,7 +184,13 @@ export function FusionSection() {
             <div className="relative w-full h-full rounded-full overflow-hidden [transform-style:preserve-3d] [backface-visibility:hidden]">
               <div className="absolute inset-0 mix-blend-color" />
               <div className="absolute inset-0 bg-gradient-to-br  mix-blend-soft-light" />
-              <Image src="/about/fkoi.png?height=300&width=300" alt="Center image" fill className="object-cover" priority />
+              <Image
+                src="/about/fkoi.png?height=300&width=300"
+                alt="Center image"
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
 
@@ -205,7 +217,13 @@ export function FusionSection() {
       >
         <div className="relative w-full h-full rounded-full overflow-hidden [transform-style:preserve-3d] [backface-visibility:hidden]">
           <div className="absolute inset-0 mix-blend-color" />
-          <Image src="/about/koi.png?height=300&width=300" alt="Final merged image" fill className="object-cover" priority />
+          <Image
+            src="/about/koi.png?height=300&width=300"
+            alt="Final merged image"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
       </div>
     </section>

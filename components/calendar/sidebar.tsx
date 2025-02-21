@@ -1,9 +1,10 @@
 "use client"
 
 import { DatePicker } from "@/components/ui/date-picker"
-import type { Category } from "@/lib/sanity/queries"
 import { cn } from "@/lib/utils"
+import type { Category } from "@/types/sanity"
 import gsap from "gsap"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { useEffect, useRef } from "react"
 import type { DateRange } from "react-day-picker"
@@ -17,6 +18,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ categories, selectedCategories, onToggleCategory, date, onDateSelect }: SidebarProps) {
+  const t = useTranslations("calendar")
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -34,11 +36,11 @@ export function Sidebar({ categories, selectedCategories, onToggleCategory, date
   return (
     <aside className="sticky top-20 space-y-6">
       <div>
-        <h2 className="mb-2 text-lg font-semibold">Date Range</h2>
+        <h2 className="mb-2 text-lg font-semibold">{t("dateRange")}</h2>
         <DatePicker date={date} onSelect={onDateSelect} className="w-full [&>div]:w-full [&_button]:w-full" />
       </div>
       <div>
-        <h2 className="mb-4 text-lg font-semibold">Categories</h2>
+        <h2 className="mb-4 text-lg font-semibold">{t("categories")}</h2>
         <div ref={containerRef} className="space-y-2">
           {categories.map((category) => (
             <button

@@ -2,6 +2,7 @@
 
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { useEffect, useRef } from "react"
 
@@ -35,6 +36,7 @@ function createCurvedPath(
 }
 
 export function MapSection() {
+  const t = useTranslations("club")
   const sectionRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
@@ -248,16 +250,14 @@ export function MapSection() {
 
       {/* Title */}
       <div className="map-title w-full z-30 text-center px-4 md:mt-[-500px]">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">Comunidad Internacional</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">{t("location.title")}</h2>
       </div>
 
       {/* Description */}
       <div className="map-description w-full z-30 text-center px-4 mt-8">
         <div className="max-w-4xl mx-auto">
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl max-w-3xl sm:max-w-4xl mx-auto">
-            Con sedes en Madrid, Berlín y Toronto, conectamos talentos y comunidades globales, impulsando un ecosistema
-            vibrante en los esports. España y Latinoamérica forman el corazón de nuestra afición, mientras que Canadá y
-            nuestros seguidores internacionales completan una comunidad global apasionada y única.
+            {t("location.description")}
           </p>
         </div>
       </div>

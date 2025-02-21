@@ -1,12 +1,12 @@
 "use client"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import type { DateRange } from "react-day-picker"
-
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
+import type { DateRange } from "react-day-picker"
 
 interface DatePickerProps {
   className?: string
@@ -15,6 +15,7 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ className, date, onSelect }: DatePickerProps) {
+  const t = useTranslations("common")
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -34,7 +35,7 @@ export function DatePicker({ className, date, onSelect }: DatePickerProps) {
                 format(date.from, "LLL dd, y")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>{t("pickDate")}</span>
             )}
           </Button>
         </PopoverTrigger>

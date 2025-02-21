@@ -2,14 +2,15 @@
 
 import { Countdown } from "@/components/calendar/countdown"
 import { fetchMoreMatches } from "@/lib/actions"
-import type { Match } from "@/lib/sanity/queries"
 import { cn } from "@/lib/utils"
+import type { Match } from "@/types/sanity"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
+import { useParams } from "next/navigation"
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { DateRange } from "react-day-picker"
 
@@ -89,6 +90,8 @@ function shouldShowCountdown(matchDate: Date): boolean {
 
 export function Matches({ matches: initialMatches, selectedCategories, dateRange }: MatchesProps) {
   const t = useTranslations("match")
+  const params = useParams()
+  const locale = params.locale as string
   const [matches, setMatches] = useState<Match[]>(initialMatches)
   const [isLoading, setIsLoading] = useState(false)
   const [hasMoreBefore, setHasMoreBefore] = useState(true)
@@ -239,7 +242,7 @@ export function Matches({ matches: initialMatches, selectedCategories, dateRange
   if (filteredMatches.length === 0) {
     return (
       <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-dashed">
-        <p className="text-muted-foreground">{t("noMatches")}</p>
+        <p className="text-muted-foreground">{t("status.noMatches")}</p>
       </div>
     )
   }
@@ -272,7 +275,9 @@ export function Matches({ matches: initialMatches, selectedCategories, dateRange
             ) : (
               <div className="text-center">
                 <div className="text-xl font-bold">{format(matchDate, "HH:mm")}</div>
-                <div className="text-xs text-muted-foreground">{format(matchDate, "dd MMM", { locale: es })}</div>
+                <div className="text-xs text-muted-foreground">
+                  {format(matchDate, "dd MMM", { locale: locale === "es" ? es : undefined })}
+                </div>
               </div>
             )}
           </div>
@@ -340,13 +345,13 @@ export function Matches({ matches: initialMatches, selectedCategories, dateRange
               <div className="relative h-4 w-4">
                 <Image
                   src={match.category.image.url || "/placeholder.svg"}
-                  alt={match.category.name.en}
+                  alt={match.category.name[locale as "en" | "es"]}
                   fill
                   className="rounded-full object-cover"
                 />
               </div>
             )}
-            <span>{match.category?.name.en}</span>
+            <span>{match.category?.name[locale as "en" | "es"]}</span>
             <span>•</span>
             <span>{match.bo}</span>
           </div>
@@ -359,7 +364,8 @@ export function Matches({ matches: initialMatches, selectedCategories, dateRange
               <Countdown targetDate={matchDate} className="text-xs font-medium" />
             ) : (
               <div className="text-sm text-muted-foreground">
-                {format(matchDate, "HH:mm")} · {format(matchDate, "dd MMM", { locale: es })}
+                {format(matchDate, "HH:mm")} ·{" "}
+                {format(matchDate, "dd MMM", { locale: locale === "es" ? es : undefined })}
               </div>
             )}
           </div>
@@ -368,13 +374,13 @@ export function Matches({ matches: initialMatches, selectedCategories, dateRange
               <div className="relative h-3 w-3">
                 <Image
                   src={match.category.image.url || "/placeholder.svg"}
-                  alt={match.category.name.en}
+                  alt={match.category.name[locale as "en" | "es"]}
                   fill
                   className="rounded-full object-cover"
                 />
               </div>
             )}
-            <span>{match.category?.name.en}</span>
+            <span>{match.category?.name[locale as "en" | "es"]}</span>
             <span>•</span>
             <span>{match.bo}</span>
           </div>
