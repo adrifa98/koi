@@ -4,15 +4,15 @@
 
 @layer base {
   :root {
-    --background: 235 80% 3%; /* Ajuste hacia un azul más violáceo */
+    --background: 235 80% 3%; 
     --foreground: 60 9.1% 97.8%;
     --card: 235 75% 4%;
     --card-foreground: 60 9.1% 97.8%;
     --popover: 235 75% 4%;
     --popover-foreground: 60 9.1% 97.8%;
-    --primary: 225 88% 58%; /* Azul con un leve tinte violeta */
+    --primary: 225 88% 58%; 
     --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 225 55% 25%; /* Ajuste sutil al morado */
+    --secondary: 225 55% 25%; 
     --secondary-foreground: 210 10% 85%;
     --muted: 225 35% 18%;
     --muted-foreground: 225 12% 65%;
@@ -22,13 +22,12 @@
     --destructive-foreground: 60 9.1% 97.8%;
     --border: 225 35% 18%;
     --input: 225 35% 18%;
-    --ring: 225 85% 60%; /* Azul con un toque más violeta */
+    --ring: 225 85% 60%; 
     --radius: 0.5rem;
 
-    /* Gradient colors for primary button */
-    --gradient-blue: #4169e1; /* Royal Blue */
+    --gradient-blue: #4169e1; 
     --gradient-blue2: #414fe1;
-    --gradient-purple: #5500ff; /* Blue Violet */
+    --gradient-purple: #5500ff;
 
     /* Sidebar */
     --sidebar-background: 240 5.9% 10%;

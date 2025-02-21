@@ -1,57 +1,90 @@
 "use client"
 
+import { ValueCard } from "@/components/about/value-card"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useTranslations } from "next-intl"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function ValuesSection() {
-  const t = useTranslations("club")
   const sectionRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const t = useTranslations("club")
+  useEffect(() => {
+    if (!sectionRef.current || !containerRef.current) return
 
-  // ... (efectos se mantienen igual)
+    const section = sectionRef.current
+    const container = containerRef.current
+
+    gsap.to(container, {
+      x: () => -(container.scrollWidth - window.innerWidth),
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        start: "center center",
+        end: () => `+=${(container.scrollWidth - window.innerWidth) * 0.6}`, // Reduce scroll length by 40%
+        pin: true,
+        scrub: 0.8, // Reduce scrub time for faster response
+        invalidateOnRefresh: true,
+      },
+    })
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+    }
+  }, [])
 
   const cards = [
     {
       number: "01",
-      title: t("values.passion.title"),
-      description: t("values.passion.description"),
+      title: "Pasión",
+      description:
+        "Nuestra pasión por los esports impulsa la innovación y excelencia en cada aspecto de nuestra organización",
       animation: "https://cdn.lordicon.com/fpipqhrr.json",
     },
     {
       number: "02",
-      title: t("values.excellence.title"),
-      description: t("values.excellence.description"),
+      title: "Competitividad",
+      description:
+        "Buscamos la excelencia en cada competición, impulsando el desarrollo del talento y la mejora continua",
       animation: "https://cdn.lordicon.com/rqsvgwdj.json",
     },
     {
       number: "03",
-      title: t("values.innovation.title"),
-      description: t("values.innovation.description"),
+      title: "Responsabilidad social",
+      description: "Comprometidos con el impacto positivo en la comunidad, promoviendo valores y desarrollo sostenible",
       animation: "https://cdn.lordicon.com/uukerzzv.json",
     },
     {
       number: "04",
-      title: t("values.community.title"),
-      description: t("values.community.description"),
+      title: "Sostenibilidad",
+      description:
+        "Construimos un futuro sostenible para los esports, equilibrando el crecimiento con la responsabilidad ambiental",
       animation: "https://cdn.lordicon.com/hpxruznz.json",
     },
   ]
 
   return (
     <section className="relative mt-20">
+      {/* Título de la sección */}
       <div className="absolute top-0 left-0 w-full z-10 pointer-events-none">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-black dark:text-white py-8">
-            {t("values.title")}
+          {t("values.title")}
           </h1>
         </div>
       </div>
 
-      {/* ... (resto del JSX se mantiene igual) */}
+      {/* Contenido principal */}
+      <div ref={sectionRef} className="relative min-h-screen text-black dark:text-white overflow-hidden">
+        <div ref={containerRef} className="relative flex gap-4 px-6 md:px-[10vw] py-32 will-change-transform">
+          {cards.map((card, index) => (
+            <ValueCard key={index} {...card} />
+          ))}
+        </div>
+      </div>
     </section>
   )
 }
