@@ -4,26 +4,31 @@
 
 @layer base {
   :root {
-    --background: 230 80% 3%;
+    --background: 235 80% 3%; /* Ajuste hacia un azul más violáceo */
     --foreground: 60 9.1% 97.8%;
-    --card: 230 75% 4%;
+    --card: 235 75% 4%;
     --card-foreground: 60 9.1% 97.8%;
-    --popover: 230 75% 4%;
+    --popover: 235 75% 4%;
     --popover-foreground: 60 9.1% 97.8%;
-    --primary: 220 88% 58%;
+    --primary: 225 88% 58%; /* Azul con un leve tinte violeta */
     --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 220 55% 25%;
+    --secondary: 225 55% 25%; /* Ajuste sutil al morado */
     --secondary-foreground: 210 10% 85%;
-    --muted: 220 35% 18%;
-    --muted-foreground: 220 12% 65%;
-    --accent: 220 55% 25%;
+    --muted: 225 35% 18%;
+    --muted-foreground: 225 12% 65%;
+    --accent: 225 55% 25%;
     --accent-foreground: 60 9.1% 97.8%;
     --destructive: 0 72.2% 50.6%;
     --destructive-foreground: 60 9.1% 97.8%;
-    --border: 220 35% 18%;
-    --input: 220 35% 18%;
-    --ring: 220 85% 60%;
+    --border: 225 35% 18%;
+    --input: 225 35% 18%;
+    --ring: 225 85% 60%; /* Azul con un toque más violeta */
     --radius: 0.5rem;
+
+    /* Gradient colors for primary button */
+    --gradient-blue: #4169e1; /* Royal Blue */
+    --gradient-blue2: #414fe1;
+    --gradient-purple: #5500ff; /* Blue Violet */
 
     /* Sidebar */
     --sidebar-background: 240 5.9% 10%;
@@ -248,3 +253,34 @@
   animation: marquee2 40s linear infinite;
 }
 
+/* Gradient button styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gradient-blue) 0%, var(--gradient-blue2) 52%, var(--gradient-purple) 100%);
+  
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--gradient-purple), var(--gradient-blue));
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  border-radius: inherit;
+}
+
+.btn-primary:hover::before {
+  opacity: 1;
+}
+
+/* Override default button styles */
+.bg-primary {
+  @apply btn-primary;
+}
