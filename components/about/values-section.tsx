@@ -39,29 +39,26 @@ export function ValuesSection() {
   const cards = [
     {
       number: "01",
-      title: "Pasión",
-      description:
-        "Nuestra pasión por los esports impulsa la innovación y excelencia en cada aspecto de nuestra organización",
+      title: t("values.passion.title"),
+      description: t("values.passion.description"),
       animation: "https://cdn.lordicon.com/fpipqhrr.json",
     },
     {
       number: "02",
-      title: "Competitividad",
-      description:
-        "Buscamos la excelencia en cada competición, impulsando el desarrollo del talento y la mejora continua",
+      title: t("values.excellence.title"),
+      description: t("values.excellence.description"),
       animation: "https://cdn.lordicon.com/rqsvgwdj.json",
     },
     {
       number: "03",
-      title: "Responsabilidad social",
-      description: "Comprometidos con el impacto positivo en la comunidad, promoviendo valores y desarrollo sostenible",
+      title: t("values.innovation.title"),
+      description: t("values.innovation.description"),
       animation: "https://cdn.lordicon.com/uukerzzv.json",
     },
     {
       number: "04",
-      title: "Sostenibilidad",
-      description:
-        "Construimos un futuro sostenible para los esports, equilibrando el crecimiento con la responsabilidad ambiental",
+      title: t("values.community.title"),
+      description: t("values.community.description"),
       animation: "https://cdn.lordicon.com/hpxruznz.json",
     },
   ]
